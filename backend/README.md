@@ -1,1 +1,0 @@
-# Enterprise systems project

@@ -1,0 +1,157 @@
+from sqlalchemy import (
+    Column, String, TIMESTAMP,
+    func, DateTime, Float, ForeignKey, Boolean, Date,
+    UniqueConstraint
+)
+from sqlalchemy.dialects.mysql.types import BIT, INTEGER
+from sqlalchemy.orm import relationship
+
+from src.crud.engine import Base
+
+
+_COLLATION = "utf8mb4_general_ci"
+
+
+class CityRecord(Base):
+    __tablename__ = "cities"
+    city_id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    city_name = Column(
+        String(collation=_COLLATION),
+        unique=True
+    )
+
+
+class PersonTypeRecord(Base):
+    __tablename__ = "person_types"
+    person_type_id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    person_type = Column(
+        String(collation=_COLLATION),
+        unique=True,
+        nullable=False,
+    )
+    discount_amount = Column(
+        Float(),
+        nullable=False,
+    )
+
+
+class PermissionsRecord(Base):
+    __tablename__ = "permissions"
+    permission_id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    permission = Column(
+        String(collation=_COLLATION),
+        unique=True,
+        nullable=False,
+    )
+
+
+class HallsRecord(Base):
+    __tablename__ = "halls"
+    hall_id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    hall_name = Column(
+        String(collation=_COLLATION),
+        nullable=False,
+    )
+    seats_per_row = Column(
+        INTEGER(unsigned=True),
+        nullable=False,
+    )
+    no_of_rows = Column(
+        INTEGER(unsigned=True),
+        nullable=False,
+    )
+
+
+class RolesRecord(Base):
+    __tablename__ = "roles"
+    role_id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    role_name = Column(
+        String(collation=_COLLATION),
+        unique=True,
+        nullable=False,
+    )
+    permissions = relationship("RolePermissionsRecord", back_populates="permissions")
+
+
+class UserRecord(Base):
+    __tablename__ = "users"
+    user_id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    name = Column(
+        String(collation=_COLLATION),
+        nullable=False,
+    )
+    email = Column(
+        String(collation=_COLLATION),
+        nullable=False,
+    )
+    roles = relationship("RolePermissionsRecord", back_populates="user_permissions")
+
+
+class RolePermissionsRecord(Base):
+    __tablename__ = "role_permissions"
+    id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    role_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("roles.id"),
+        nullable=False,
+    )
+    permissions_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("permissions.id"),
+        nullable=False,
+    )
+    role = relationship("RolesRecord", back_populates="role_permissions")
+    # role =
+
+# class FilmImagesRecord:
+#     __tablename__ = "film_images"
+#     person_type_id = Column(
+#         INTEGER(unsigned=True),
+#         primary_key=True,
+#         autoincrement=True,
+#         nullable=False,
+#         unique=True,
+#     )
+#     film_id: Column
