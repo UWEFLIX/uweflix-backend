@@ -116,6 +116,11 @@ class RolePermissionsRecord(Base):
     role_permission: Mapped["PermissionsRecord"] = relationship(
         "PermissionsRecord", back_populates="roles"
     )
+    __table_args__ = (
+        UniqueConstraint(
+            'role_id', 'permissions_id', name='_role-permission'
+        ),
+    )
 
 
 class RolesRecord(Base):
@@ -135,9 +140,9 @@ class RolesRecord(Base):
     permissions: Mapped[List["RolePermissionsRecord"]] = relationship(
         "RolePermissionsRecord", back_populates="role", uselist=True
     )
-#     user_roles: Mapped[List["UserRolesRecord"]] = relationship(
-#         "UserRolesRecord", back_populates="user_user"
-#     )
+    user_roles: Mapped[List["UserRolesRecord"]] = relationship(
+        "UserRolesRecord", back_populates="role"
+    )
 
 
 class UserRolesRecord(Base):
@@ -159,15 +164,20 @@ class UserRolesRecord(Base):
         ForeignKey("users.user_id"),
         nullable=False,
     )
-#     user: Mapped["UserRecord"] = relationship(
-#         "UserRecord", "roles_user"
-#     )
-#     role: Mapped["RolesRecord"] = relationship(
-#         "RolesRecord", "roles_role"
-#     )
+    __table_args__ = (
+        UniqueConstraint(
+            'role_id', 'user_id', name='_user-roles'
+        ),
+    )
+    # user: Mapped["UserRecord"] = relationship(
+    #     "UserRecord", "roles_user"
+    # )
+    role: Mapped["RolesRecord"] = relationship(
+        "RolesRecord", back_populates="user_roles"
+    )
 
 
-class UserRecord(Base):
+class UsersRecord(Base):
     __tablename__ = "users"
     user_id = Column(
         INTEGER(unsigned=True),
@@ -184,9 +194,13 @@ class UserRecord(Base):
         String(50, collation=_COLLATION),
         nullable=False,
     )
-#     user_roles: Mapped[List["UserRolesRecord"]] = relationship(
-#         "UserRolesRecord", back_populates="user_permissions"
-#     )
+    password = Column(
+        String(60, collation=_COLLATION),
+        nullable=False,
+    )
+    # user_roles: Mapped[List["UserRolesRecord"]] = relationship(
+    #     "UserRolesRecord", back_populates="user_permissions"
+    # )
 
 
 # class RolePermissionsRecord(Base):
