@@ -3,7 +3,7 @@ from typing import List, Set
 from pydantic import BaseModel, Field
 
 
-class Permissions(BaseModel):
+class Permission(BaseModel):
     id: int | None
     name: str
 
@@ -14,21 +14,26 @@ class Permissions(BaseModel):
 class Role(BaseModel):
     id: int | None
     name: str
-    permissions: List[Permissions]
-
-    def __repr__(self):
-        return f"[id: {self.id}, name: {self.name}, permissions: {self.permissions}]"
-
-
-class User(BaseModel):
-    id: int | None = None
-    name: str
-    password: str = Field(exclude=True)
-    roles: List[Role] | None = None
-    permissions: Set[str] | None = Field(default=None, exclude=True)
+    permissions: List[Permission]
 
     def __repr__(self):
         return (
-            f"[id: {self.id}, name: {self.name},"
+            f"[id: {self.id}, name: {self.name}, permissions: "
+            f"{self.permissions}]"
+        )
+
+
+class User(BaseModel):
+    id: int | None = Field(default=None, ge=0)
+    name: str
+    email: str
+    password: str = Field(exclude=True)
+    roles: List[Role] | None = Field(default=None, exclude=True)
+    permissions: Set[str] | None = Field(default=None, exclude=True)
+    status: str
+
+    def __repr__(self):
+        return (
+            f"[id: {self.id}, name: {self.name}, email: {self.email},"
             f" roles: f{self.roles}, permissions: {self.permissions}]"
         )

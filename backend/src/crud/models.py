@@ -198,6 +198,10 @@ class UsersRecord(Base):
         String(60, collation=_COLLATION),
         nullable=False,
     )
+    status = Column(
+        String(10, collation=_COLLATION),
+        nullable=False, default="ENABLED"
+    )
     # user_roles: Mapped[List["UserRolesRecord"]] = relationship(
     #     "UserRolesRecord", back_populates="user_permissions"
     # )
