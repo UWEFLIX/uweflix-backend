@@ -1,15 +1,16 @@
 from typing import Annotated, List
 
 from fastapi import APIRouter, Security, HTTPException
+from fastapi.params import Param
 from sqlalchemy import select, delete, and_
 
 from src.crud.models import (
     RolesRecord, PermissionsRecord, RolePermissionsRecord, UserRolesRecord
 )
 from src.crud.queries.roles import (
-    select_roles, get_user_role_data
+    select_roles
 )
-from src.crud.queries.user import select_user_by_email, select_user_by_id
+from src.crud.queries.user import select_user_by_id
 from src.crud.queries.utils import add_object, delete_record, execute_safely
 from src.schema.factories.role_factory import RoleFactory
 from src.schema.factories.user_factory import UserFactory
@@ -63,10 +64,23 @@ async def _get_role_by_id(role_id: int) -> Role:
 async def get_roles(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["read:roles"])
-        ]
+        ],
+        start: Annotated[int, Param(title="Range starting ID to get", ge=1)],
+        limit: Annotated[int, Param(title="Amount of resources to fetch", ge=1)]
 ):
-    _map = await select_roles()
-    return RoleFactory.get_roles(_map)
+    query = select(
+        RolesRecord, RolePermissionsRecord, PermissionsRecord
+    ).outerjoin(
+        RolePermissionsRecord,
+        RolePermissionsRecord.role_id == RolesRecord.role_id
+    ).outerjoin(
+        PermissionsRecord,
+        PermissionsRecord.permission_id == PermissionsRecord.permission_id
+    ).where(
+        RolesRecord.role_id >= start,
+    )
+    _map = await select_roles(query)
+    return RoleFactory.get_roles(_map)[:limit]
 
 
 @router.get("/role", status_code=200, tags=["Unfinished"])

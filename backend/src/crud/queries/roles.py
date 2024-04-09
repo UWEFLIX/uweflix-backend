@@ -1,7 +1,4 @@
-from fastapi import HTTPException
 from sqlalchemy import select, update, and_
-from sqlalchemy.exc import DataError, IntegrityError
-
 from src.crud.engine import async_session
 from src.crud.models import RolesRecord, RolePermissionsRecord, PermissionsRecord, UsersRecord, UserRolesRecord
 from src.crud.queries.utils import execute_safely
@@ -9,15 +6,7 @@ from src.schema.users import Role
 
 
 async def select_roles(
-        query=select(
-        RolesRecord, RolePermissionsRecord, PermissionsRecord
-        ).outerjoin(
-            RolePermissionsRecord,
-            RolePermissionsRecord.role_id == RolesRecord.role_id
-        ).outerjoin(
-            PermissionsRecord,
-            PermissionsRecord.permission_id == PermissionsRecord.permission_id
-        )
+        query
 ):
     permissions = {}
     roles = {}
@@ -33,18 +22,18 @@ async def select_roles(
 
             rows = result.all()
 
-            if len(rows) == 0:
-                return
-            elif len(rows) == 1:
-                if not rows[0][1]:
-                    record = rows[0][0]
-                    roles.update({record.role_id: record})
-                    return {
-                        "roles": roles,
-                        "permissions": permissions,
-                        "user_roles": user_roles,
-                        "role_permissions": role_permissions
-                    }
+            # if len(rows) == 0:
+            #     return
+            # elif len(rows) == 1:
+            #     if not rows[0][1]:
+            #         record = rows[0][0]
+            #         roles.update({record.role_id: record})
+            #         return {
+            #             "roles": roles,
+            #             "permissions": permissions,
+            #             "user_roles": user_roles,
+            #             "role_permissions": role_permissions
+            #         }
 
             for row in rows:
                 # UsersRecord, UserRolesRecord, RolesRecord, RolePermissionsRecord,
@@ -53,13 +42,18 @@ async def select_roles(
                 role_permissions_record = row[1]
                 permissions_record = row[2]
 
-                roles.update({role_record.role_id: role_record})
-                permissions.update({
-                    permissions_record.permission_id: permissions_record
-                })
-                role_permissions.update({
-                    role_permissions_record.id: role_permissions_record
-                })
+                if role_record:
+                    roles.update({role_record.role_id: role_record})
+
+                if permissions_record:
+                    permissions.update({
+                        permissions_record.permission_id: permissions_record
+                    })
+
+                if role_permissions_record:
+                    role_permissions.update({
+                        role_permissions_record.id: role_permissions_record
+                    })
 
     return {
         "roles": roles,

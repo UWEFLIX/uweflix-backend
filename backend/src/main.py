@@ -13,12 +13,14 @@ from src.security.security import get_current_active_user, authenticate_user, fe
 from src.utils.utils import lifespan
 
 from src.endpoints.roles import router as roles
+from src.endpoints.accounts import router as accounts
 
 from src.crud.models import *
 
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(roles)
+app.include_router(accounts)
 
 
 @app.post(
