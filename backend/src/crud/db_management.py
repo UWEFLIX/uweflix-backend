@@ -39,13 +39,16 @@ async def get_permissions():
     read_images = PermissionsRecord(permission="read:images")
     write_images = PermissionsRecord(permission="write:images")
 
+    read_role_perms = PermissionsRecord(permission="read:role_permissions")
+    write_role_perms = PermissionsRecord(permission="write:role_permissions")
+
     return [
         write_user, read_user, write_bookings, read_bookings,
         read_halls, write_halls, read_clubs, write_clubs,
         read_user_roles, write_user_roles, read_roles,
         write_roles, read_cities, write_cities, read_schedules,
         write_schedules, read_films, write_films, read_images,
-        write_images,
+        write_images, read_role_perms, write_role_perms
     ]
 
 

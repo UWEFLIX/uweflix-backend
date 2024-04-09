@@ -11,9 +11,14 @@ from src.schema.users import User
 from src.security.security import get_current_active_user, authenticate_user, fernet, ACCESS_TOKEN_EXPIRE_MINUTES, \
     create_access_token
 from src.utils.utils import lifespan
+
+from src.endpoints.roles import router as roles
+
 from src.crud.models import *
 
 app = FastAPI(lifespan=lifespan)
+
+app.include_router(roles)
 
 
 @app.post(

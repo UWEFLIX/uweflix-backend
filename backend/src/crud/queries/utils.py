@@ -1,5 +1,8 @@
 from fastapi import HTTPException
-from pymysql import IntegrityError, DataError
+from sqlalchemy.exc import IntegrityError, DataError
+
+# from pymysql import IntegrityError, DataError
+# import sqlalchemy.exc.IntegrityError
 
 from src.crud.engine import async_session
 
@@ -14,3 +17,23 @@ async def add_object(record) -> None:
         code = e.orig.args[0]
         message = e.orig.args[1]
         raise HTTPException(status_code=422, detail=message)
+
+
+async def execute_safely(query):
+    async with async_session() as session:
+        async with session.begin():
+            try:
+                await session.execute(query)
+            except (DataError, IntegrityError) as e:
+                raise HTTPException(status_code=422, detail=e.orig.args[1])
+
+            await session.commit()
+
+
+async def delete_record(record):
+    async with async_session() as session:
+        async with session.begin():
+            try:
+                await session.delete(record)
+            except (DataError, IntegrityError) as e:
+                raise HTTPException(status_code=422, detail=e.orig.args[1])

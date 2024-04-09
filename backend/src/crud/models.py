@@ -59,13 +59,13 @@ class PermissionsRecord(Base):
         unique=True,
     )
     permission = Column(
-        String(20, collation=_COLLATION),
+        String(50, collation=_COLLATION),
         unique=True,
         nullable=False,
     )
-    roles: Mapped[List["RolePermissionsRecord"]] = relationship(
-        "RolePermissionsRecord", back_populates="role_permission"
-    )
+    # roles: Mapped[List["RolePermissionsRecord"]] = relationship(
+    #     "RolePermissionsRecord", back_populates="role_permission"
+    # )
 
 
 class HallsRecord(Base):
@@ -102,7 +102,7 @@ class RolePermissionsRecord(Base):
     )
     role_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("roles.role_id"),
+        ForeignKey("roles.role_id", ondelete="CASCADE"),
         nullable=False,
     )
     permissions_id = Column(
@@ -110,12 +110,12 @@ class RolePermissionsRecord(Base):
         ForeignKey("permissions.permission_id"),
         nullable=False,
     )
-    role: Mapped[List["RolesRecord"]] = relationship(
-        "RolesRecord", back_populates="permissions"
-    )
-    role_permission: Mapped["PermissionsRecord"] = relationship(
-        "PermissionsRecord", back_populates="roles"
-    )
+    # role: Mapped[List["RolesRecord"]] = relationship(
+    #     "RolesRecord", back_populates="permissions"
+    # )
+    # role_permission: Mapped["PermissionsRecord"] = relationship(
+    #     "PermissionsRecord", back_populates="roles"
+    # )
     __table_args__ = (
         UniqueConstraint(
             'role_id', 'permissions_id', name='_role-permission'
@@ -137,12 +137,12 @@ class RolesRecord(Base):
         unique=True,
         nullable=False,
     )
-    permissions: Mapped[List["RolePermissionsRecord"]] = relationship(
-        "RolePermissionsRecord", back_populates="role", uselist=True
-    )
-    user_roles: Mapped[List["UserRolesRecord"]] = relationship(
-        "UserRolesRecord", back_populates="role"
-    )
+    # permissions: Mapped[List["RolePermissionsRecord"]] = relationship(
+    #     "RolePermissionsRecord", back_populates="role", uselist=True
+    # )
+    # user_roles: Mapped[List["UserRolesRecord"]] = relationship(
+    #     "UserRolesRecord", back_populates="role"
+    # )
 
 
 class UserRolesRecord(Base):
@@ -156,12 +156,12 @@ class UserRolesRecord(Base):
     )
     role_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("roles.role_id"),
+        ForeignKey("roles.role_id", ondelete="CASCADE"),
         nullable=False,
     )
     user_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("users.user_id"),
+        ForeignKey("users.user_id", ondelete="CASCADE"),
         nullable=False,
     )
     __table_args__ = (
@@ -172,9 +172,9 @@ class UserRolesRecord(Base):
     # user: Mapped["UserRecord"] = relationship(
     #     "UserRecord", "roles_user"
     # )
-    role: Mapped["RolesRecord"] = relationship(
-        "RolesRecord", back_populates="user_roles"
-    )
+    # role: Mapped["RolesRecord"] = relationship(
+    #     "RolesRecord", back_populates="user_roles"
+    # )
 
 
 class UsersRecord(Base):
