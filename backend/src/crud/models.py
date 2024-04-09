@@ -255,7 +255,37 @@ class ClubsRecord(Base):
     )
     leader = Column(
         INTEGER(unsigned=True),
-        ForeignKey("users.user_id"),
+        ForeignKey("users.user_id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    club_name = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+        unique=True
+    )
+    addr_street_number = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+    )
+    addr_street_name = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+    )
+    post_code = Column(
+        INTEGER(unsigned=True),
+        nullable=False,
+    )
+    city_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("cities.city_id", ondelete="CASCADE"),
+        nullable=False,
+    )
+    contact_number = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+    )
+    landline_number = Column(
+        String(50, collation=_COLLATION),
         nullable=False,
     )
 
@@ -328,11 +358,11 @@ class ClubMemberRecords(Base):
     )
     member = Column(
         INTEGER(unsigned=True),
-        ForeignKey("users.user_id"),
+        ForeignKey("users.user_id", ondelete="CASCADE"),
         nullable=False,
     )
     club = Column(
         INTEGER(unsigned=True),
-        ForeignKey("clubs.id"),
+        ForeignKey("clubs.id", ondelete="CASCADE"),
         nullable=False,
     )

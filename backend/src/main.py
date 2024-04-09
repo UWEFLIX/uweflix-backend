@@ -15,6 +15,7 @@ from src.utils.utils import lifespan
 from src.endpoints.users.roles import router as roles
 # from src.endpoints.accounts.accounts import router as accounts
 from src.endpoints.clubs.cities import router as cities
+from src.endpoints.clubs.clubs import router as clubs
 
 from src.crud.models import *
 
@@ -22,6 +23,7 @@ app = FastAPI(lifespan=lifespan)
 
 app.include_router(roles)
 app.include_router(cities)
+app.include_router(clubs)
 # app.include_router(accounts)
 
 

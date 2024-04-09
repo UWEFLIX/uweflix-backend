@@ -1,6 +1,6 @@
 from typing import List, Set
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 
 
 class Permission(BaseModel):
@@ -44,7 +44,7 @@ class Account(BaseModel):
 class User(BaseModel):
     id: int | None = Field(default=None, ge=0)
     name: str
-    email: str
+    email: EmailStr
     password: str = Field(exclude=True)
     roles: List[Role] | None = Field(default=None, exclude=True)
     permissions: Set[str] | None = Field(default=None, exclude=True)

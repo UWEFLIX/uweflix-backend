@@ -1,4 +1,5 @@
 from collections import defaultdict
+from typing import List
 
 from src.schema.users import User, Role, Permission
 
@@ -51,3 +52,19 @@ class UserFactory:
             roles=roles,
             status=user_record.status
         )
+
+    @staticmethod
+    def create_half_user(user_record) -> User:
+        return User(
+            id=user_record.id,
+            name=user_record.name,
+            email=user_record.email,
+            password=user_record.password,
+            status=user_record.status,
+        )
+
+    @staticmethod
+    def create_half_users(user_records) -> List[User]:
+        return [
+            UserFactory.create_half_user(x) for x in user_records
+        ]
