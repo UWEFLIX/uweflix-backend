@@ -13,7 +13,7 @@ from src.crud.engine import Base
 _COLLATION = "utf8mb4_general_ci"
 
 
-class CityRecord(Base):
+class CitiesRecord(Base):
     __tablename__ = "cities"
     city_id = Column(
         INTEGER(unsigned=True),
@@ -234,6 +234,13 @@ class CardsRecord(Base):
     status = Column(
         Enum("ENABLED", "DISABLED", name="status", collation=_COLLATION),
         nullable=False, default="ENABLED"
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            'account_id',
+            name='_account-card'
+        ),
     )
 
 

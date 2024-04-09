@@ -52,3 +52,17 @@ async def select_accounts(query):
         accounts[entity_id]["cards"] = cards
 
     return accounts
+
+
+async def select_card(card):
+    query = select(
+        CardsRecord
+    ).where(
+        CardsRecord.card_number == card
+    )
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            rows = result.all()
+
+            return rows

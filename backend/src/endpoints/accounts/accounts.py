@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, List
 
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
@@ -184,7 +184,7 @@ async def get_accounts(
         ],
         start: Annotated[int, Param(title="Range starting ID to get", ge=1)],
         limit: Annotated[int, Param(title="Amount of resources to fetch", ge=1)]
-) -> Account:
+) -> list[Account]:
     query = select(
         AccountsRecord, CardsRecord
     ).outerjoin(

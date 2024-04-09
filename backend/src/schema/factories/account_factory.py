@@ -33,3 +33,13 @@ class AccountsFactory:
         return [
             AccountsFactory.get_account(mp) for account_id, mp in mps.items()
         ]
+
+    @staticmethod
+    def get_card(record) -> Card:
+        return Card(
+            id=record.card_id,
+            card_number=record.card_number,
+            holder_name=record.holder_name,
+            exp_date=record.exp_date,
+            status=record.status,
+        )

@@ -25,6 +25,7 @@ class Role(BaseModel):
 
 class Card(BaseModel):
     id: int | None
+    account_id: int | None
     card_number: int
     holder_name: str
     exp_date: str = Field(max_length=5)
