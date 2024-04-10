@@ -3,7 +3,7 @@ from collections import defaultdict
 from sqlalchemy import select, and_
 
 from src.crud.engine import async_session
-from src.crud.models import AccountsRecord, CardsRecord
+from src.crud.models import AccountsRecord, CardsRecord, UsersRecord, ClubsRecord
 
 
 async def select_account(query):
@@ -63,6 +63,54 @@ async def select_card(card):
     async with async_session() as session:
         async with session.begin():
             result = await session.execute(query)
-            rows = result.all()
+            rows = result.scalar()
 
             return rows
+
+
+async def check_user_card(*args):
+    user_id = args[0]
+    card_id = args[1]
+    check_query = select(
+        UsersRecord
+    ).join(
+        CardsRecord, CardsRecord.card_id == card_id
+    ).join(
+        AccountsRecord, and_(
+            AccountsRecord.id == CardsRecord.account_id,
+            AccountsRecord.entity_id == user_id,
+            AccountsRecord.entity_type == "USER"
+        )
+    ).where(
+        UsersRecord.user_id == user_id
+    )
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(check_query)
+            return result.scalar()
+
+
+async def check_club_card(*args):
+    user_id = args[0]
+    card_id = args[1]
+    club_id = args[2]
+
+    check_query = select(
+        ClubsRecord
+    ).join(
+        CardsRecord, CardsRecord.card_id == card_id
+    ).join(
+        AccountsRecord, and_(
+            AccountsRecord.id == CardsRecord.account_id,
+            AccountsRecord.entity_id == club_id,
+            AccountsRecord.entity_type == "CLUB"
+        )
+    ).where(
+        ClubsRecord.id == club_id
+    )
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(check_query)
+            return result.scalar()
+

@@ -3,7 +3,7 @@ import asyncio
 from src.crud.engine import engine, Base
 from src.crud.models import (
     PermissionsRecord, RolesRecord, RolePermissionsRecord,
-    UsersRecord, UserRolesRecord
+    UsersRecord, UserRolesRecord, AccountsRecord
 )
 from src.crud.queries.utils import add_object, add_objects
 
@@ -79,6 +79,13 @@ async def initialise_db():
         email="nishawl.naseer@outlook.com",
         password="$2b$12$qtCm88dd7JSa9SGlwKGp/e/VDEbZ0kbSmnUJEC7sgunD1whHFBjeW"
     )
+    account1 = AccountsRecord(
+        account_uid="2",
+        name="something",
+        entity_type="USER",
+        entity_id=1,
+        discount_rate=0
+    )
     user_role1 = UserRolesRecord(user_id=1, role_id=1)
 
     await add_object(admin)
@@ -90,7 +97,7 @@ async def initialise_db():
     # tasks = [add_object(x) for x in objs]
     # await asyncio.gather(*tasks)
 
-    objs2.extend([user_role1])
+    objs2.extend([user_role1, account1])
     tasks2 = [add_object(x) for x in objs2]
     await asyncio.gather(*tasks2)
 

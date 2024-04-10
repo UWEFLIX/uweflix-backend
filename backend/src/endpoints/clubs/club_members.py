@@ -2,15 +2,12 @@ from typing import Annotated, List
 
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
-from sqlalchemy import update, and_, select, delete
-from starlette.responses import JSONResponse
+from sqlalchemy import and_, delete
 
-from src.crud.models import AccountsRecord, CardsRecord, ClubMemberRecords
-from src.crud.queries.accounts import select_account, select_accounts
+from src.crud.models import ClubMemberRecords
 from src.crud.queries.clubs import select_leader_clubs
 from src.crud.queries.utils import add_object, execute_safely
-from src.schema.factories.account_factory import AccountsFactory
-from src.schema.users import User, Card, Account
+from src.schema.users import User
 from src.security.security import get_current_active_user
 
 router = APIRouter(prefix="/clubs", )

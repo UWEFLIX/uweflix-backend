@@ -1,6 +1,6 @@
 from typing import List
 
-from src.schema.users import Card, Account
+from src.schema.accounts import Account, Card
 
 
 class AccountsFactory:
@@ -36,10 +36,13 @@ class AccountsFactory:
 
     @staticmethod
     def get_card(record) -> Card:
-        return Card(
+        card = Card(
             id=record.card_id,
+            account_id=record.account_id,
             card_number=record.card_number,
             holder_name=record.holder_name,
             exp_date=record.exp_date,
             status=record.status,
         )
+        card._encrypted = True
+        return card

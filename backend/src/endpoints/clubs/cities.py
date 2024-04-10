@@ -11,7 +11,7 @@ from src.crud.queries.utils import add_object, execute_safely
 from src.schema.clubs import City
 from src.schema.factories.account_factory import AccountsFactory
 from src.schema.factories.club_factories import ClubFactory
-from src.schema.users import User, Card
+from src.schema.users import User
 from src.security.security import get_current_active_user
 
 router = APIRouter(prefix="/cities", tags=["Cities"])

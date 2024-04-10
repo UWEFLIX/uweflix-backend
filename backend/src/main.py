@@ -13,13 +13,11 @@ from src.security.security import get_current_active_user, authenticate_user, fe
 from src.utils.utils import lifespan
 
 from src.endpoints.users.roles import router as roles
-# from src.endpoints.accounts.accounts import router as accounts
+from src.endpoints.accounts.accounts import router as accounts
 from src.endpoints.clubs.cities import router as cities
 from src.endpoints.clubs.clubs import router as clubs
 from src.endpoints.users.users import router as users
 from src.endpoints.bookings.bookings import router as bookings
-
-from src.crud.models import *
 
 app = FastAPI(lifespan=lifespan)
 
@@ -28,7 +26,7 @@ app.include_router(cities)
 app.include_router(clubs)
 app.include_router(users)
 app.include_router(bookings)
-# app.include_router(accounts)
+app.include_router(accounts)
 
 
 @app.post(

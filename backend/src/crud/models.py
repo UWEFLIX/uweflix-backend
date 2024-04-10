@@ -201,20 +201,23 @@ class CardsRecord(Base):
         nullable=False,
     )
     card_number = Column(
-        INTEGER(unsigned=True),
-        unique=True,
+        String(100, collation=_COLLATION),
+        nullable=False
     )
     holder_name = Column(
-        String(50, collation=_COLLATION),
+        String(100, collation=_COLLATION),
         nullable=False
     )
     exp_date = Column(
-        String(5, collation=_COLLATION),
+        String(100, collation=_COLLATION),
         nullable=False
     )
     status = Column(
-        Enum("ENABLED", "DISABLED", name="status", collation=_COLLATION),
-        nullable=False, default="ENABLED"
+        Enum(
+            "ENABLED", "DISABLED", collation=_COLLATION,
+            # native_enum=False
+        ),
+        nullable=False, default="ENABLED "
     )
 
     __table_args__ = (
@@ -298,7 +301,7 @@ class AccountsRecord(Base):
         nullable=False,
     )
     entity_type = Column(
-        Enum("USER", "CLUB", name="status", collation=_COLLATION),
+        Enum("USER", "CLUB", name="entity_type", collation=_COLLATION),
         nullable=False,
     )
     entity_id = Column(

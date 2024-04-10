@@ -23,24 +23,6 @@ class Role(BaseModel):
         )
 
 
-class Card(BaseModel):
-    id: int | None
-    account_id: int | None
-    card_number: int
-    holder_name: str
-    exp_date: str = Field(max_length=5)
-    status: str
-
-
-class Account(BaseModel):
-    id: int | None
-    uid: str
-    name: str
-    cards: List[Card] | None
-    entity_type: str
-    discount_rate: int = Field(min_value=0, max_value=100)
-
-
 class User(BaseModel):
     id: int | None = Field(default=None, ge=0)
     name: str
