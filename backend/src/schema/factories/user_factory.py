@@ -1,6 +1,7 @@
 from collections import defaultdict
 from typing import List
 
+from src.crud.models import UsersRecord
 from src.schema.users import User, Role, Permission
 
 
@@ -51,7 +52,7 @@ class UserFactory:
         return user
 
     @staticmethod
-    def create_half_user(user_record) -> User:
+    def create_half_user(user_record: UsersRecord) -> User:
         return User(
             id=user_record.user_id,
             name=user_record.name,

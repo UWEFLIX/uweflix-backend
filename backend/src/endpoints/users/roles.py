@@ -17,7 +17,7 @@ from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User, Role, Permission
 from src.security.security import get_current_active_user
 
-router = APIRouter(prefix="/roles", tags=["roles"])
+router = APIRouter(prefix="/roles", tags=["Roles"])
 
 
 async def _get_role_by_name(role_name: str) -> Role:
@@ -188,13 +188,6 @@ async def append_user_role(
         permissions: List[Permission],
         role_id: Annotated[int, Param(title="role_id", ge=1)]
 ) -> Role:
-    # todo test
-
-    # permissions_record = RolePermissionsRecord(
-    #     role_id=role_id,
-    #     permissions_id=permissions_id
-    # )
-
     records = [
         RolePermissionsRecord(
             role_id=role_id,

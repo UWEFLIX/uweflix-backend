@@ -5,12 +5,12 @@ from src.crud.models import (
     PermissionsRecord, RolesRecord, RolePermissionsRecord,
     UsersRecord, UserRolesRecord
 )
-from src.crud.queries.utils import add_object
+from src.crud.queries.utils import add_object, add_objects
 
 
 async def get_permissions():
-    write_user = PermissionsRecord(permission="write:user")
-    read_user = PermissionsRecord(permission="read:user")
+    write_user = PermissionsRecord(permission="write:users")
+    read_user = PermissionsRecord(permission="read:users")
 
     write_bookings = PermissionsRecord(permission="write:bookings")
     read_bookings = PermissionsRecord(permission="read:bookings")
@@ -81,8 +81,10 @@ async def initialise_db():
 
     objs.append(user1)
 
-    tasks = [add_object(x) for x in objs]
-    await asyncio.gather(*tasks)
+    await add_objects(objs)
+
+    # tasks = [add_object(x) for x in objs]
+    # await asyncio.gather(*tasks)
 
     objs2.extend([user_role1])
     tasks2 = [add_object(x) for x in objs2]

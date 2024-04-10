@@ -16,6 +16,7 @@ from src.endpoints.users.roles import router as roles
 # from src.endpoints.accounts.accounts import router as accounts
 from src.endpoints.clubs.cities import router as cities
 from src.endpoints.clubs.clubs import router as clubs
+from src.endpoints.users.users import router as users
 
 from src.crud.models import *
 
@@ -24,11 +25,12 @@ app = FastAPI(lifespan=lifespan)
 app.include_router(roles)
 app.include_router(cities)
 app.include_router(clubs)
+app.include_router(users)
 # app.include_router(accounts)
 
 
 @app.post(
-    "/token", response_model=Token, tags=["Users", "Users-Root"],
+    "/token", response_model=Token, tags=["Users"],
     status_code=201
 )
 async def login_for_access_token(
@@ -80,7 +82,7 @@ async def login_for_access_token(
 
 
 @app.get(
-    "/users/me", response_model=User, tags=["Users", "Users-Root"],
+    "/users/me", response_model=User, tags=["Users"],
 )
 async def read_users_me(
         current_user: Annotated[

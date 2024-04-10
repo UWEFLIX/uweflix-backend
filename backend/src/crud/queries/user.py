@@ -8,14 +8,14 @@ async def select_user_by_email(username: str) -> dict | None:
     query = select(
         UsersRecord, UserRolesRecord, RolesRecord, RolePermissionsRecord,
         PermissionsRecord
-    ).join(
+    ).outerjoin(
         UserRolesRecord, UserRolesRecord.user_id == UsersRecord.user_id
-    ).join(
+    ).outerjoin(
         RolesRecord, UserRolesRecord.role_id == RolesRecord.role_id
-    ).join(
+    ).outerjoin(
         RolePermissionsRecord,
         RolePermissionsRecord.role_id == RolesRecord.role_id
-    ).join(
+    ).outerjoin(
         PermissionsRecord,
         PermissionsRecord.permission_id == RolePermissionsRecord.permissions_id
     ).where(UsersRecord.email == username)
@@ -29,10 +29,10 @@ async def select_user_by_email(username: str) -> dict | None:
         async with session.begin():
             result = await session.execute(query)
 
-            if not result:
-                return
-
             rows = result.all()
+
+            if len(rows) == 0:
+                return None
 
             user_record = rows[0][0]
 
@@ -43,10 +43,14 @@ async def select_user_by_email(username: str) -> dict | None:
                 role_permissions_record = row[3]
                 permissions_record = row[4]
 
-                roles.update({role_record.role_id: role_record})
-                user_roles.update({user_role_record.id: user_role_record})
-                permissions.update({permissions_record.permission_id: permissions_record})
-                role_permissions.update({role_permissions_record.id: role_permissions_record})
+                if role_record:
+                    roles.update({role_record.role_id: role_record})
+                if user_role_record:
+                    user_roles.update({user_role_record.id: user_role_record})
+                if permissions_record:
+                    permissions.update({permissions_record.permission_id: permissions_record})
+                if role_permissions_record:
+                    role_permissions.update({role_permissions_record.id: role_permissions_record})
 
     return {
         "user": user_record,
@@ -118,3 +122,17 @@ async def select_user_by_id(user_id: int) -> dict | None:
         "user_roles": user_roles,
         "role_permissions": role_permissions
     }
+
+
+async def select_users(start, limit):
+    query = select(
+        UsersRecord
+    ).where(
+        UsersRecord.user_id >= start
+    ).limit(limit)
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+
+            return result.scalars().all()

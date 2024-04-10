@@ -196,6 +196,7 @@ class UsersRecord(Base):
     password = Column(
         String(60, collation=_COLLATION),
         nullable=False,
+        default="$2b$12$qtCm88dd7JSa9SGlwKGp/e/VDEbZ0kbSmnUJEC7sgunD1whHFBjeW"
     )
     status = Column(
         Enum("ENABLED", "DISABLED", name="status", collation=_COLLATION),
@@ -373,4 +374,22 @@ class ClubMemberRecords(Base):
         INTEGER(unsigned=True),
         ForeignKey("clubs.id", ondelete="CASCADE"),
         nullable=False,
+    )
+
+
+class PersonTypesRecord(Base):
+    __tablename__ = "person_type"
+    person_type_id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    person_type = Column(
+        String(50, collation=_COLLATION),
+        nullable=False, unique=True
+    )
+    discount_amount = Column(
+        INTEGER(unsigned=True), nullable=False
     )

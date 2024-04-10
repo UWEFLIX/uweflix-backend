@@ -46,7 +46,7 @@ class User(BaseModel):
     name: str
     email: EmailStr
     password: str = Field(exclude=True)
-    roles: List[Role] | None = Field(default=None, exclude=True)
+    roles: List[Role] | None = Field(default=None)
     permissions: Set[str] | None = Field(default=None, exclude=True)
     status: str
 

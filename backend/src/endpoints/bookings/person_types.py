@@ -14,43 +14,43 @@ from src.schema.factories.club_factories import ClubFactory
 from src.schema.users import User, Card
 from src.security.security import get_current_active_user
 
-router = APIRouter(prefix="/cities", tags=["Cities"])
+router = APIRouter(prefix="/person-types", tags=["Persons"])
 
 
-@router.get("/city", status_code=200, tags=["Unfinished"])
-async def get_cities(
+@router.get("/person-types", status_code=200, tags=["Unfinished"])
+async def get_person(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["read:cities"])
+            User, Security(get_current_active_user, scopes=["read:persons"])
         ],
-        city_name: str
+        person_type: str
 ) -> City:
-    record = await select_city(city_name)
+    record = await select_person_type(person_type)
 
     if record is None:
-        raise HTTPException(404, "City not found")
+        raise HTTPException(404, "Person Type not found")
 
     return ClubFactory.get_city(record)
 
 
-@router.post("/city", status_code=201, tags=["Unfinished"])
-async def create_city(
+@router.post("/person-type", status_code=201, tags=["Unfinished"])
+async def create_person(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:cities"])
+            User, Security(get_current_active_user, scopes=["write:persons"])
         ],
-        city_name: str
+        person_type: str
 ) -> City:
     await add_object(
         CitiesRecord(
-            city_name=city_name
+            person_type=person_type
         )
     )
 
-    record = await select_city(city_name)
+    record = await select_city(person_type)
     return ClubFactory.get_city(record)
 
 
-@router.patch("/city", status_code=201, tags=["Unfinished"])
-async def update_city(
+@router.patch("/person-type", status_code=201, tags=["Unfinished"])
+async def create_person_type(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:cities"])
         ],
@@ -69,8 +69,8 @@ async def update_city(
     return ClubFactory.get_city(record)
 
 
-@router.get("/cities", status_code=200, tags=["Unfinished"])
-async def get_cities(
+@router.get("/person-types", status_code=200, tags=["Unfinished"])
+async def get_person_types(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["read:cities"])
         ],
