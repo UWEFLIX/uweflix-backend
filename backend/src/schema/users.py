@@ -55,3 +55,17 @@ class User(BaseModel):
             f"[id: {self.id}, name: {self.name}, email: {self.email},"
             f" roles: f{self.roles}, permissions: {self.permissions}]"
         )
+
+
+class PasswordChange(BaseModel):
+    old_password: str
+    new_password: str
+
+
+class ResetRequest(BaseModel):
+    email: EmailStr
+    otp: str
+
+
+class PasswordResetConfirmation(ResetRequest):
+    new_password: str

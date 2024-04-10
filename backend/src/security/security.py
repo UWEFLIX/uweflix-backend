@@ -10,10 +10,14 @@ from src.crud.queries.user import select_user_by_email
 from src.schema.users import User
 from src.schema.security import TokenData
 from src.schema.factories.user_factory import UserFactory
+from src.security.one_time_passwords import OTP
 from src.security.utils import check_scope
 # from src.utils.mailing import EmailClient
 from cryptography.fernet import Fernet
 # from src.security.one_time_password import OTP
+import os
+
+from src.utils.mailing import EmailClient
 
 # todo change on prod with: ```openssl rand -hex 32```
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
@@ -22,11 +26,17 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 PASSWORD_RESET_TOKEN_EXPIRE_MINUTES = 30
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-# EMAILS = EmailClient()
+EMAILS = EmailClient(
+    server=os.getenv("MAILING_SERVER"),
+    port=os.getenv("SMTP_PORT"),
+    username=os.getenv("MAILING_USERNAME"),
+    password=os.getenv("MAILING_PASSWORD"),
+)
 fernet = Fernet(ENCRYPTION_KEY)
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="token",
 )
+otp = OTP(os.environ.get("OTP_SECRET"))
 
 
 def verify_password(plain_password: str, hashed_password: str):
