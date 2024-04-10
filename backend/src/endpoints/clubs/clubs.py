@@ -2,9 +2,9 @@ from typing import Annotated
 
 from fastapi.params import Param
 from select import select
-from sqlalchemy import update, delete
+from sqlalchemy import update, delete, and_
 
-from src.crud.models import ClubsRecord
+from src.crud.models import ClubsRecord, AccountsRecord
 from src.crud.queries.clubs import select_club, select_leader_clubs, select_clubs
 from src.crud.queries.utils import add_object, execute_safely
 from src.endpoints.clubs.club_members import router as club_members
@@ -97,6 +97,16 @@ async def delete_club(
     )
 
     await execute_safely(query)
+
+    delete_accounts = delete(
+        AccountsRecord
+    ).where(
+        and_(
+            AccountsRecord.entity_type == "CLUB",
+            AccountsRecord.entity_id == club.id
+        )
+    )
+    await execute_safely(delete_accounts)
 
 
 @router.get("/club", status_code=200, tags=["Unfinished"])

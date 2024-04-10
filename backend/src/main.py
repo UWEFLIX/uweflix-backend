@@ -17,6 +17,7 @@ from src.endpoints.users.roles import router as roles
 from src.endpoints.clubs.cities import router as cities
 from src.endpoints.clubs.clubs import router as clubs
 from src.endpoints.users.users import router as users
+from src.endpoints.bookings.bookings import router as bookings
 
 from src.crud.models import *
 
@@ -26,6 +27,7 @@ app.include_router(roles)
 app.include_router(cities)
 app.include_router(clubs)
 app.include_router(users)
+app.include_router(bookings)
 # app.include_router(accounts)
 
 

@@ -28,26 +28,6 @@ class CitiesRecord(Base):
     )
 
 
-class PersonTypeRecord(Base):
-    __tablename__ = "person_types"
-    person_type_id = Column(
-        INTEGER(unsigned=True),
-        primary_key=True,
-        autoincrement=True,
-        nullable=False,
-        unique=True,
-    )
-    person_type = Column(
-        String(20, collation=_COLLATION),
-        unique=True,
-        nullable=False,
-    )
-    discount_amount = Column(
-        Float(),
-        nullable=False,
-    )
-
-
 class PermissionsRecord(Base):
     __tablename__ = "permissions"
     permission_id = Column(
@@ -378,7 +358,7 @@ class ClubMemberRecords(Base):
 
 
 class PersonTypesRecord(Base):
-    __tablename__ = "person_type"
+    __tablename__ = "person_types"
     person_type_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
