@@ -25,9 +25,14 @@ async def add_club_member(
 ) -> dict:
     clubs = await select_leader_clubs(current_user.id)
     try:
-        clubs[club_id]
+        club = clubs[club_id]
     except KeyError:
-        raise HTTPException(status_code=422, detail="You are not the leader")
+        raise HTTPException(status_code=422, detail="Club doesnt exist")
+
+    if club.status != "ENABLED":
+        raise HTTPException(
+            422, "Club is not enabled"
+        )
 
     record = ClubMemberRecords(
         member=user_id,
@@ -50,7 +55,7 @@ async def remove_club_member(
     try:
         clubs[club_id]
     except KeyError:
-        raise HTTPException(status_code=422, detail="You are not the leader")
+        raise HTTPException(status_code=422, detail="Club doesnt exist")
 
     query = delete(
         ClubMemberRecords
@@ -58,7 +63,6 @@ async def remove_club_member(
         and_(
             ClubMemberRecords.member == user_id,
             ClubMemberRecords.club == club_id,
-
         )
     )
 

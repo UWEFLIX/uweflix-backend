@@ -37,3 +37,15 @@ async def delete_record(record):
                 await session.delete(record)
             except (DataError, IntegrityError) as e:
                 raise HTTPException(status_code=422, detail=e.orig.args[1])
+
+
+async def add_objects(records) -> None:
+    try:
+        async with async_session() as session:
+            async with session.begin():
+                session.add_all(records)
+                await session.commit()
+    except (IntegrityError, DataError) as e:
+        code = e.orig.args[0]
+        message = e.orig.args[1]
+        raise HTTPException(status_code=422, detail=message)

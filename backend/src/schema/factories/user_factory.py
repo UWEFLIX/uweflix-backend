@@ -6,7 +6,7 @@ from src.schema.users import User, Role, Permission
 
 class UserFactory:
     @staticmethod
-    def create_full_user(mp: dict):
+    def create_full_user(mp: dict) -> User:
         user_record = mp["user"]
         roles_records = mp["roles"]
         permissions_records = mp["permissions"]
@@ -43,20 +43,17 @@ class UserFactory:
                 )
             )
 
-        return User(
-            id=user_record.user_id,
-            email=user_record.email,
-            name=user_record.name,
-            password=user_record.password,
-            permissions=set(_permissions),
-            roles=roles,
-            status=user_record.status
-        )
+        user = UserFactory.create_half_user(user_record)
+
+        user.permissions = set(_permissions)
+        user.roles = roles
+
+        return user
 
     @staticmethod
     def create_half_user(user_record) -> User:
         return User(
-            id=user_record.id,
+            id=user_record.user_id,
             name=user_record.name,
             email=user_record.email,
             password=user_record.password,

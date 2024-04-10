@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from sqlalchemy.orm import aliased
 
 from src.crud.engine import async_session
 from src.crud.models import ClubsRecord, CitiesRecord, ClubMemberRecords, UsersRecord
@@ -47,19 +48,20 @@ async def select_cities(start, limit):
 
 
 async def select_club(club_name: str):
-    query = (select(
-        ClubsRecord, CitiesRecord, UsersRecord, UsersRecord
+    MemberRecords = aliased(UsersRecord)
+    query = select(
+        ClubsRecord, CitiesRecord, UsersRecord, MemberRecords
     ).join(
-        UsersRecord, UsersRecord.id == ClubsRecord.leader
+        UsersRecord, UsersRecord.user_id == ClubsRecord.leader
     ).join(
-        ClubsRecord, ClubsRecord.city_id == CitiesRecord.city_id
+        CitiesRecord, ClubsRecord.city_id == CitiesRecord.city_id
     ).outerjoin(
         ClubMemberRecords, ClubMemberRecords.club == ClubsRecord.id
     ).outerjoin(
-        UsersRecord, UsersRecord.id == ClubMemberRecords.member
+        MemberRecords, MemberRecords.user_id == ClubMemberRecords.member
     ).where(
         ClubsRecord.club_name == club_name
-    ))
+    )
 
     async with async_session() as session:
         async with session.begin():
@@ -73,5 +75,20 @@ async def select_club(club_name: str):
                 "club": rows[0][0],
                 "city": rows[0][1],
                 "leader": rows[0][2],
-                "members": [x for x in rows[0][3] if x]
+                "members": [x[3] for x in rows if x[3]]
             }
+
+
+async def select_clubs(start, limit):
+    query = select(
+        ClubsRecord, CitiesRecord
+    ).join(
+        CitiesRecord, CitiesRecord.city_id == ClubsRecord.city_id
+    ).where(
+        ClubsRecord.id >= start
+    ).limit(limit)
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.all()

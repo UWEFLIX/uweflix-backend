@@ -19,14 +19,24 @@ class ClubFactory:
         ]
 
     @staticmethod
-    def get_club(mp: dict) -> Club:
+    def get_full_club(mp: dict) -> Club:
         club_record = mp["club"]
         city_record = mp["city"]
         leader_record = mp["leader"]
         member_records = mp["members"]
+
+        club = ClubFactory.get_half_club([club_record, city_record])
+        club.leader = UserFactory.create_half_user(leader_record)
+        club.member = UserFactory.create_half_users(member_records)
+
+        return club
+
+    @staticmethod
+    def get_half_club(record) -> Club:
+        city_record = record[1]
+        club_record = record[0]
         return Club(
             id=club_record.id,
-            leader=UserFactory.create_half_user(leader_record),
             club_name=club_record.club_name,
             addr_street_number=club_record.addr_street_number,
             addr_street_name=club_record.addr_street_name,
@@ -35,5 +45,11 @@ class ClubFactory:
             landline_number=club_record.landline_number,
             post_code=club_record.post_code,
             city=ClubFactory.get_city(city_record),
-            members=UserFactory.create_half_users(member_records),
+            status=club_record.status
         )
+
+    @staticmethod
+    def get_half_clubs(records) -> List[Club]:
+        return [
+            ClubFactory.get_half_club(x) for x in records
+        ]

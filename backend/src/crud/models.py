@@ -288,6 +288,14 @@ class ClubsRecord(Base):
         String(50, collation=_COLLATION),
         nullable=False,
     )
+    email = Column(
+        String(50, collation=_COLLATION),
+        nullable=False, unique=True
+    )
+    status = Column(
+        Enum("ENABLED", "DISABLED", name="status", collation=_COLLATION),
+        nullable=False, default="ENABLED"
+    )
 
 
 class AccountsRecord(Base):

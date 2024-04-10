@@ -12,7 +12,7 @@ class City(BaseModel):
 
 class Club(BaseModel):
     id: int | None
-    leader: User
+    leader: User | None = None
     club_name: str
     addr_street_number: str
     addr_street_name: str
@@ -21,5 +21,6 @@ class Club(BaseModel):
     landline_number: str
     post_code: int
     city: City
+    status: str
 
-    members: List[User]
+    members: List[User] | None = None

@@ -11,10 +11,10 @@ from src.crud.queries.roles import (
     select_roles
 )
 from src.crud.queries.user import select_user_by_id
-from src.crud.queries.utils import add_object, delete_record, execute_safely
+from src.crud.queries.utils import add_object, delete_record, execute_safely, add_objects
 from src.schema.factories.role_factory import RoleFactory
 from src.schema.factories.user_factory import UserFactory
-from src.schema.users import User, Role
+from src.schema.users import User, Role, Permission
 from src.security.security import get_current_active_user
 
 router = APIRouter(prefix="/roles", tags=["roles"])
@@ -185,14 +185,24 @@ async def append_user_role(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:roles"])
         ],
-        permissions_id: int, role_id: int
+        permissions: List[Permission],
+        role_id: Annotated[int, Param(title="role_id", ge=1)]
 ) -> Role:
-    permissions_record = RolePermissionsRecord(
-        role_id=role_id,
-        permissions_id=permissions_id
-    )
+    # todo test
 
-    await add_object(permissions_record)
+    # permissions_record = RolePermissionsRecord(
+    #     role_id=role_id,
+    #     permissions_id=permissions_id
+    # )
+
+    records = [
+        RolePermissionsRecord(
+            role_id=role_id,
+            permissions_id=x.id
+        ) for x in permissions
+    ]
+
+    await add_objects(records)
 
     return await _get_role_by_id(role_id)
 
