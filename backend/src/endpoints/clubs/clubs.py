@@ -16,9 +16,11 @@ from src.schema.factories.club_factories import ClubFactory
 from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
+from src.endpoints.clubs.cities import router as cities
 
 router = APIRouter(prefix="/clubs", tags=["Clubs"])
 router.include_router(club_members)
+router.include_router(cities)
 
 
 @router.post("/club", status_code=201, tags=["Unfinished"])

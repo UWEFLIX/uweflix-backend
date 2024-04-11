@@ -15,9 +15,11 @@ from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
 from src.endpoints.users.passwords import router as passwords
+from src.endpoints.users.roles import router as roles
 
 router = APIRouter(prefix="/users", tags=["Users"])
 router.include_router(passwords)
+router.include_router(roles)
 
 
 @router.get("/user", status_code=200, tags=["Unfinished"])

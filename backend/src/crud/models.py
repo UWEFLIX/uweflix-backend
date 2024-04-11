@@ -58,7 +58,7 @@ class HallsRecord(Base):
     )
     hall_name = Column(
         String(50, collation=_COLLATION),
-        nullable=False,
+        nullable=False, unique=True
     )
     seats_per_row = Column(
         INTEGER(unsigned=True),

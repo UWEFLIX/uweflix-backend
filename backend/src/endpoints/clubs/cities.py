@@ -2,7 +2,7 @@ from typing import Annotated, List
 
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
-from sqlalchemy import update, select
+from sqlalchemy import update, select, delete
 
 from src.crud.models import CardsRecord, CitiesRecord
 from src.crud.queries.accounts import select_card
@@ -80,3 +80,18 @@ async def get_cities(
 ) -> List[City]:
     records = await select_cities(start, limit)
     return ClubFactory.get_cities(records)
+
+
+@router.delete("/city", status_code=204, tags=["Unfinished"])
+async def delete_city(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["write:halls"])
+        ],
+        city_name: str
+):
+    query = delete(
+        CitiesRecord
+    ).where(
+        CitiesRecord.city_name == city_name
+    )
+    await execute_safely(query)
