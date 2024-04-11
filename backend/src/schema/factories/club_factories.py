@@ -27,7 +27,7 @@ class ClubFactory:
 
         club = ClubFactory.get_half_club([club_record, city_record])
         club.leader = UserFactory.create_half_user(leader_record)
-        club.member = UserFactory.create_half_users(member_records)
+        club.members = UserFactory.create_half_users(member_records)
 
         return club
 

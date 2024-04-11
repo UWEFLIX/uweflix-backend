@@ -13,7 +13,7 @@ from src.security.security import get_current_active_user
 router = APIRouter(prefix="/clubs", )
 
 
-@router.post("/club", status_code=201, tags=["Unfinished"])
+@router.post("/member", status_code=201, tags=["Unfinished"])
 async def add_club_member(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
@@ -41,7 +41,7 @@ async def add_club_member(
     return {"details": "Success"}
 
 
-@router.delete("/club-member", status_code=204, tags=["Unfinished"])
+@router.delete("/member", status_code=204, tags=["Unfinished"])
 async def remove_club_member(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])

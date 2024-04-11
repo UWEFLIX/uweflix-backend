@@ -1,3 +1,4 @@
+from random import randint
 from typing import Annotated, List
 
 from fastapi import APIRouter, Security, HTTPException
@@ -6,16 +7,12 @@ from pydantic import EmailStr
 from sqlalchemy import select, delete, and_, update
 
 from src.crud.models import (
-    RolesRecord, PermissionsRecord, RolePermissionsRecord, UserRolesRecord, UsersRecord, AccountsRecord
+    UsersRecord, AccountsRecord
 )
-from src.crud.queries.roles import (
-    select_roles
-)
-from src.crud.queries.user import select_user_by_id, select_user_by_email, select_users
-from src.crud.queries.utils import add_object, delete_record, execute_safely, add_objects
-from src.schema.factories.role_factory import RoleFactory
+from src.crud.queries.user import  select_user_by_email, select_users
+from src.crud.queries.utils import add_object, execute_safely
 from src.schema.factories.user_factory import UserFactory
-from src.schema.users import User, Role, Permission
+from src.schema.users import User
 from src.security.security import get_current_active_user
 from src.endpoints.users.passwords import router as passwords
 
@@ -65,7 +62,18 @@ async def create_user(
     await add_object(record)
 
     user_record = await select_user_by_email(user.email)
-    return UserFactory.create_full_user(user_record)
+    user = UserFactory.create_full_user(user_record)
+
+    accounts_record = AccountsRecord(
+        account_uid=randint(0, 10000),
+        name=user.name,
+        entity_type="USER",
+        entity_id=user.id,
+        discount_rate=0
+    )
+    await add_object(accounts_record)
+
+    return user
 
 
 @router.patch("/user", status_code=201, tags=["Unfinished"])

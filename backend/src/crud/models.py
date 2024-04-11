@@ -220,12 +220,12 @@ class CardsRecord(Base):
         nullable=False, default="ENABLED "
     )
 
-    __table_args__ = (
-        UniqueConstraint(
-            'account_id',
-            name='_account-card'
-        ),
-    )
+    # __table_args__ = (
+    #     UniqueConstraint(
+    #         'account_id',
+    #         name='_account-card'
+    #     ),
+    # )
 
 
 class ClubsRecord(Base):
@@ -321,22 +321,6 @@ class AccountsRecord(Base):
             name='_entity-name'
         ),
     )
-
-    # manually created from mariadb
-    # CREATE TABLE `accounts` (
-    # 	`id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-    # 	`account_uid` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',
-    # 	`name` VARCHAR(50) NOT NULL COLLATE 'utf8mb4_general_ci',
-    # 	`entity_type` ENUM('USER','CLUB') NOT NULL COLLATE 'latin1_swedish_ci',
-    # 	`entity_id` INT(10) UNSIGNED NOT NULL,
-    # 	PRIMARY KEY (`id`) USING BTREE,
-    # 	UNIQUE INDEX `id` (`id`) USING BTREE,
-    # 	UNIQUE INDEX `account_uid` (`account_uid`) USING BTREE,
-    # 	INDEX `FK_accounts_users` (`entity_id`) USING BTREE,
-    # 	CONSTRAINT `FK_accounts_clubs` FOREIGN KEY (`entity_id`) REFERENCES `clubs` (`club_id`) ON UPDATE CASCADE ON DELETE NO ACTION,
-    # 	CONSTRAINT `FK_accounts_users` FOREIGN KEY (`entity_id`) REFERENCES `users` (`user_id`) ON UPDATE NO ACTION ON DELETE NO ACTION
-    # )
-    # COLLATE='latin1_swedish_ci'
 
 
 class ClubMemberRecords(Base):

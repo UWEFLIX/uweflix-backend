@@ -68,9 +68,7 @@ async def select_card(card):
             return rows
 
 
-async def check_user_card(*args):
-    user_id = args[0]
-    card_id = args[1]
+async def check_user_card(user_id, card_id):
     check_query = select(
         UsersRecord
     ).join(
@@ -90,23 +88,22 @@ async def check_user_card(*args):
             return result.scalar()
 
 
-async def check_club_card(*args):
-    user_id = args[0]
-    card_id = args[1]
-    club_id = args[2]
+async def check_club_card(user_id, card_id):
 
     check_query = select(
         ClubsRecord
     ).join(
         CardsRecord, CardsRecord.card_id == card_id
     ).join(
+        UsersRecord, ClubsRecord.leader == UsersRecord.id
+    ).join(
         AccountsRecord, and_(
             AccountsRecord.id == CardsRecord.account_id,
-            AccountsRecord.entity_id == club_id,
+            AccountsRecord.entity_id == ClubsRecord.id,
             AccountsRecord.entity_type == "CLUB"
         )
     ).where(
-        ClubsRecord.id == club_id
+        UsersRecord.id == user_id
     )
 
     async with async_session() as session:

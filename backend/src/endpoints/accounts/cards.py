@@ -1,10 +1,10 @@
-from typing import Annotated
+from typing import Annotated, Callable
 
 from fastapi import APIRouter, Security, HTTPException
-from sqlalchemy import and_, select, update
+from sqlalchemy import update, delete
 
-from src.crud.models import CardsRecord, UsersRecord, AccountsRecord
-from src.crud.queries.accounts import select_card, check_user_card
+from src.crud.models import CardsRecord
+from src.crud.queries.accounts import select_card, check_user_card, check_club_card
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.accounts import Card
 from src.schema.factories.account_factory import AccountsFactory
@@ -40,18 +40,11 @@ async def create_card(
     return _card
 
 
-@router.patch("/user/card", status_code=201, tags=["Unfinished", "User"])
-async def update_card(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
-        ],
-        card: Card
-):
-
+async def _update_card(card: Card, current_user: User, check: Callable):
     card.validate_card()
     card.encrypt()
 
-    record = check_user_card(current_user.id, card.id)
+    record = check([current_user.id, card.id])
     if not record:
         raise HTTPException(status_code=422, detail="Invalid details")
 
@@ -71,3 +64,56 @@ async def update_card(
     _card = AccountsFactory.get_card(record)
     _card.decrypt()
     return _card
+
+
+async def _delete_card(card: Card, current_user: User, check: Callable):
+    record = check(current_user.id, card.id)
+    if not record:
+        raise HTTPException(status_code=422, detail="Invalid details")
+
+    query = delete(
+        CardsRecord
+    ).where(
+        CardsRecord.card_id == card.id
+    )
+    await execute_safely(query)
+
+
+@router.patch("/user/card", status_code=201, tags=["Unfinished", "Users"])
+async def update_user_card(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        card: Card
+):
+    return await _update_card(card, current_user, check_user_card)
+
+
+@router.patch("/club/card", status_code=201, tags=["Unfinished", "Clubs"])
+async def update_club_card(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        card: Card
+):
+    return await _update_card(card, current_user, check_club_card)
+
+
+@router.delete("/club/card", status_code=204, tags=["Unfinished", "Clubs"])
+async def delete_club_card(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        card: Card
+):
+    await _delete_card(card, current_user, check_club_card)
+
+
+@router.delete("/user/card", status_code=204, tags=["Unfinished", "Users"])
+async def delete_user_card(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        card: Card
+):
+    await _delete_card(card, current_user, check_user_card)

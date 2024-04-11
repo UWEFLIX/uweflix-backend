@@ -1,3 +1,4 @@
+from random import randint
 from typing import Annotated
 
 from fastapi.params import Param
@@ -42,8 +43,18 @@ async def add_club(
     await add_object(record)
 
     record = await select_club(club.club_name)
+    club = ClubFactory.get_full_club(record)
 
-    return ClubFactory.get_full_club(record)
+    accounts_record = AccountsRecord(
+        account_uid=randint(0, 10000),
+        name=club.club_name,
+        entity_type="CLUB",
+        entity_id=club.id,
+        discount_rate=0
+    )
+    await add_object(accounts_record)
+
+    return club
 
 
 @router.patch("/club", status_code=201, tags=["Unfinished"])
