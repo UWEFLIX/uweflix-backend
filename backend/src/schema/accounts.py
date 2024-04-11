@@ -88,6 +88,8 @@ class Account(BaseModel):
     id: int | None
     uid: str
     name: str
-    cards: List[Card] | None
+    cards: List[Card] | None = None
     entity_type: str
+    entity_id: int
     discount_rate: int = Field(min_value=0, max_value=100)
+    status: str

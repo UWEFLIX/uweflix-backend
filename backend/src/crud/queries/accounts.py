@@ -10,22 +10,22 @@ async def select_account(query):
     async with async_session() as session:
         async with session.begin():
             result = await session.execute(query)
-            rows = result.all()
+            return result.scalar()
 
-            if len(rows) == 0:
-                return None
-
-            account = rows[0][0]
-
-            if rows[0][1]:
-                cards = {x[1].card_id: x[1] for x in rows}
-            else:
-                cards = {}
-
-            return {
-                "account": account,
-                "cards": cards
-            }
+            # if len(rows) == 0:
+            #     return None
+            #
+            # account = rows[0][0]
+            #
+            # if rows[0][1]:
+            #     cards = {x[1].card_id: x[1] for x in rows}
+            # else:
+            #     cards = {}
+            #
+            # return {
+            #     "account": account,
+            #     "cards": cards
+            # }
 
 
 async def select_accounts(query):
@@ -111,3 +111,79 @@ async def check_club_card(user_id, card_id):
             result = await session.execute(check_query)
             return result.scalar()
 
+
+async def select_half_account(account_id):
+    query = select(
+        AccountsRecord
+    ).where(
+        AccountsRecord.id == account_id
+    )
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.scalar()
+
+
+async def select_half_accounts(start, limit):
+    query = select(
+        AccountsRecord
+    ).where(
+        AccountsRecord.id >= start
+    ).limit(limit)
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.scalars().all()
+
+
+async def select_last_entered_account(account_name, entity_id):
+    query = select(
+        AccountsRecord
+    ).where(
+        and_(
+            AccountsRecord.name == account_name,
+            AccountsRecord.entity_id == entity_id,
+            AccountsRecord.entity_type == "CLUB"
+        )
+    )
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.scalar()
+
+
+async def select_full_account(query):
+    _data = {}
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+
+            rows = result.all()
+
+            _data["account"] = rows[0][0]
+            _data["cards"] = [
+                row[1] for row in rows if row[1]
+            ]
+
+    return _data
+
+
+async def select_club_accounts(club_id: int, start: int, limit: int):
+
+    query = select(
+        AccountsRecord
+    ).where(
+        and_(
+            AccountsRecord.id >= start,
+            AccountsRecord.entity_id == club_id,
+            AccountsRecord.entity_type == "CLUB"
+        )
+    ).limit(limit)
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.scalars()

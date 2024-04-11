@@ -45,6 +45,9 @@ async def get_permissions():
     read_person_type = PermissionsRecord(permission="read:person-types")
     write_person_type = PermissionsRecord(permission="write:person-types")
 
+    read_accounts = PermissionsRecord(permission="read:accounts")
+    write_accounts = PermissionsRecord(permission="write:accounts")
+
     return [
         write_user, read_user, write_bookings, read_bookings,
         read_halls, write_halls, read_clubs, write_clubs,
@@ -52,7 +55,8 @@ async def get_permissions():
         write_roles, read_cities, write_cities, read_schedules,
         write_schedules, read_films, write_films, read_images,
         write_images, read_role_perms, write_role_perms,
-        read_person_type, write_person_type
+        read_person_type, write_person_type, read_accounts,
+        write_accounts
     ]
 
 
@@ -81,10 +85,11 @@ async def initialise_db():
     )
     account1 = AccountsRecord(
         account_uid="2",
-        name="something",
+        name="Nishawl Naseer",
         entity_type="USER",
         entity_id=1,
-        discount_rate=0
+        discount_rate=0,
+        status="ENABLED"
     )
     user_role1 = UserRolesRecord(user_id=1, role_id=1)
 

@@ -312,6 +312,10 @@ class AccountsRecord(Base):
         INTEGER(unsigned=True),
         nullable=False,
     )
+    status = Column(
+        Enum("ENABLED", "DISABLED", collation=_COLLATION),
+        nullable=False,
+    )
 
     __table_args__ = (
         # ForeignKeyConstraint(columns=["entity_id"], refcolumns=["users.user_id"]),

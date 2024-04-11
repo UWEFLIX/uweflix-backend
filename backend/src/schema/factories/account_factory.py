@@ -10,28 +10,18 @@ class AccountsFactory:
         card_records = mp["cards"]
 
         cards = [
-            Card(
-                id=x.card_id,
-                card_number=x.card_number,
-                holder_name=x.holder_name,
-                exp_date=x.exp_date,
-                status=x.status,
-            ) for x in card_records
+            AccountsFactory.get_card(x) for x in card_records
         ]
 
-        return Account(
-            id=account_record.id,
-            uid=account_record.account_uid,
-            name=account_record.name,
-            entity_type=account_record.entity_type,
-            discount_rate=account_record.discount_rate,
-            cards=cards
-        )
+        account = AccountsFactory.get_half_account(account_record)
+        account.cards = cards
+
+        return account
 
     @staticmethod
-    def get_accounts(mps: dict) -> List[Account]:
+    def get_accounts(items) -> List[Account]:
         return [
-            AccountsFactory.get_account(mp) for account_id, mp in mps.items()
+            AccountsFactory.get_account(c) for c in items
         ]
 
     @staticmethod
@@ -46,3 +36,21 @@ class AccountsFactory:
         )
         card._encrypted = True
         return card
+
+    @staticmethod
+    def get_half_account(record) -> Account:
+        return Account(
+            id=record.id,
+            uid=record.account_uid,
+            name=record.name,
+            entity_type=record.entity_type,
+            discount_rate=record.discount_rate,
+            entity_id=record.entity_id,
+            status=record.status
+        )
+
+    @staticmethod
+    def get_half_accounts(records) -> List[Account]:
+        return [
+            AccountsFactory.get_half_account(x) for x in records
+        ]

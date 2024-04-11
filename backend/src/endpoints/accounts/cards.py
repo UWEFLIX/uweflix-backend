@@ -44,7 +44,7 @@ async def _update_card(card: Card, current_user: User, check: Callable):
     card.validate_card()
     card.encrypt()
 
-    record = check([current_user.id, card.id])
+    record = await check([current_user.id, card.id])
     if not record:
         raise HTTPException(status_code=422, detail="Invalid details")
 
@@ -67,7 +67,7 @@ async def _update_card(card: Card, current_user: User, check: Callable):
 
 
 async def _delete_card(card: Card, current_user: User, check: Callable):
-    record = check(current_user.id, card.id)
+    record = await check(current_user.id, card.id)
     if not record:
         raise HTTPException(status_code=422, detail="Invalid details")
 
