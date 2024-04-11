@@ -1,13 +1,12 @@
+import uuid
 from typing import List
 
 from sqlalchemy import (
     Column, String, TIMESTAMP,
     func, DateTime, Float, ForeignKey, Boolean, Date,
-    UniqueConstraint, Enum, ForeignKeyConstraint
+    UniqueConstraint, Enum, Text, UUID, text
 )
 from sqlalchemy.dialects.mysql.types import BIT, INTEGER
-from sqlalchemy.orm import relationship, Mapped
-
 from src.crud.engine import Base
 
 _COLLATION = "utf8mb4_general_ci"
@@ -363,4 +362,158 @@ class PersonTypesRecord(Base):
     )
     discount_amount = Column(
         INTEGER(unsigned=True), nullable=False
+    )
+
+
+class FilmsRecord(Base):
+    __tablename__ = "films"
+    film_id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    title = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+        unique=True
+    )
+    age_rating = Column(
+        Enum("high", "medium", "low", collation=_COLLATION),
+        nullable=False,
+    )
+    duration_sec = Column(
+        INTEGER(unsigned=True),
+        nullable=False
+    )
+    trailer_desc = Column(
+        Text(500),
+        nullable=False
+    )
+    on_air_from = Column(
+        DateTime, nullable=False
+    )
+    on_air_to = Column(
+        DateTime, nullable=False
+    )
+    is_active = Column(
+        BIT(1), nullable=False
+    )
+    poster_image = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+        unique=True
+    )
+
+
+class FilmImagesRecord(Base):
+    __tablename__ = "film_images"
+    image_id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    film_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("films.film_id"),
+        nullable=False,
+    )
+    filename = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+    )
+
+    __table_args__ = (
+        UniqueConstraint(
+            'film_id', "filename",
+            name='_film_images'
+        ),
+    )
+
+
+class SchedulesRecord(Base):
+    __tablename__ = "schedules"
+    schedule_id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    hall_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("halls.hall_id"),
+        nullable=False,
+    )
+    film_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("films.film_id"),
+        nullable=False,
+    )
+    show_time = Column(
+        DateTime, nullable=False
+    )
+    on_schedule = Column(
+        BIT(1), nullable=False
+    )
+    ticket_price = Column(
+        Float(),
+        nullable=False,
+    )
+
+
+class BookingsRecord(Base):
+    __tablename__ = "bookings"
+    id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    hall_no = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+    )
+    seat_no = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+    )
+    entity_type = Column(
+        Enum("CLUB", "USER", collation=_COLLATION),
+        nullable=False,
+    )
+    schedule_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("schedules.schedule_id"),
+        nullable=False,
+    )
+    status = Column(
+        Enum("ENABLED", "DISABLED", collation=_COLLATION),
+        nullable=False,
+    )
+    account_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("users.user_id"),
+        nullable=False,
+    )
+    amount = Column(
+        Float(),
+        nullable=False,
+    )
+    person_type_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("person_types.person_type_id"),
+        nullable=False,
+    )
+    serial_no = Column(
+        String(6, collation=_COLLATION),
+        nullable=False, unique=True, default=text("generate_unique_string()")
+    )
+    batch_ref = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
     )

@@ -1,11 +1,14 @@
 import asyncio
 
-from src.crud.engine import engine, Base
+from sqlalchemy import text
+
+from src.crud.engine import engine, Base, async_session
 from src.crud.models import (
     PermissionsRecord, RolesRecord, RolePermissionsRecord,
     UsersRecord, UserRolesRecord, AccountsRecord
 )
 from src.crud.queries.utils import add_object, add_objects
+from src.crud.queries.stored_procedures import generate_unique_string
 
 
 async def get_permissions():
@@ -69,6 +72,11 @@ def admin_perms(count: int):
 
 
 async def initialise_db():
+
+    async with async_session() as session:
+        async with session.begin():
+            await session.execute(text(generate_unique_string()))
+
     async with engine.begin() as connection:
         # await connection.run_sync(Base.metadata.drop_all)
         await connection.run_sync(Base.metadata.create_all)
