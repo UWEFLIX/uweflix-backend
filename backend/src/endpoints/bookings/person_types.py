@@ -5,7 +5,7 @@ from fastapi.params import Param
 from sqlalchemy import update, select, delete
 
 from src.crud.models import PersonTypesRecord
-from src.crud.queries.person_type import select_person_type, select_person_types
+from src.crud.queries.bookings import select_person_type, select_person_types
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.bookings import PersonType
 from src.schema.factories.bookings_factory import BookingsFactory

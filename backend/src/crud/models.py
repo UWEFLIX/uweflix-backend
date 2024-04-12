@@ -517,3 +517,9 @@ class BookingsRecord(Base):
         String(50, collation=_COLLATION),
         nullable=False,
     )
+    __table_args__ = (
+        UniqueConstraint(
+            "seat_no", "schedule_id",
+            name='_schedule_details'
+        ),
+    )

@@ -19,14 +19,27 @@ router = APIRouter(prefix="/schedules", tags=["Schedules"])
 _tzinfo = timezone(timedelta(hours=5, minutes=30))
 
 
+def _get_timings(schedule: Schedule, duration: int):
+    start = datetime.datetime(
+        tzinfo=_tzinfo,
+        year=schedule.show_time.year,
+        month=schedule.show_time.month,
+        day=schedule.show_time.day,
+        minute=schedule.show_time.minute,
+        second=schedule.show_time.second,
+    )
+    end = start + timedelta(seconds=duration, minutes=15)
+
+    return start, end
+
+
 async def _check_time_conflicts(new_schedule: Schedule):
     """
     Check for time conflicts in schedules
     Args:
         new_schedule: the new schedule
 
-    Returns: true if the new schedule is okay else false
-
+    Returns: true none, raises 422 if conflict
     """
     query = select(
         SchedulesRecord, FilmsRecord, HallsRecord
@@ -36,48 +49,16 @@ async def _check_time_conflicts(new_schedule: Schedule):
 
     _film_record = await select_film_by_id(new_schedule.film_id)
     _film = FilmFactory.get_half_film(_film_record)
-    startTimeB = datetime.datetime(
-        tzinfo=_tzinfo,
-        year=new_schedule.show_time.year,
-        month=new_schedule.show_time.month,
-        day=new_schedule.show_time.day,
-        minute=new_schedule.show_time.minute,
-        second=new_schedule.show_time.second,
-    )
-    endTimeB = datetime.datetime(
-        tzinfo=_tzinfo,
-        year=new_schedule.show_time.year,
-        month=new_schedule.show_time.month,
-        day=new_schedule.show_time.day,
-        minute=new_schedule.show_time.minute,
-        second=new_schedule.show_time.second,
-    ) + timedelta(seconds=_film.duration_sec, minutes=15)
+    startTimeB, endTimeB = _get_timings(new_schedule, _film.duration_sec)
 
     for schedule in schedules:
-        startTimeA = datetime.datetime(
-            tzinfo=_tzinfo,
-            year=schedule.show_time.year,
-            month=schedule.show_time.month,
-            day=schedule.show_time.day,
-            minute=schedule.show_time.minute,
-            second=schedule.show_time.second,
-        )
-        endTimeA = datetime.datetime(
-            tzinfo=_tzinfo,
-            year=schedule.show_time.year,
-            month=schedule.show_time.month,
-            day=schedule.show_time.day,
-            minute=schedule.show_time.minute,
-            second=schedule.show_time.second,
-        ) + timedelta(seconds=_film.duration_sec, minutes=15)
+        startTimeA, endTimeA = _get_timings(new_schedule, _film.duration_sec)
 
-        if startTimeA <= startTimeB <= endTimeA:
-            raise HTTPException(
-                422,
-                f"Time Conflict with schedule ID {schedule.id}"
-            )
-
-        if startTimeA <= endTimeB <= endTimeA:
+        if (
+                startTimeA <= startTimeB <= endTimeA
+        ) or (
+                startTimeA <= endTimeB <= endTimeA
+        ):
             raise HTTPException(
                 422,
                 f"Time Conflict with schedule ID {schedule.id}"
@@ -112,7 +93,7 @@ async def create_schedule(
 
 
 @router.patch("/schedule", status_code=201, tags=["Unfinished"])
-async def create_schedule(
+async def update_schedule(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:schedules"])
         ],
@@ -145,7 +126,7 @@ async def create_schedule(
 @router.get("/schedule", tags=["Unfinished"])
 async def get_schedule(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:schedules"])
+            User, Security(get_current_active_user, scopes=[])
         ],
         schedule_id: int
 ):
@@ -154,9 +135,9 @@ async def get_schedule(
 
 
 @router.get("/schedules", tags=["Unfinished"])
-async def get_schedule(
+async def get_schedules(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:schedules"])
+            User, Security(get_current_active_user, scopes=[])
         ],
         start: Annotated[int, Param(title="Range starting ID to get", ge=1)],
         limit: Annotated[int, Param(title="Amount of resources to fetch", ge=1)]
@@ -166,7 +147,7 @@ async def get_schedule(
 
 
 @router.delete("/schedule", tags=["Unfinished"], status_code=204)
-async def get_schedule(
+async def delete_schedule(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:schedules"])
         ],

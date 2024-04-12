@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 from src.schema.accounts import Account
 from src.schema.clubs import Club
-from src.schema.films import Schedule
+from src.schema.films import Schedule, ScheduleDetailed
 from src.schema.users import User
 
 
@@ -15,7 +15,8 @@ class Booking(BaseModel):
     id: int
     seat_no: str
     entity_type: str
-    schedule: Schedule
+    entity_id: int
+    schedule: ScheduleDetailed
     status: str
     account: Account
     person_type: PersonType
