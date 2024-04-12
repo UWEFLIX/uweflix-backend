@@ -1,10 +1,7 @@
-import uuid
-from typing import List
-
 from sqlalchemy import (
-    Column, String, TIMESTAMP,
-    func, DateTime, Float, ForeignKey, Boolean, Date,
-    UniqueConstraint, Enum, Text, UUID, text
+    Column, String,
+    DateTime, Float, ForeignKey,
+    UniqueConstraint, Enum, Text, text
 )
 from sqlalchemy.dialects.mysql.types import BIT, INTEGER
 from src.crud.engine import Base
@@ -474,10 +471,10 @@ class BookingsRecord(Base):
         nullable=False,
         unique=True,
     )
-    hall_no = Column(
-        String(50, collation=_COLLATION),
-        nullable=False,
-    )
+    # hall_no = Column(
+    #     String(50, collation=_COLLATION),
+    #     nullable=False,
+    # )
     seat_no = Column(
         String(50, collation=_COLLATION),
         nullable=False,
@@ -497,7 +494,7 @@ class BookingsRecord(Base):
     )
     account_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("users.user_id"),
+        ForeignKey("accounts.id"),
         nullable=False,
     )
     amount = Column(
