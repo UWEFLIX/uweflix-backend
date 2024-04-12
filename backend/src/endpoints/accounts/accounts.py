@@ -156,7 +156,7 @@ async def update_club_account(
     return await _update_account(account, account.entity_id, "CLUB")
 
 
-@router.patch("/user/account", status_code=201, tags=["Unfinished", "User"])
+@router.patch("/user/account", status_code=201, tags=["Unfinished", "Users"])
 async def update_user_account(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
@@ -185,7 +185,7 @@ async def _select_account(
     return AccountsFactory.get_account(records)
 
 
-@router.get("/user/account", status_code=201, tags=["Unfinished", "User"])
+@router.get("/user/account", status_code=201, tags=["Unfinished", "Users"])
 async def get_user_account(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])

@@ -4,7 +4,7 @@ from pydantic import BaseModel, Field, EmailStr
 
 
 class Permission(BaseModel):
-    id: int | None
+    id: int
     name: str
 
     def __repr__(self):
@@ -12,7 +12,7 @@ class Permission(BaseModel):
 
 
 class Role(BaseModel):
-    id: int | None
+    id: int
     name: str
     permissions: List[Permission]
 
@@ -24,7 +24,7 @@ class Role(BaseModel):
 
 
 class User(BaseModel):
-    id: int | None = Field(default=None, ge=0)
+    id: int = Field(default=None, ge=0)
     name: str
     email: EmailStr
     password: str = Field(exclude=True)

@@ -8,7 +8,7 @@ from src.security.security import fernet
 
 
 class Card(BaseModel):
-    id: int | None = None
+    id: int
     account_id: int
     card_number: str = Field()
     holder_name: str
@@ -85,7 +85,7 @@ class Card(BaseModel):
 
 
 class Account(BaseModel):
-    id: int | None
+    id: int
     uid: str
     name: str
     cards: List[Card] | None = None

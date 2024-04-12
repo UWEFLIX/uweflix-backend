@@ -6,13 +6,13 @@ from src.schema.users import User
 
 
 class City(BaseModel):
-    id: int | None
+    id: int
     name: str
 
 
 class Club(BaseModel):
-    id: int | None
-    leader: User | None = None
+    id: int
+    leader: User
     club_name: str
     addr_street_number: str
     addr_street_name: str

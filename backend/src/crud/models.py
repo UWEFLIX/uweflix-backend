@@ -377,7 +377,7 @@ class FilmsRecord(Base):
         unique=True
     )
     age_rating = Column(
-        Enum("high", "medium", "low", collation=_COLLATION),
+        Enum("ADULT", "CHILD", collation=_COLLATION),
         nullable=False,
     )
     duration_sec = Column(
@@ -395,10 +395,10 @@ class FilmsRecord(Base):
         DateTime, nullable=False
     )
     is_active = Column(
-        BIT(1), nullable=False
+        BIT(1), nullable=False, default=False
     )
     poster_image = Column(
-        String(50, collation=_COLLATION),
+        String(60, collation=_COLLATION),
         nullable=False,
         unique=True
     )
@@ -415,7 +415,7 @@ class FilmImagesRecord(Base):
     )
     film_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("films.film_id"),
+        ForeignKey("films.film_id", ondelete="CASCADE"),
         nullable=False,
     )
     filename = Column(
@@ -442,12 +442,12 @@ class SchedulesRecord(Base):
     )
     hall_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("halls.hall_id"),
+        ForeignKey("halls.hall_id", ondelete="CASCADE"),
         nullable=False,
     )
     film_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("films.film_id"),
+        ForeignKey("films.film_id", ondelete="CASCADE"),
         nullable=False,
     )
     show_time = Column(
@@ -460,6 +460,13 @@ class SchedulesRecord(Base):
         Float(),
         nullable=False,
     )
+    __table_args__ = (
+        UniqueConstraint(
+            "show_time", "hall_id",
+            name='_schedule_details'
+        ),
+    )
+
 
 
 class BookingsRecord(Base):
