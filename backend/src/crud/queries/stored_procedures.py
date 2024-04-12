@@ -1,11 +1,11 @@
-from src.crud.models import BookingsRecord
+from src.crud.models import BookingsRecord, FilmImagesRecord
 
 
 def generate_unique_string():
     return f"""
 CREATE FUNCTION generate_unique_string() RETURNS VARCHAR(6)
 BEGIN
-    DECLARE alphabet VARCHAR(26) DEFAULT 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    DECLARE alphabet VARCHAR(26) DEFAULT 'AAAAAAAAAAAAAAAAAAAAAAAAAA';
     DECLARE length INT DEFAULT 6;
     DECLARE result VARCHAR(6) DEFAULT '';
     DECLARE i INT DEFAULT 1;
@@ -29,3 +29,33 @@ BEGIN
 END;
 
 """
+
+
+def generate_filename():
+    return f"""
+    CREATE FUNCTION generate_filename() RETURNS VARCHAR(15)
+    BEGIN
+        DECLARE alphabet VARCHAR(26) DEFAULT 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        DECLARE length INT DEFAULT 15;
+        DECLARE result VARCHAR(15) DEFAULT '';
+        DECLARE i INT DEFAULT 1;
+        DECLARE rows_count INT;
+
+        WHILE true DO
+            SET result = '';
+            SET i = 1;
+            WHILE i <= length DO
+                SET result = CONCAT(result, SUBSTRING(alphabet, ((UUID_SHORT() >> (i * 4)) % 26) + 1, 1));
+                SET i = i + 1;
+            END WHILE;
+
+            SELECT COUNT(*) INTO rows_count FROM `{FilmImagesRecord.__tablename__}` 
+                WHERE `{FilmImagesRecord.__tablename__}`.`filename` = result;
+
+            IF rows_count = 0 THEN
+                RETURN result;
+            END IF;
+        END WHILE;
+    END;
+
+    """

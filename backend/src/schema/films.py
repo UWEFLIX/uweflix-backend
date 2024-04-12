@@ -18,6 +18,15 @@ class FilmImage(BaseModel):
     filename: str
 
 
+class Schedule(BaseModel):
+    id: int
+    hall_id: int
+    film_id: int
+    show_time: datetime
+    on_schedule: bool
+    ticket_price: float
+
+
 class Film(BaseModel):
     id: int
     title: str
@@ -29,12 +38,9 @@ class Film(BaseModel):
     is_active: bool
     poster_image: bytes | None = None
     images: List[FilmImage] | None = None
+    schedules: List[Schedule] | None = None
 
 
-class Schedule(BaseModel):
-    id: int
+class ScheduleDetailed(Schedule):
     hall: Hall | None = None
     film: Film | None = None
-    showtime: datetime
-    on_schedule: bool
-    ticket_price: float

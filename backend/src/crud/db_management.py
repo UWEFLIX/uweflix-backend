@@ -8,7 +8,7 @@ from src.crud.models import (
     UsersRecord, UserRolesRecord, AccountsRecord
 )
 from src.crud.queries.utils import add_object, add_objects
-from src.crud.queries.stored_procedures import generate_unique_string
+from src.crud.queries.stored_procedures import generate_unique_string, generate_filename
 
 
 async def get_permissions():
@@ -76,6 +76,7 @@ async def initialise_db():
     async with async_session() as session:
         async with session.begin():
             await session.execute(text(generate_unique_string()))
+            await session.execute(text(generate_filename()))
 
     async with engine.begin() as connection:
         # await connection.run_sync(Base.metadata.drop_all)

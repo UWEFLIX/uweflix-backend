@@ -420,14 +420,11 @@ class FilmImagesRecord(Base):
     )
     filename = Column(
         String(50, collation=_COLLATION),
-        nullable=False,
+        nullable=False, unique=True, default=text("generate_filename()")
     )
-
-    __table_args__ = (
-        UniqueConstraint(
-            'film_id', "filename",
-            name='_film_images'
-        ),
+    batch = Column(
+        INTEGER,
+        nullable=False
     )
 
 
@@ -462,7 +459,7 @@ class SchedulesRecord(Base):
     )
     __table_args__ = (
         UniqueConstraint(
-            "show_time", "hall_id",
+            "show_time", "hall_id", "film_id",
             name='_schedule_details'
         ),
     )

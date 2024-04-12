@@ -2,10 +2,10 @@ from typing import Annotated, List
 
 from fastapi import APIRouter, Security, HTTPException, UploadFile, File
 from fastapi.params import Param
-from sqlalchemy import delete, update
+from sqlalchemy import delete, update, select
 
-from src.crud.models import FilmsRecord
-from src.crud.queries.films import select_film, select_films
+from src.crud.models import FilmsRecord, SchedulesRecord
+from src.crud.queries.films import select_film, select_films, select_film_schedules
 from src.crud.queries.utils import add_object, execute_safely
 from src.endpoints.films.halls import router as halls
 from src.schema.factories.film_factories import FilmFactory
@@ -130,8 +130,22 @@ async def get_schedules(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
         ],
-        start: Annotated[int, Param(title="Range starting ID to get", ge=1)],
-        limit: Annotated[int, Param(title="Amount of resources to fetch", ge=1)]
+        title: str
 ):
-    # todo finish
-    pass
+    query = select(
+        FilmsRecord, SchedulesRecord
+    ).outerjoin(
+        SchedulesRecord,
+        FilmsRecord.film_id == SchedulesRecord.film_id
+    ).where(
+        FilmsRecord.title == title
+    )
+
+    records = await select_film_schedules(query)
+
+    if records is None:
+        raise HTTPException(
+            404, "Film not found"
+        )
+
+    return FilmFactory.get_film_schedules(records)

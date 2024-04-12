@@ -7,7 +7,7 @@ from src.crud.queries.utils import add_object
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    await create_new_db()
+    # await create_new_db()
     pass
     yield
     await close_db()
