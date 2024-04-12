@@ -395,7 +395,7 @@ class FilmsRecord(Base):
         DateTime, nullable=False
     )
     is_active = Column(
-        BIT(1), nullable=False, default=False
+        BIT(1), nullable=False, default=b'0'
     )
     poster_image = Column(
         String(60, collation=_COLLATION),
@@ -466,7 +466,6 @@ class SchedulesRecord(Base):
             name='_schedule_details'
         ),
     )
-
 
 
 class BookingsRecord(Base):

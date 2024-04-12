@@ -12,7 +12,7 @@ from src.schema.factories.film_factories import FilmFactory
 from src.schema.films import Film
 from src.schema.users import User
 from src.security.security import get_current_active_user
-from src.endpoints.films.halls import router as images
+from src.endpoints.films.film_images import router as images
 from src.endpoints.films.schedules import router as schedules
 
 router = APIRouter(prefix="/films", tags=["Films"])
@@ -28,12 +28,6 @@ async def create_film(
         ],
         film: Film
 ) -> Film:
-
-    if not film.poster_image:
-        raise HTTPException(
-            422, "Expecting poster_image to be a byte"
-        )
-
     record = FilmsRecord(
         film_id=film.id,
         title=film.title,
@@ -43,13 +37,10 @@ async def create_film(
         on_air_from=film.on_air_from,
         on_air_to=film.on_air_to,
         is_active=film.is_active,
-        poster_image=f"{film.title}-poster.jpg",
+        poster_image=f"{film.title}-poster",
     )
 
     await add_object(record)
-
-    # todo save poster image to file
-
     records = await select_film(film.title)
     return FilmFactory.get_full_film(records)
 
@@ -69,7 +60,7 @@ async def delete_film(
     await execute_safely(query)
 
 
-@router.patch("/film", status_code=204, tags=["Unfinished"])
+@router.patch("/film", status_code=201, tags=["Unfinished"])
 async def update_film(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:films"])
@@ -86,12 +77,21 @@ async def update_film(
         on_air_from=film.on_air_from,
         on_air_to=film.on_air_to,
         is_active=film.is_active,
+        poster_image=f"{film.title}-poster"
     ).where(
         FilmsRecord.film_id==film.id
     )
     await execute_safely(query)
 
     records = await select_film(film.title)
+
+    if not records:
+        raise HTTPException(
+            404, "Film not found"
+        )
+
+    # todo change the filename of poster image
+
     return FilmFactory.get_full_film(records)
 
 
@@ -123,3 +123,15 @@ async def get_films(
     records = await select_films(start, limit)
 
     return FilmFactory.get_half_films(records)
+
+
+@router.get("/film/schedules", tags=["Unfinished"])
+async def get_schedules(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        start: Annotated[int, Param(title="Range starting ID to get", ge=1)],
+        limit: Annotated[int, Param(title="Amount of resources to fetch", ge=1)]
+):
+    # todo finish
+    pass

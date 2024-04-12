@@ -71,7 +71,7 @@ async def update_hall(
 
     if not record:
         raise HTTPException(
-          404, "Hall not found"
+          422, "Hall not found"
         )
 
     return FilmFactory.get_hall(record)
@@ -103,3 +103,14 @@ async def delete_hall(
         HallsRecord.hall_name == hall_name
     )
     await execute_safely(query)
+
+
+@router.get("/halls/schedules", tags=["Unfinished"])
+async def get_schedules(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:halls"])
+        ],
+        hall_name: str
+):
+    # todo finish
+    pass
