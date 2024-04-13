@@ -1,9 +1,6 @@
 from datetime import datetime
 from typing import List
-
-from fastapi import UploadFile
 from pydantic import BaseModel
-from starlette.responses import FileResponse
 
 
 class Hall(BaseModel):

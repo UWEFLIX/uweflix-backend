@@ -1,9 +1,9 @@
 from typing import List
-
-from pydantic import BaseModel, Field
+from datetime import datetime
+from pydantic import BaseModel, Field, EmailStr
 from src.schema.accounts import Account
 from src.schema.clubs import Club
-from src.schema.films import Schedule, ScheduleDetailed
+from src.schema.films import ScheduleDetailed
 from src.schema.users import User
 
 
@@ -16,8 +16,6 @@ class PersonType(BaseModel):
 class Booking(BaseModel):
     id: int
     seat_no: str
-    # entity_type: str
-    # entity_id: int
     schedule: ScheduleDetailed
     status: str
     account: Account
@@ -25,12 +23,15 @@ class Booking(BaseModel):
     amount: float
     serial_no: str
     batch_ref: str
+    created: datetime
+    assigned_user: EmailStr
 
 
 class SingleBooking(BaseModel):
     seat_no: str
     schedule: ScheduleDetailed
     person_type: PersonType
+    user_email: EmailStr
 
 
 class MultipleBookings(BaseModel):

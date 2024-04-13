@@ -4,7 +4,7 @@ from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from sqlalchemy import and_, delete
 
-from src.crud.models import ClubMemberRecords
+from src.crud.models import ClubMembersRecords
 from src.crud.queries.clubs import select_leader_clubs
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.users import User
@@ -31,7 +31,7 @@ async def add_club_member(
             422, "Club is not enabled"
         )
 
-    record = ClubMemberRecords(
+    record = ClubMembersRecords(
         member=user_id,
         club=club_id
     )
@@ -55,11 +55,11 @@ async def remove_club_member(
         raise HTTPException(status_code=422, detail="Club doesnt exist")
 
     query = delete(
-        ClubMemberRecords
+        ClubMembersRecords
     ).where(
         and_(
-            ClubMemberRecords.member == user_id,
-            ClubMemberRecords.club == club_id,
+            ClubMembersRecords.member == user_id,
+            ClubMembersRecords.club == club_id,
         )
     )
 

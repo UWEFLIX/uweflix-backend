@@ -26,8 +26,8 @@ class BookingsFactory:
         return Booking(
             id=booking_record.id,
             seat_no=booking_record.seat_no,
-            # entity_type=booking_record.entity_type,
-            # entity_id=booking_record.entity_id,
+            created=booking_record.created,
+            assigned_user=booking_record.assigned_user,
             schedule=FilmFactory.get_detailed_schedule(records),
             status=booking_record.status,
             account=AccountsFactory.get_half_account(records[4]),

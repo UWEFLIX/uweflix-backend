@@ -2,7 +2,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import aliased
 
 from src.crud.engine import async_session
-from src.crud.models import ClubsRecord, CitiesRecord, ClubMemberRecords, UsersRecord
+from src.crud.models import ClubsRecord, CitiesRecord, ClubMembersRecords, UsersRecord
 
 
 async def select_leader_clubs(leader: int):
@@ -56,9 +56,9 @@ async def select_club(club_name: str):
     ).join(
         CitiesRecord, ClubsRecord.city_id == CitiesRecord.city_id
     ).outerjoin(
-        ClubMemberRecords, ClubMemberRecords.club == ClubsRecord.id
+        ClubMembersRecords, ClubMembersRecords.club == ClubsRecord.id
     ).outerjoin(
-        MemberRecords, MemberRecords.user_id == ClubMemberRecords.member
+        MemberRecords, MemberRecords.user_id == ClubMembersRecords.member
     ).where(
         ClubsRecord.club_name == club_name
     )

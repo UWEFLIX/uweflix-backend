@@ -1,10 +1,11 @@
 from collections import defaultdict
-
-from sqlalchemy import select, and_
-from sqlalchemy.orm import Session
-
+from typing import Dict
+from sqlalchemy import select, and_, text
 from src.crud.engine import async_session
-from src.crud.models import PersonTypesRecord, BookingsRecord, SchedulesRecord, HallsRecord, FilmsRecord, AccountsRecord
+from src.crud.models import (
+    PersonTypesRecord, BookingsRecord, SchedulesRecord, HallsRecord, FilmsRecord,
+    AccountsRecord, ClubMembersRecords, ClubsRecord, UsersRecord
+)
 
 
 async def select_person_type(person_type: str):
@@ -117,17 +118,43 @@ async def select_user_bookings(start: int, limit: int, user_id: int):
             return result.fetchall()
 
 
+async def select_batches() -> Dict[str, int]:
+    query = f"""
+    SELECT `batch_ref`, COUNT(*) AS occurrences
+    FROM {BookingsRecord.__tablename__}
+    GROUP BY `batch_ref`;
+    """
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(text(query))
+            rows = result.fetchall()
+            return {ref: count for ref, count in rows}
+
+
 async def get_details(entity_id: int, entity_type: str, schedule_id: int):
+    tables = [AccountsRecord, PersonTypesRecord, SchedulesRecord]
+
+    if entity_type == "CLUB":
+        tables.extend([UsersRecord])
+
     query = select(
-        AccountsRecord, PersonTypesRecord, BookingsRecord, SchedulesRecord,
+        *tables
         # FilmsRecord
     ).outerjoin(
         PersonTypesRecord, PersonTypesRecord.person_type_id >= 1
     ).outerjoin(
-        BookingsRecord, BookingsRecord.id >= 1
-    ).outerjoin(
         SchedulesRecord, SchedulesRecord.id == schedule_id
-    ).where(
+    )
+
+    if entity_type == "CLUB":
+        query = query.outerjoin(
+            ClubMembersRecords, ClubMembersRecords.club == ClubsRecord.entity_id
+        ).join(
+            UsersRecord, UsersRecord.user_id == ClubMembersRecords.member
+        )
+
+    query = query.where(
         and_(
             AccountsRecord, AccountsRecord.entity_id == entity_id,
             AccountsRecord.entity_type == entity_type
@@ -143,27 +170,25 @@ async def get_details(entity_id: int, entity_type: str, schedule_id: int):
             for row in rows:
                 account_record = row[0]
                 persons_record = row[1]
-                bookings_record: BookingsRecord = row[2]
-                schedule_record = row[3]
-                # film_record = row[2]
+                schedule_record = row[2]
 
                 if account_record:
                     details["accounts"][account_record.id] = account_record
 
                 if persons_record:
-                    details["persons"][persons_record.person_type_id] = persons_record
-
-                if bookings_record:
-                    details["batches"][bookings_record.batch_ref] = \
-                        bookings_record.batch_ref
+                    details["persons"][persons_record.person_type_id] = \
+                        persons_record
 
                 if schedule_record:
                     details["schedules"] = schedule_record
 
-                # if film_record:
-                #     details["film"] = film_record
+                if entity_type == "CLUB":
+                    club_member_record = row[3]
+                    if club_member_record:
+                        details["club_members"][club_member_record.email] = True
 
-            return details
+    details["batches"] = await select_batches()
+    return details
 
 
 async def select_batch(batch: str):
@@ -188,13 +213,8 @@ async def select_batch(batch: str):
     async with async_session() as session:
         async with session.begin():
             result = await session.execute(query)
-            return result.fetchall()
+            rows = result.fetchall()
 
-
-async def select_batches():
-    query = select(BookingsRecord)
-
-    async with async_session() as session:
-        async with session.begin():
-            result = await session.execute(query)
-            return result.scalars().all()
+            if len(rows) == 0:
+                return None
+            return rows

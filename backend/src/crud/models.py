@@ -1,7 +1,7 @@
 from sqlalchemy import (
     Column, String,
     DateTime, Float, ForeignKey,
-    UniqueConstraint, Enum, Text, text
+    UniqueConstraint, Enum, Text, text, func
 )
 from sqlalchemy.dialects.mysql.types import BIT, INTEGER
 from src.crud.engine import Base
@@ -323,7 +323,7 @@ class AccountsRecord(Base):
     )
 
 
-class ClubMemberRecords(Base):
+class ClubMembersRecords(Base):
     __tablename__ = "club_members"
     id = Column(
         INTEGER(unsigned=True),
@@ -516,6 +516,12 @@ class BookingsRecord(Base):
     batch_ref = Column(
         String(50, collation=_COLLATION),
         nullable=False,
+    )
+    created = Column(
+        DateTime(), default=func.now(), nullable=False
+    )
+    assigned_user = Column(
+        String(), ForeignKey("users.email"), nullable=False
     )
     __table_args__ = (
         UniqueConstraint(

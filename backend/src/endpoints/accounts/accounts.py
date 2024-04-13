@@ -4,7 +4,7 @@ from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from sqlalchemy import update, and_, select
 
-from src.crud.models import AccountsRecord, CardsRecord, ClubMemberRecords
+from src.crud.models import AccountsRecord, CardsRecord, ClubMembersRecords
 from src.crud.queries.accounts import select_account, select_accounts, select_half_account, select_half_accounts, \
     select_last_entered_account, select_full_account, select_club_accounts
 from src.crud.queries.clubs import select_leader_clubs
