@@ -482,18 +482,18 @@ class BookingsRecord(Base):
         String(50, collation=_COLLATION),
         nullable=False,
     )
-    entity_type = Column(
-        Enum("CLUB", "USER", collation=_COLLATION),
-        nullable=False,
-    )
+    # entity_type = Column(
+    #     Enum("CLUB", "USER", collation=_COLLATION),
+    #     nullable=False,
+    # )
     schedule_id = Column(
         INTEGER(unsigned=True),
         ForeignKey("schedules.schedule_id"),
         nullable=False,
     )
     status = Column(
-        Enum("ENABLED", "DISABLED", collation=_COLLATION),
-        nullable=False,
+        Enum("ACTIVE", "CANCELLED", collation=_COLLATION),
+        nullable=False, default="ACTIVE"
     )
     account_id = Column(
         INTEGER(unsigned=True),

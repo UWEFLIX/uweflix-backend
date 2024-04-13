@@ -1,4 +1,6 @@
-from sqlalchemy import select
+from collections import defaultdict
+
+from sqlalchemy import select, and_
 from sqlalchemy.orm import Session
 
 from src.crud.engine import async_session
@@ -55,3 +57,144 @@ async def select_booking(booking_id: int):
             result = await session.execute(query)
             row = result.fetchone()
             return row
+
+
+async def select_club_bookings(start: int, limit: int, club_id: int):
+    query = select(
+        BookingsRecord, SchedulesRecord, FilmsRecord, HallsRecord,
+        AccountsRecord, PersonTypesRecord
+    ).join(
+        SchedulesRecord.schedule_id == BookingsRecord.schedule_id
+    ).join(
+        SchedulesRecord.film_id == FilmsRecord.film_id
+    ).join(
+        HallsRecord.hall_id == SchedulesRecord.hall_id
+    ).join(
+        AccountsRecord, AccountsRecord.id == BookingsRecord.account_id
+    ).join(
+        PersonTypesRecord,
+        PersonTypesRecord.person_type_id == BookingsRecord.person_type_id
+    ).where(
+        and_(
+            BookingsRecord.id >= start,
+            AccountsRecord.entity_id == club_id,
+            AccountsRecord.entity_type == "CLUB"
+        )
+    ).limit(limit)
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.fetchall()
+
+
+async def select_user_bookings(start: int, limit: int, user_id: int):
+    query = select(
+        BookingsRecord, SchedulesRecord, FilmsRecord, HallsRecord,
+        AccountsRecord, PersonTypesRecord
+    ).join(
+        SchedulesRecord.schedule_id == BookingsRecord.schedule_id
+    ).join(
+        SchedulesRecord.film_id == FilmsRecord.film_id
+    ).join(
+        HallsRecord.hall_id == SchedulesRecord.hall_id
+    ).join(
+        AccountsRecord, AccountsRecord.id == BookingsRecord.account_id
+    ).join(
+        PersonTypesRecord,
+        PersonTypesRecord.person_type_id == BookingsRecord.person_type_id
+    ).where(
+        and_(
+            BookingsRecord.id >= start,
+            AccountsRecord.entity_id == user_id,
+            AccountsRecord.entity_type == "USER"
+        )
+    ).limit(limit)
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.fetchall()
+
+
+async def get_details(entity_id: int, entity_type: str, schedule_id: int):
+    query = select(
+        AccountsRecord, PersonTypesRecord, BookingsRecord, SchedulesRecord,
+        # FilmsRecord
+    ).outerjoin(
+        PersonTypesRecord, PersonTypesRecord.person_type_id >= 1
+    ).outerjoin(
+        BookingsRecord, BookingsRecord.id >= 1
+    ).outerjoin(
+        SchedulesRecord, SchedulesRecord.id == schedule_id
+    ).where(
+        and_(
+            AccountsRecord, AccountsRecord.entity_id == entity_id,
+            AccountsRecord.entity_type == entity_type
+        )
+    )
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+
+            details = defaultdict(dict)
+            rows = result.fetchall()
+            for row in rows:
+                account_record = row[0]
+                persons_record = row[1]
+                bookings_record: BookingsRecord = row[2]
+                schedule_record = row[3]
+                # film_record = row[2]
+
+                if account_record:
+                    details["accounts"][account_record.id] = account_record
+
+                if persons_record:
+                    details["persons"][persons_record.person_type_id] = persons_record
+
+                if bookings_record:
+                    details["batches"][bookings_record.batch_ref] = \
+                        bookings_record.batch_ref
+
+                if schedule_record:
+                    details["schedules"] = schedule_record
+
+                # if film_record:
+                #     details["film"] = film_record
+
+            return details
+
+
+async def select_batch(batch: str):
+    query = select(
+        BookingsRecord, SchedulesRecord, FilmsRecord, HallsRecord,
+        AccountsRecord, PersonTypesRecord
+    ).join(
+        SchedulesRecord.schedule_id == BookingsRecord.schedule_id
+    ).join(
+        SchedulesRecord.film_id == FilmsRecord.film_id
+    ).join(
+        HallsRecord.hall_id == SchedulesRecord.hall_id
+    ).join(
+        AccountsRecord, AccountsRecord.id == BookingsRecord.account_id
+    ).join(
+        PersonTypesRecord,
+        PersonTypesRecord.person_type_id == BookingsRecord.person_type_id
+    ).where(
+        BookingsRecord.batch_ref == batch
+    )
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.fetchall()
+
+
+async def select_batches():
+    query = select(BookingsRecord)
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.scalars().all()

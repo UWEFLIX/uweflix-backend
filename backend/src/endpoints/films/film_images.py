@@ -92,7 +92,6 @@ async def delete_film_posters(
         ],
         file_name: str
 ):
-    # todo finish
     file_name.replace("/", "")
     file_name.replace("\\", "")
 

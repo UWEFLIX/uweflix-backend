@@ -26,8 +26,8 @@ class BookingsFactory:
         return Booking(
             id=booking_record.id,
             seat_no=booking_record.seat_no,
-            entity_type=booking_record.entity_type,
-            entity_id=booking_record.entity_id,
+            # entity_type=booking_record.entity_type,
+            # entity_id=booking_record.entity_id,
             schedule=FilmFactory.get_detailed_schedule(records),
             status=booking_record.status,
             account=AccountsFactory.get_half_account(records[4]),
@@ -36,3 +36,9 @@ class BookingsFactory:
             serial_no=booking_record.serial_no,
             batch_ref=booking_record.batch_ref,
         )
+
+    @staticmethod
+    def get_bookings(records):
+        return [
+            BookingsFactory.get_booking(x) for x in records
+        ]

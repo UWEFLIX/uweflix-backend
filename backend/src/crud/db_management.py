@@ -5,7 +5,7 @@ from sqlalchemy import text
 from src.crud.engine import engine, Base, async_session
 from src.crud.models import (
     PermissionsRecord, RolesRecord, RolePermissionsRecord,
-    UsersRecord, UserRolesRecord, AccountsRecord
+    UsersRecord, UserRolesRecord, AccountsRecord, PersonTypesRecord
 )
 from src.crud.queries.utils import add_object, add_objects
 from src.crud.queries.stored_procedures import generate_unique_string, generate_filename
@@ -101,6 +101,10 @@ async def initialise_db():
         status="ENABLED"
     )
     user_role1 = UserRolesRecord(user_id=1, role_id=1)
+    person_type = PersonTypesRecord(
+        person_type="ADULT",
+        discount_amount=0
+    )
 
     await add_object(admin)
 
@@ -111,7 +115,7 @@ async def initialise_db():
     # tasks = [add_object(x) for x in objs]
     # await asyncio.gather(*tasks)
 
-    objs2.extend([user_role1, account1])
+    objs2.extend([user_role1, account1, person_type])
     tasks2 = [add_object(x) for x in objs2]
     await asyncio.gather(*tasks2)
 
