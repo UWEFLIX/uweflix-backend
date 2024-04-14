@@ -1,7 +1,7 @@
 from sqlalchemy import (
     Column, String,
     DateTime, Float, ForeignKey,
-    UniqueConstraint, Enum, Text, text, func
+    UniqueConstraint, Enum, Text, text, func, CheckConstraint, ForeignKeyConstraint
 )
 from sqlalchemy.dialects.mysql.types import BIT, INTEGER
 from src.crud.engine import Base
@@ -167,7 +167,7 @@ class UsersRecord(Base):
     )
     email = Column(
         String(50, collation=_COLLATION),
-        nullable=False,
+        nullable=False, unique=True
     )
     password = Column(
         String(60, collation=_COLLATION),
@@ -312,14 +312,16 @@ class AccountsRecord(Base):
         Enum("ENABLED", "DISABLED", collation=_COLLATION),
         nullable=False,
     )
+    balance = Column(
+        Float, default=0, nullable=False,
+    )
 
     __table_args__ = (
-        # ForeignKeyConstraint(columns=["entity_id"], refcolumns=["users.user_id"]),
-        # ForeignKeyConstraint(columns=["entity_id"], refcolumns=["clubs.id"]),
         UniqueConstraint(
             'entity_type', 'entity_id', "name",
             name='_entity-name'
         ),
+        CheckConstraint('balance >= -100', name='balance_constraint')
     )
 
 
@@ -474,18 +476,10 @@ class BookingsRecord(Base):
         nullable=False,
         unique=True,
     )
-    # hall_no = Column(
-    #     String(50, collation=_COLLATION),
-    #     nullable=False,
-    # )
     seat_no = Column(
         String(50, collation=_COLLATION),
         nullable=False,
     )
-    # entity_type = Column(
-    #     Enum("CLUB", "USER", collation=_COLLATION),
-    #     nullable=False,
-    # )
     schedule_id = Column(
         INTEGER(unsigned=True),
         ForeignKey("schedules.schedule_id"),
@@ -521,7 +515,8 @@ class BookingsRecord(Base):
         DateTime(), default=func.now(), nullable=False
     )
     assigned_user = Column(
-        String(), ForeignKey("users.email"), nullable=False
+        String(50, collation=_COLLATION), ForeignKey("users.email"),
+        nullable=False,
     )
     __table_args__ = (
         UniqueConstraint(

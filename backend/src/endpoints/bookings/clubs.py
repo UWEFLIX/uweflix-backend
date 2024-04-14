@@ -1,11 +1,11 @@
-from turtle import update
+from sqlalchemy import update
 from typing import Annotated, List
 
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from pydantic import EmailStr
 
-from src.crud.models import SchedulesRecord, PersonTypesRecord, BookingsRecord
+from src.crud.models import SchedulesRecord, PersonTypesRecord, BookingsRecord, AccountsRecord
 from src.crud.queries.bookings import select_club_bookings, get_details, select_batch, select_booking
 from src.crud.queries.clubs import select_leader_clubs
 from src.crud.queries.utils import add_objects, execute_safely
@@ -63,6 +63,7 @@ async def create_club_bookings(
     _persons = details["persons"]
     accounts = details["accounts"]
     batches = details["batches"]
+    members = details["members"]
 
     try:
         account = accounts[requests.account_id]
@@ -85,6 +86,7 @@ async def create_club_bookings(
             break
 
     final_booking_records = []
+    total = 0
     for request in requests.bookings:
         try:
             person_record: PersonTypesRecord = _persons[request.person_type.id]
@@ -92,6 +94,14 @@ async def create_club_bookings(
             raise HTTPException(
                 404,
                 f"Person type ID {request.person_type.id} not found"
+            )
+
+        try:
+            members[request.user_email]
+        except KeyError as e:
+            raise HTTPException(
+                422,
+                f"{request.user_email} doesnt exist or is not in your club"
             )
 
         # todo find if discounts stack like this
@@ -103,6 +113,7 @@ async def create_club_bookings(
         amount = schedule_record.ticket_price * (
                 (100 - discount) / 100
         )
+        total += amount
 
         record = BookingsRecord(
             seat_no=request.seat_no,
@@ -111,11 +122,19 @@ async def create_club_bookings(
             batch_ref=batch_reference,
             amount=amount,
             account_id=account.id,
+            email=request.user_email
         )
         final_booking_records.append(record)
         batches[batch_reference] = batch_reference
 
     await add_objects(final_booking_records)
+
+    query = update(
+        AccountsRecord
+    ).values(
+        balance=AccountsRecord.balance - total
+    ).where(AccountsRecord.id == account.id)
+    await execute_safely(query)
 
     records = select_batch(batch_reference)
     return BookingsFactory.get_bookings(records)
@@ -140,6 +159,28 @@ async def reassign_user_bookings(
         raise HTTPException(
             403,
             "You do not have rights to edit this booking"
+        )
+
+    clubs = await select_leader_clubs(current_user.id)
+    try:
+        clubs[booking.account.entity_id]
+    except KeyError:
+        raise HTTPException(
+            422, "You are not the leader of the club"
+        )
+
+    details = await get_details(
+        current_user.id, "CLUB", booking.schedule.id
+    )
+
+    # todo verify if user_email is in club
+    members = details["members"]
+    try:
+        members[new_assignee]
+    except KeyError:
+        raise HTTPException(
+            422,
+            f"{new_assignee} doesnt exist or is not in your club"
         )
 
     query = update(

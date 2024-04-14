@@ -5,7 +5,7 @@ from fastapi.params import Param
 from pydantic import EmailStr
 from sqlalchemy import update
 
-from src.crud.models import PersonTypesRecord, SchedulesRecord, BookingsRecord
+from src.crud.models import PersonTypesRecord, SchedulesRecord, BookingsRecord, AccountsRecord
 from src.crud.queries.bookings import select_user_bookings, get_details, select_batch, select_booking
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.bookings import Booking, SingleBooking
@@ -66,7 +66,9 @@ async def create_user_bookings(
         if batch_reference not in batches:
             break
 
-    amount = schedule_record.ticket_price * ((100 - person_record.discount_amount) / 100)
+    amount = schedule_record.ticket_price * (
+            (100 - person_record.discount_amount) / 100
+    )
 
     record = BookingsRecord(
         seat_no=booking_request.seat_no,
@@ -78,6 +80,13 @@ async def create_user_bookings(
         account_id=account.id,
     )
     await add_object(record)
+
+    query = update(
+        AccountsRecord
+    ).values(
+        balance=AccountsRecord.balance - amount
+    ).where(AccountsRecord.id == account.id)
+    await execute_safely(query)
 
     records = await select_batch(batch_reference)
 
