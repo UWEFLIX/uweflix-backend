@@ -84,13 +84,14 @@ async def initialise_db():
 
     objs = await get_permissions()
 
-    admin = RolesRecord(role_name="admin")
+    admin = RolesRecord(role_name="Admin")
 
     objs2: list = admin_perms(len(objs))
     user1 = UsersRecord(
         name="Nishawl Naseer",
         email="nishawl.naseer@outlook.com",
-        password="$2b$12$qtCm88dd7JSa9SGlwKGp/e/VDEbZ0kbSmnUJEC7sgunD1whHFBjeW"
+        password="$2b$12$qtCm88dd7JSa9SGlwKGp/e"
+                 "/VDEbZ0kbSmnUJEC7sgunD1whHFBjeW"
     )
     account1 = AccountsRecord(
         account_uid="2",

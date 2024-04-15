@@ -6,6 +6,7 @@ from src.crud.models import (
     PersonTypesRecord, BookingsRecord, SchedulesRecord, HallsRecord, FilmsRecord,
     AccountsRecord, ClubMembersRecords, ClubsRecord, UsersRecord
 )
+from src.schema.bookings import BatchData
 
 
 async def select_person_type(person_type: str):
@@ -65,11 +66,12 @@ async def select_club_bookings(start: int, limit: int, club_id: int):
         BookingsRecord, SchedulesRecord, FilmsRecord, HallsRecord,
         AccountsRecord, PersonTypesRecord
     ).join(
+        SchedulesRecord,
         SchedulesRecord.schedule_id == BookingsRecord.schedule_id
     ).join(
-        SchedulesRecord.film_id == FilmsRecord.film_id
+        FilmsRecord, SchedulesRecord.film_id == FilmsRecord.film_id
     ).join(
-        HallsRecord.hall_id == SchedulesRecord.hall_id
+        HallsRecord, HallsRecord.hall_id == SchedulesRecord.hall_id
     ).join(
         AccountsRecord, AccountsRecord.id == BookingsRecord.account_id
     ).join(
@@ -94,11 +96,12 @@ async def select_user_bookings(start: int, limit: int, user_id: int):
         BookingsRecord, SchedulesRecord, FilmsRecord, HallsRecord,
         AccountsRecord, PersonTypesRecord
     ).join(
+        SchedulesRecord,
         SchedulesRecord.schedule_id == BookingsRecord.schedule_id
     ).join(
-        SchedulesRecord.film_id == FilmsRecord.film_id
+        FilmsRecord, SchedulesRecord.film_id == FilmsRecord.film_id
     ).join(
-        HallsRecord.hall_id == SchedulesRecord.hall_id
+        HallsRecord, HallsRecord.hall_id == SchedulesRecord.hall_id
     ).join(
         AccountsRecord, AccountsRecord.id == BookingsRecord.account_id
     ).join(
@@ -118,22 +121,37 @@ async def select_user_bookings(start: int, limit: int, user_id: int):
             return result.fetchall()
 
 
-async def select_batches() -> Dict[str, int]:
+async def select_batches() -> Dict[str, BatchData]:
+    table_name = BookingsRecord.__tablename__
     query = f"""
-    SELECT `batch_ref`, COUNT(*) AS occurrences
-    FROM {BookingsRecord.__tablename__}
-    GROUP BY `batch_ref`;
+        SELECT 
+            `batch_ref`, 
+            MIN(`created`) AS first_datetime,
+            COUNT(*) AS occurrences,
+            SUM(`amount`) AS total_amount
+        FROM 
+            {table_name}
+        GROUP BY 
+            `batch_ref`;
     """
 
     async with async_session() as session:
         async with session.begin():
             result = await session.execute(text(query))
             rows = result.fetchall()
-            return {ref: count for ref, count in rows}
+            return {
+                batch_ref: BatchData(
+                    batch_ref=batch_ref,
+                    count=count,
+                    created=created,
+                    total=total,
+                )
+                for batch_ref, created, count, total in rows
+            }
 
 
 async def get_details(entity_id: int, entity_type: str, schedule_id: int):
-    tables = [AccountsRecord, PersonTypesRecord, SchedulesRecord]
+    tables = [AccountsRecord, PersonTypesRecord, SchedulesRecord, HallsRecord]
 
     if entity_type == "CLUB":
         tables.extend([UsersRecord])
@@ -145,6 +163,8 @@ async def get_details(entity_id: int, entity_type: str, schedule_id: int):
         PersonTypesRecord, PersonTypesRecord.person_type_id >= 1
     ).outerjoin(
         SchedulesRecord, SchedulesRecord.id == schedule_id
+    ).outerjoin(
+        HallsRecord, HallsRecord.hall_id == SchedulesRecord.hall_id
     )
 
     if entity_type == "CLUB":
@@ -171,6 +191,7 @@ async def get_details(entity_id: int, entity_type: str, schedule_id: int):
                 account_record = row[0]
                 persons_record = row[1]
                 schedule_record = row[2]
+                hall_record = row[3]
 
                 if account_record:
                     details["accounts"][account_record.id] = account_record
@@ -181,9 +202,10 @@ async def get_details(entity_id: int, entity_type: str, schedule_id: int):
 
                 if schedule_record:
                     details["schedules"] = schedule_record
+                    details["halls"] = hall_record
 
                 if entity_type == "CLUB":
-                    club_member_record = row[3]
+                    club_member_record = row[4]
                     if club_member_record:
                         details["club_members"][club_member_record.email] = True
 

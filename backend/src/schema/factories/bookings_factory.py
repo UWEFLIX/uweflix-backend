@@ -21,14 +21,15 @@ class BookingsFactory:
     @staticmethod
     def get_booking(records):
         booking_record = records[0]
-        records.pop(0)
 
         return Booking(
             id=booking_record.id,
             seat_no=booking_record.seat_no,
             created=booking_record.created,
             assigned_user=booking_record.assigned_user,
-            schedule=FilmFactory.get_detailed_schedule(records),
+            schedule=FilmFactory.get_detailed_schedule([
+                records[1], records[2], records[3]
+            ]),
             status=booking_record.status,
             account=AccountsFactory.get_half_account(records[4]),
             person_type=BookingsFactory.get_person_type(records[5]),

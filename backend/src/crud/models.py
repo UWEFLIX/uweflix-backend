@@ -1,7 +1,6 @@
 from sqlalchemy import (
-    Column, String,
-    DateTime, Float, ForeignKey,
-    UniqueConstraint, Enum, Text, text, func, CheckConstraint, ForeignKeyConstraint
+    Column, String, DateTime, Float, ForeignKey,
+    UniqueConstraint, Enum, Text, text, func, CheckConstraint
 )
 from sqlalchemy.dialects.mysql.types import BIT, INTEGER
 from src.crud.engine import Base
@@ -399,11 +398,11 @@ class FilmsRecord(Base):
     is_active = Column(
         BIT(1), nullable=False, default=b'0'
     )
-    poster_image = Column(
-        String(60, collation=_COLLATION),
-        nullable=False,
-        unique=True
-    )
+    # poster_image = Column(
+    #     String(60, collation=_COLLATION),
+    #     nullable=False,
+    #     unique=True
+    # )
 
 
 class FilmImagesRecord(Base):

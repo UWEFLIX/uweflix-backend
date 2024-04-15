@@ -41,9 +41,8 @@ class MultipleBookings(BaseModel):
     account_id: int
 
 
-class ClubBooking(Booking):
-    club: Club
-
-
-class IndividualBooking(Booking):
-    user: User
+class BatchData(BaseModel):
+    batch_ref: str
+    count: int
+    created: datetime
+    total: float

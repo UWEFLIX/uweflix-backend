@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy import update
 from typing import Annotated, List
 
@@ -8,9 +10,12 @@ from pydantic import EmailStr
 from src.crud.models import SchedulesRecord, PersonTypesRecord, BookingsRecord, AccountsRecord
 from src.crud.queries.bookings import select_club_bookings, get_details, select_batch, select_booking
 from src.crud.queries.clubs import select_leader_clubs
+from src.crud.queries.films import select_schedule
 from src.crud.queries.utils import add_objects, execute_safely
+from src.endpoints.bookings._utils import validate_seat
 from src.schema.bookings import Booking, MultipleBookings
 from src.schema.factories.bookings_factory import BookingsFactory
+from src.schema.factories.film_factories import FilmFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
 from src.utils.utils import generate_random_string
@@ -59,11 +64,11 @@ async def create_club_bookings(
         current_user.id, "CLUB", requests.schedule_id
     )
 
-    # todo verify if user_email is in club
     _persons = details["persons"]
     accounts = details["accounts"]
     batches = details["batches"]
     members = details["members"]
+    hall = details["halls"]
 
     try:
         account = accounts[requests.account_id]
@@ -75,6 +80,16 @@ async def create_club_bookings(
     except KeyError:
         raise HTTPException(
             404, "Schedule not found"
+        )
+
+    if schedule_record.on_schedule:
+        raise HTTPException(
+            422, "Schedule is not on schedule"
+        )
+
+    if schedule_record.show_time < datetime.datetime.now():
+        raise HTTPException(
+            422, "Cannot book for a past schedule"
         )
 
     if account.status != "ENABLED":
@@ -95,6 +110,8 @@ async def create_club_bookings(
                 404,
                 f"Person type ID {request.person_type.id} not found"
             )
+
+        validate_seat(request.seat_no, hall)
 
         try:
             members[request.user_email]

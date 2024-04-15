@@ -12,7 +12,7 @@ from src.schema.factories.film_factories import FilmFactory
 from src.schema.films import Film
 from src.schema.users import User
 from src.security.security import get_current_active_user
-from src.endpoints.films.film_images import router as images
+from src.endpoints.films.film_images import router as images, rename_poster
 from src.endpoints.films.schedules import router as schedules
 
 router = APIRouter(prefix="/films", tags=["Films"])
@@ -65,6 +65,9 @@ async def update_film(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:films"])
         ],
+        old_title: Annotated[
+            str, Param(title="Old title of the film")
+        ],
         film: Film
 ):
     query = update(
@@ -77,9 +80,9 @@ async def update_film(
         on_air_from=film.on_air_from,
         on_air_to=film.on_air_to,
         is_active=film.is_active,
-        poster_image=f"{film.title}-poster"
+        # poster_image=f"{film.title}-poster"
     ).where(
-        FilmsRecord.film_id==film.id
+        FilmsRecord.title == old_title
     )
     await execute_safely(query)
 
@@ -90,7 +93,7 @@ async def update_film(
             404, "Film not found"
         )
 
-    # todo change the filename of poster image
+    await rename_poster(film.title, old_title)
 
     return FilmFactory.get_full_film(records)
 

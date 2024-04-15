@@ -2,7 +2,7 @@ import time
 from typing import Annotated, List
 
 import aiofiles
-from aiofiles.os import remove, path
+from aiofiles.os import remove, path, rename
 from fastapi import APIRouter, Security, UploadFile, File, HTTPException
 from fastapi.params import Param
 from sqlalchemy import text, delete
@@ -19,6 +19,13 @@ from src.security.security import get_current_active_user
 router = APIRouter(prefix="/images", tags=["FilmImages"])
 
 _root_path = f'assets/images/films'
+
+
+async def rename_poster(new_title: str, old_title: str) -> None:
+    await rename(
+        f"{_root_path}/{old_title}.jpg",
+        f"{_root_path}/{new_title}.jpg",
+    )
 
 
 @router.patch("/poster", status_code=201, tags=["Unfinished"])

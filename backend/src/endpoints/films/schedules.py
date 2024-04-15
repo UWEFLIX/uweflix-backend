@@ -72,6 +72,23 @@ async def create_schedule(
         ],
         schedule: Schedule
 ):
+    film_record: FilmsRecord = await select_film_by_id(schedule.film_id)
+
+    if not film_record:
+        raise HTTPException(
+            404, "Film not found"
+        )
+
+    _film: Film = FilmFactory.get_half_film(film_record)
+
+    if not _film.is_active or (
+        _film.on_air_from <= schedule.show_time <= _film.on_air_to
+    ):
+        raise HTTPException(
+            422,
+            "Film is not active or not on air during this period"
+        )
+
     record = SchedulesRecord(
         hall_id=schedule.hall_id,
         film_id=schedule.film_id,
@@ -99,6 +116,16 @@ async def update_schedule(
         ],
         schedule: Schedule
 ):
+    _film: Film = FilmFactory.get_half_film(schedule.film_id)
+
+    if not _film.is_active or (
+            _film.on_air_from <= schedule.show_time <= _film.on_air_to
+    ):
+        raise HTTPException(
+            422,
+            "Film is not active or not on air during this period"
+        )
+
     query = update(
         SchedulesRecord
     ).values(

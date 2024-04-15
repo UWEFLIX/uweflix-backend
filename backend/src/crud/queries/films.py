@@ -209,6 +209,3 @@ async def select_film_by_id(film_id: int):
         async with session.begin():
             result = await session.execute(query)
             return result.scalar()
-
-
-

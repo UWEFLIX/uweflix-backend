@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated, List
 
 from fastapi import APIRouter, Security, HTTPException
@@ -8,6 +9,7 @@ from sqlalchemy import update
 from src.crud.models import PersonTypesRecord, SchedulesRecord, BookingsRecord, AccountsRecord
 from src.crud.queries.bookings import select_user_bookings, get_details, select_batch, select_booking
 from src.crud.queries.utils import add_object, execute_safely
+from src.endpoints.bookings._utils import validate_seat
 from src.schema.bookings import Booking, SingleBooking
 from src.schema.factories.bookings_factory import BookingsFactory
 from src.schema.users import User
@@ -45,7 +47,10 @@ async def create_user_bookings(
     _persons = details["persons"]
     batches = details["batches"]
     accounts = details["accounts"]
+    hall = details["halls"]
     account = accounts.values()[0]
+
+    validate_seat(booking_request.seat_no, hall)
 
     try:
         person_record: PersonTypesRecord = _persons[booking_request.person_type.id]
@@ -59,6 +64,16 @@ async def create_user_bookings(
     except KeyError:
         raise HTTPException(
             404, "Schedule not found"
+        )
+
+    if schedule_record.on_schedule:
+        raise HTTPException(
+            422, "Schedule is not on schedule"
+        )
+
+    if schedule_record.show_time < datetime.now():
+        raise HTTPException(
+            422, "Cannot book for a past schedule"
         )
 
     while True:
