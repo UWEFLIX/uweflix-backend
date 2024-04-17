@@ -7,16 +7,31 @@ _ALPH_TO_INT = {key: value for value, key in enumerate(ALPHABETS)}
 
 
 def validate_seat(seat: str, hall: HallsRecord):
-    if len(seat) != 2:
-        raise HTTPException(status_code=422, detail="Invalid seat")
+    row = 0
+    index = 0
 
-    submitted_row_str = seat[0]
+    for _index, alph in enumerate(seat):
+        if alph.isalpha():
+            try:
+                letter_int = _ALPH_TO_INT[alph] + 1
+            except KeyError:
+                raise HTTPException(422, detail="Invalid seat")
+
+            row += letter_int
+            _index += 1
+        else:
+            break
 
     try:
-        submitted_column = int(seat[1])
-        submitted_row = _ALPH_TO_INT[submitted_row_str]
-    except (ValueError, KeyError):
-        raise HTTPException(status_code=422, detail="Invalid seat")
+        column = int(seat[index:])
+    except ValueError:
+        raise HTTPException(422, detail="Invalid seat")
 
-    if submitted_row > hall.no_of_rows or submitted_column > hall.seats_per_row:
+    if row == 0 or column <= 0:
+        raise HTTPException(422, detail="Invalid seat")
+
+    if (row > hall.no_of_rows or
+            column > hall.seats_per_row):
         raise HTTPException(status_code=422, detail="Seat out of range")
+
+    return row, column

@@ -3,7 +3,9 @@ from datetime import datetime
 from sqlalchemy import select, and_
 
 from src.crud.engine import async_session
-from src.crud.models import HallsRecord, FilmsRecord, FilmImagesRecord, SchedulesRecord
+from src.crud.models import (
+    HallsRecord, FilmsRecord, FilmImagesRecord, SchedulesRecord
+)
 
 
 async def select_hall(hall_name: str):

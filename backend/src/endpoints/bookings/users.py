@@ -46,9 +46,16 @@ async def create_user_bookings(
 
     _persons = details["persons"]
     batches = details["batches"]
-    accounts = details["accounts"]
+    accounts: dict = details["accounts"]
     hall = details["halls"]
-    account = accounts.values()[0]
+
+    try:
+        account = accounts[booking_request.account.id]
+    except KeyError:
+        raise HTTPException(
+            404,
+            "Account not found, or not available for you"
+        )
 
     validate_seat(booking_request.seat_no, hall)
 

@@ -5,9 +5,9 @@ from fastapi.params import Param
 from select import select
 from sqlalchemy import update, delete, and_
 
-from src.crud.models import ClubsRecord, AccountsRecord
+from src.crud.models import ClubsRecord, AccountsRecord, ClubMembersRecords
 from src.crud.queries.clubs import select_club, select_leader_clubs, select_clubs
-from src.crud.queries.utils import add_object, execute_safely
+from src.crud.queries.utils import add_object, execute_safely, add_objects
 from src.endpoints.clubs.club_members import router as club_members
 from fastapi import APIRouter, Security, HTTPException
 
@@ -54,7 +54,11 @@ async def add_club(
         entity_id=club.id,
         discount_rate=0
     )
-    await add_object(accounts_record)
+    club_member_record = ClubMembersRecords(
+        member=club.leader.id,
+        club=club.id
+    )
+    await add_objects([accounts_record, club_member_record])
 
     return club
 

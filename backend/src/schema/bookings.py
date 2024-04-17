@@ -32,6 +32,7 @@ class SingleBooking(BaseModel):
     schedule: ScheduleDetailed
     person_type: PersonType
     user_email: EmailStr
+    account: Account
 
 
 class MultipleBookings(BaseModel):
