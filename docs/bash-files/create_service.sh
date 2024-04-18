@@ -2,10 +2,10 @@
 
 echo Creating Service
 echo "[Unit]
-Description=Dashboard frontend
+Description=UWE-Flix Backend
 
 [Service]
-ExecStart=/home/pi/Desktop/dashboard/run.sh
+ExecStart=/home/usr/uweflix-backend/uweflix-backend/run.sh
 Restart=always
 
 [Install]
