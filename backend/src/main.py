@@ -8,8 +8,10 @@ from starlette import status
 from src.schema.factories.user_factory import UserFactory
 from src.schema.security import Token
 from src.schema.users import User
-from src.security.security import get_current_active_user, authenticate_user, fernet, ACCESS_TOKEN_EXPIRE_MINUTES, \
-    create_access_token
+from src.security.security import (
+    get_current_active_user, authenticate_user, fernet,
+    ACCESS_TOKEN_EXPIRE_MINUTES, create_access_token
+)
 from src.utils.utils import lifespan
 
 from src.endpoints.accounts.accounts import router as accounts

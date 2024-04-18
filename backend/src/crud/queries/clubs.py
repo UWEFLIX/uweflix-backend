@@ -2,7 +2,9 @@ from sqlalchemy import select
 from sqlalchemy.orm import aliased
 
 from src.crud.engine import async_session
-from src.crud.models import ClubsRecord, CitiesRecord, ClubMembersRecords, UsersRecord
+from src.crud.models import (
+    ClubsRecord, CitiesRecord, ClubMembersRecords, UsersRecord
+)
 
 
 async def select_leader_clubs(leader: int):

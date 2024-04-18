@@ -1,5 +1,4 @@
 from typing import Annotated, Dict, List
-
 from fastapi import APIRouter, Security, HTTPException
 from src.crud.queries.bookings import (
     select_booking, select_batches, select_batch

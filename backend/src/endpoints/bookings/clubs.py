@@ -1,21 +1,20 @@
 import datetime
-
 from sqlalchemy import update
 from typing import Annotated, List
-
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from pydantic import EmailStr
-
-from src.crud.models import SchedulesRecord, PersonTypesRecord, BookingsRecord, AccountsRecord
-from src.crud.queries.bookings import select_club_bookings, get_details, select_batch, select_booking
+from src.crud.models import (
+    SchedulesRecord, PersonTypesRecord, BookingsRecord, AccountsRecord
+)
+from src.crud.queries.bookings import (
+    select_club_bookings, get_details, select_batch, select_booking
+)
 from src.crud.queries.clubs import select_leader_clubs
-from src.crud.queries.films import select_schedule
 from src.crud.queries.utils import add_objects, execute_safely
 from src.endpoints.bookings._utils import validate_seat
 from src.schema.bookings import Booking, MultipleBookings
 from src.schema.factories.bookings_factory import BookingsFactory
-from src.schema.factories.film_factories import FilmFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
 from src.utils.utils import generate_random_string

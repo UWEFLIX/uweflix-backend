@@ -1,9 +1,7 @@
 from typing import Annotated, List
-
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
-from sqlalchemy import update, select, delete
-
+from sqlalchemy import update, delete
 from src.crud.models import PersonTypesRecord
 from src.crud.queries.bookings import select_person_type, select_person_types
 from src.crud.queries.utils import add_object, execute_safely

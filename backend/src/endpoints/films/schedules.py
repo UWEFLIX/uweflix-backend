@@ -1,16 +1,17 @@
 import datetime
-from datetime import timedelta, tzinfo, timezone
+from datetime import timedelta, timezone
 from typing import Annotated
-
-from fastapi import APIRouter, Security, UploadFile, File, HTTPException
+from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from sqlalchemy import delete, update, select
 from src.crud.models import SchedulesRecord, HallsRecord, FilmsRecord
-from src.crud.queries.films import select_inserted_schedules, select_schedule, select_schedules, select_all_schedules, \
-    select_film_by_id
+from src.crud.queries.films import (
+    select_inserted_schedules, select_schedule, select_schedules,
+    select_all_schedules, select_film_by_id
+)
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.factories.film_factories import FilmFactory
-from src.schema.films import Schedule, Film, ScheduleDetailed
+from src.schema.films import Schedule, Film
 from src.schema.users import User
 from src.security.security import get_current_active_user
 

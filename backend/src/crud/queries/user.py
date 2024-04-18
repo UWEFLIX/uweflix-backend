@@ -1,7 +1,10 @@
 from sqlalchemy import select
 
 from src.crud.engine import async_session
-from src.crud.models import UsersRecord, UserRolesRecord, RolesRecord, RolePermissionsRecord, PermissionsRecord
+from src.crud.models import (
+    UsersRecord, UserRolesRecord, RolesRecord, RolePermissionsRecord,
+    PermissionsRecord
+)
 
 
 async def select_user_by_email(username: str) -> dict | None:

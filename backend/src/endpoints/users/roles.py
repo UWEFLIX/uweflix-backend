@@ -1,9 +1,7 @@
 from typing import Annotated, List
-
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from sqlalchemy import select, delete, and_
-
 from src.crud.models import (
     RolesRecord, PermissionsRecord, RolePermissionsRecord, UserRolesRecord
 )
@@ -11,7 +9,9 @@ from src.crud.queries.roles import (
     select_roles
 )
 from src.crud.queries.user import select_user_by_id
-from src.crud.queries.utils import add_object, delete_record, execute_safely, add_objects
+from src.crud.queries.utils import (
+    add_object, delete_record, execute_safely, add_objects
+)
 from src.schema.factories.role_factory import RoleFactory
 from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User, Role, Permission

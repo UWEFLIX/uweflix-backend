@@ -1,14 +1,16 @@
 from typing import Annotated
-
 from fastapi import APIRouter, Security, HTTPException
 from pydantic import EmailStr
 from sqlalchemy import update
-
 from src.crud.models import UsersRecord
 from src.crud.queries.user import select_user_by_email
 from src.crud.queries.utils import execute_safely
-from src.schema.users import User, PasswordChange, ResetRequest, PasswordResetConfirmation
-from src.security.security import get_current_active_user, verify_password, get_password_hash, EMAILS, otp
+from src.schema.users import (
+    User, PasswordChange, ResetRequest, PasswordResetConfirmation
+)
+from src.security.security import (
+    get_current_active_user, verify_password, get_password_hash, EMAILS, otp
+)
 
 router = APIRouter(prefix="/passwords", tags=["Passwords"])
 

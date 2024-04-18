@@ -1,9 +1,6 @@
 from fastapi import HTTPException
 from sqlalchemy.exc import IntegrityError, DataError
 
-# from pymysql import IntegrityError, DataError
-# import sqlalchemy.exc.IntegrityError
-
 from src.crud.engine import async_session
 
 

@@ -1,10 +1,8 @@
-from typing import List, Any
+from typing import List
 from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr
 from src.schema.accounts import Account
-from src.schema.clubs import Club
 from src.schema.films import ScheduleDetailed
-from src.schema.users import User
 
 
 class PersonType(BaseModel):

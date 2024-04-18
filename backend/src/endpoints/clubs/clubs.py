@@ -1,19 +1,14 @@
 from random import randint
 from typing import Annotated
-
 from fastapi.params import Param
-from select import select
 from sqlalchemy import update, delete, and_
-
 from src.crud.models import ClubsRecord, AccountsRecord, ClubMembersRecords
 from src.crud.queries.clubs import select_club, select_leader_clubs, select_clubs
 from src.crud.queries.utils import add_object, execute_safely, add_objects
 from src.endpoints.clubs.club_members import router as club_members
 from fastapi import APIRouter, Security, HTTPException
-
 from src.schema.clubs import Club
 from src.schema.factories.club_factories import ClubFactory
-from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
 from src.endpoints.clubs.cities import router as cities

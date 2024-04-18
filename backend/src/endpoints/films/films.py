@@ -1,11 +1,11 @@
 from typing import Annotated, List
-
-from fastapi import APIRouter, Security, HTTPException, UploadFile, File
+from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from sqlalchemy import delete, update, select
-
 from src.crud.models import FilmsRecord, SchedulesRecord
-from src.crud.queries.films import select_film, select_films, select_film_schedules
+from src.crud.queries.films import (
+    select_film, select_films, select_film_schedules
+)
 from src.crud.queries.utils import add_object, execute_safely
 from src.endpoints.films.halls import router as halls
 from src.schema.factories.film_factories import FilmFactory

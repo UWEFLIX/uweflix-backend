@@ -1,13 +1,11 @@
 import time
 from typing import Annotated, List
-
 import aiofiles
 from aiofiles.os import remove, path, rename
 from fastapi import APIRouter, Security, UploadFile, File, HTTPException
 from fastapi.params import Param
 from sqlalchemy import text, delete
 from starlette.responses import FileResponse
-
 from src.crud.models import FilmImagesRecord
 from src.crud.queries.films import select_film, select_images
 from src.crud.queries.utils import add_objects, execute_safely

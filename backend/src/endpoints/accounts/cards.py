@@ -1,10 +1,10 @@
 from typing import Annotated, Callable
-
 from fastapi import APIRouter, Security, HTTPException
 from sqlalchemy import update, delete
-
 from src.crud.models import CardsRecord
-from src.crud.queries.accounts import select_card, check_user_card, check_club_card
+from src.crud.queries.accounts import (
+    select_card, check_user_card, check_club_card
+)
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.accounts import Card
 from src.schema.factories.account_factory import AccountsFactory

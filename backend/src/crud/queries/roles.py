@@ -1,6 +1,8 @@
 from sqlalchemy import select, update, and_
 from src.crud.engine import async_session
-from src.crud.models import RolesRecord, RolePermissionsRecord, PermissionsRecord, UsersRecord, UserRolesRecord
+from src.crud.models import (
+    RolesRecord, UsersRecord
+)
 from src.crud.queries.utils import execute_safely
 from src.schema.users import Role
 

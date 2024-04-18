@@ -1,15 +1,11 @@
 from typing import Annotated, List
-
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
-from sqlalchemy import update, select, delete
-
-from src.crud.models import CardsRecord, CitiesRecord
-from src.crud.queries.accounts import select_card
+from sqlalchemy import update, delete
+from src.crud.models import CitiesRecord
 from src.crud.queries.clubs import select_city, select_cities
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.clubs import City
-from src.schema.factories.account_factory import AccountsFactory
 from src.schema.factories.club_factories import ClubFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user

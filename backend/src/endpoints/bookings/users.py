@@ -1,14 +1,16 @@
 from datetime import datetime
 from typing import Annotated, List
-
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from pydantic import EmailStr
 from sqlalchemy import update
-
-from src.crud.models import PersonTypesRecord, SchedulesRecord, BookingsRecord, AccountsRecord
-from src.crud.queries.bookings import select_user_bookings, get_details, select_batch, select_booking, \
+from src.crud.models import (
+    PersonTypesRecord, SchedulesRecord, BookingsRecord, AccountsRecord
+)
+from src.crud.queries.bookings import (
+    select_user_bookings, get_details, select_batch, select_booking,
     select_assigned_bookings
+)
 from src.crud.queries.utils import add_object, execute_safely
 from src.endpoints.bookings._utils import validate_seat
 from src.schema.bookings import Booking, SingleBooking

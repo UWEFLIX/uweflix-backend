@@ -1,9 +1,6 @@
-from typing import Annotated, List
-
+from typing import Annotated
 from fastapi import APIRouter, Security, HTTPException
-from fastapi.params import Param
 from sqlalchemy import and_, delete
-
 from src.crud.models import ClubMembersRecords
 from src.crud.queries.clubs import select_leader_clubs
 from src.crud.queries.utils import add_object, execute_safely

@@ -1,15 +1,13 @@
 from random import randint
-from typing import Annotated, List
-
+from typing import Annotated
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from pydantic import EmailStr
-from sqlalchemy import select, delete, and_, update
-
+from sqlalchemy import delete, and_, update
 from src.crud.models import (
     UsersRecord, AccountsRecord
 )
-from src.crud.queries.user import  select_user_by_email, select_users
+from src.crud.queries.user import select_user_by_email, select_users
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User

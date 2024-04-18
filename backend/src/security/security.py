@@ -5,16 +5,13 @@ from fastapi.security import OAuth2PasswordBearer, SecurityScopes
 from jose import jwt, JWTError  # from package python-jose
 from passlib.context import CryptContext
 from starlette import status
-from src.crud.models import UsersRecord
 from src.crud.queries.user import select_user_by_email
 from src.schema.users import User
 from src.schema.security import TokenData
 from src.schema.factories.user_factory import UserFactory
 from src.security.one_time_passwords import OTP
 from src.security.utils import check_scope
-# from src.utils.mailing import EmailClient
 from cryptography.fernet import Fernet
-# from src.security.one_time_password import OTP
 import os
 
 from src.utils.mailing import EmailClient

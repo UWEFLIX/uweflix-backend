@@ -1,10 +1,6 @@
-from typing import AsyncIterator
-
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncConnection
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from contextlib import asynccontextmanager
 from os import getenv
-from dotenv import load_dotenv
 
 db = getenv("DATABASE")
 host = getenv("DATABASE_HOST")

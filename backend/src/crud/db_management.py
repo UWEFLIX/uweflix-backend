@@ -8,7 +8,9 @@ from src.crud.models import (
     UsersRecord, UserRolesRecord, AccountsRecord, PersonTypesRecord
 )
 from src.crud.queries.utils import add_object, add_objects
-from src.crud.queries.stored_procedures import generate_unique_string, generate_filename
+from src.crud.queries.stored_procedures import (
+    generate_unique_string, generate_filename
+)
 
 
 async def get_permissions():
