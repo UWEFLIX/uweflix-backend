@@ -1,3 +1,6 @@
+sudo apt update && sudo apt upgrade
+sudo
+
 cd /home/usr/uweflix-backend/uweflix-backend
 python3 -m venv .venv
 . ./.venv/bin/activate
