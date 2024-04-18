@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, ScalarResult
 
 from src.crud.engine import async_session
 from src.crud.models import AccountsRecord, CardsRecord, UsersRecord, ClubsRecord
@@ -138,14 +138,14 @@ async def select_half_accounts(start, limit):
             return result.scalars().all()
 
 
-async def select_last_entered_account(account_name, entity_id):
+async def select_last_entered_account(account_name: str, entity_id: int, entity_type: str):
     query = select(
         AccountsRecord
     ).where(
         and_(
             AccountsRecord.name == account_name,
             AccountsRecord.entity_id == entity_id,
-            AccountsRecord.entity_type == "CLUB"
+            AccountsRecord.entity_type == entity_type
         )
     )
 
@@ -171,7 +171,9 @@ async def select_full_account(query):
     return _data
 
 
-async def select_club_accounts(club_id: int, start: int, limit: int):
+async def select_club_accounts(
+        club_id: int, start: int, limit: int
+) -> ScalarResult[AccountsRecord]:
 
     query = select(
         AccountsRecord

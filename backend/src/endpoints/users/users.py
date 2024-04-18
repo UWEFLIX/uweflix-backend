@@ -1,4 +1,4 @@
-from random import randint
+import asyncio
 from typing import Annotated
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
@@ -9,6 +9,7 @@ from src.crud.models import (
 )
 from src.crud.queries.user import select_user_by_email, select_users
 from src.crud.queries.utils import add_object, execute_safely
+from src.endpoints.accounts.accounts import get_initials, update_club_account_uid
 from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
@@ -65,13 +66,16 @@ async def create_user(
     user = UserFactory.create_full_user(user_record)
 
     accounts_record = AccountsRecord(
-        account_uid=randint(0, 10000),
+        account_uid=f"U{current_user.id}#{get_initials(user.name)}",
         name=user.name,
         entity_type="USER",
         entity_id=user.id,
         discount_rate=0
     )
     await add_object(accounts_record)
+
+    coro = update_club_account_uid(user.name, current_user.id, "USER")
+    asyncio.create_task(coro)
 
     return user
 
@@ -81,40 +85,36 @@ async def update_user(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
         ],
-        user: User
+        new_name: str
 ) -> User:
 
-    # query = update(UsersRecord)
+    query = update(
+        UsersRecord
+    ).values(
+        name=new_name,
+        # status=user.status
+    ).where(
+        UsersRecord.email == current_user.email
+    )
 
-    if current_user.email != user.email:
-        if "write:users" not in current_user.permissions:
-            raise HTTPException(
-                403, "Forbidden"
-            )
-        query = update(
-            UsersRecord
-        ).values(
-            name=user.name,
-            status=user.status
-        ).where(
-            UsersRecord.email == user.email
+    _accounts_update = update(
+        AccountsRecord
+    ).values(
+        account_uid=f"U{current_user.id}#{get_initials(new_name)}"
+    ).where(
+        and_(
+            AccountsRecord.entity_id == current_user.id,
+            AccountsRecord.entity_type == "USER"
         )
-    else:
-        query = update(
-            UsersRecord
-        ).values(
-            name=user.name,
-            # status=user.status
-        ).where(
-            UsersRecord.email == user.email
-        )
+    )
+    tasks = [
+        execute_safely(query),
+        update_club_account_uid(new_name, current_user.id, "USER")
+    ]
 
-    # query.where(
-    #     UsersRecord.email == user.email
-    # )
-    await execute_safely(query)
+    await asyncio.gather(*tasks)
 
-    user_record = await select_user_by_email(user.email)
+    user_record = await select_user_by_email(current_user.email)
     return UserFactory.create_full_user(user_record)
 
 
@@ -142,3 +142,5 @@ async def delete_user(
     )
     await execute_safely(delete_accounts)
 
+
+# todo patch method to soft delete

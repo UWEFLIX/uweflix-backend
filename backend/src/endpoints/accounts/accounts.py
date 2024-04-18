@@ -1,3 +1,4 @@
+import asyncio
 from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
@@ -17,6 +18,38 @@ from src.endpoints.accounts.cards import router as cards
 
 router = APIRouter(prefix="/accounts", tags=["Accounts"])
 router.include_router(cards)
+# todo fix account uid
+
+
+def get_initials(name: str):
+    words = name.split(" ")
+    return ". ".join([word[0].upper() for word in words])
+
+
+async def update_club_account_uid(
+        name: str, entity_id: int, entity_type: str
+) -> Account:
+    new_record = await select_last_entered_account(
+        name, entity_id, entity_type
+    )
+
+    if entity_type == "USER":
+        char = "U"
+    else:
+        char = "C"
+
+    _account = AccountsFactory.get_half_account(new_record)
+    uid = f"{char}{_account.id}#{get_initials(name)}"
+    _account.uid = uid
+
+    _query = update(
+        AccountsRecord
+    ).values(
+        account_uid=uid
+    ).where(AccountsRecord.id == _account.id)
+    await execute_safely(_query)
+
+    return _account
 
 
 @router.get("/account", status_code=200, tags=["Unfinished"])
@@ -34,7 +67,7 @@ async def get_account(
     return AccountsFactory.get_half_account(record)
 
 
-@router.patch("/account", status_code=201, tags=["Unfinished"])
+@router.patch("/club/account", status_code=201, tags=["Unfinished"])
 async def update_account_discount(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:accounts"])
@@ -51,9 +84,13 @@ async def update_account_discount(
     ).values(
         discount_rate=discount
     ).where(
-        AccountsRecord.id == account_id
+        and_(
+            AccountsRecord.id == account_id,
+            AccountsRecord.entity_type == "CLUB"
+        )
     )
     await execute_safely(query)
+    # todo finish
 
 
 @router.get("/accounts", status_code=200, tags=["Unfinished"])
@@ -78,7 +115,7 @@ async def create_account(
     clubs = await select_leader_clubs(current_user.id)
 
     try:
-        clubs[account.entity_id]
+        club = clubs[account.entity_id]
     except KeyError:
         raise HTTPException(422, "Invalid input")
 
@@ -92,20 +129,20 @@ async def create_account(
 
     await add_object(record)
 
-    new_record = select_last_entered_account(
-        account.name, current_user.id
+    return await update_club_account_uid(
+        club.name, account.entity_id, "CLUB"
     )
-    return AccountsFactory.get_half_account(new_record)
 
 
 async def _update_account(
         account: Account, entity_id: int, entity_type: str
 ) -> Account:
+    uid = f"{account.id}#{get_initials(account.name)}"
     query = update(
         AccountsRecord
     ).values(
         name=account.name,
-        uid=account.uid,
+        account_uid=uid,
         status=account.status
     ).where(
         and_(

@@ -1,10 +1,13 @@
+import asyncio
 from random import randint
 from typing import Annotated
 from fastapi.params import Param
 from sqlalchemy import update, delete, and_
 from src.crud.models import ClubsRecord, AccountsRecord, ClubMembersRecords
+from src.crud.queries.accounts import select_club_accounts
 from src.crud.queries.clubs import select_club, select_leader_clubs, select_clubs
 from src.crud.queries.utils import add_object, execute_safely, add_objects
+from src.endpoints.accounts.accounts import get_initials, update_club_account_uid
 from src.endpoints.clubs.club_members import router as club_members
 from fastapi import APIRouter, Security, HTTPException
 from src.schema.clubs import Club
@@ -16,6 +19,30 @@ from src.endpoints.clubs.cities import router as cities
 router = APIRouter(prefix="/clubs", tags=["Clubs"])
 router.include_router(club_members)
 router.include_router(cities)
+
+
+def update_uid_query(account_id: int, club_name: str, club_id: int):
+    return update(
+        AccountsRecord
+    ).values(
+        account_uid=f"C{account_id}#{get_initials(club_name)}"
+    ).where(
+        and_(
+            AccountsRecord.entity_id == club_id,
+            AccountsRecord.entity_type == "CLUB"
+        )
+    )
+
+
+async def update_account_uids(club_id: int, new_name: str):
+    rows = await select_club_accounts(club_id, 1, 1_000_000_000)
+    queries = [
+        update_uid_query(record.id, new_name, club_id) for record in rows
+    ]
+    tasks = [
+        execute_safely(query) for query in queries
+    ]
+    await asyncio.gather(*tasks)
 
 
 @router.post("/club", status_code=201, tags=["Unfinished"])
@@ -43,17 +70,20 @@ async def add_club(
     club = ClubFactory.get_full_club(record)
 
     accounts_record = AccountsRecord(
-        account_uid=randint(0, 10000),
+        account_uid=f"C{randint(0, 5000)}#{get_initials(club.club_name)}",
         name=club.club_name,
         entity_type="CLUB",
         entity_id=club.id,
-        discount_rate=0
+        discount_rate=0,
+        status="ENABLED"
     )
     club_member_record = ClubMembersRecords(
         member=club.leader.id,
         club=club.id
     )
     await add_objects([accounts_record, club_member_record])
+    coro = update_club_account_uid(club.club_name, club.id, "CLUB")
+    asyncio.create_task(coro)
 
     return club
 
@@ -68,7 +98,7 @@ async def update_club(
 
     clubs = await select_leader_clubs(current_user.id)
     try:
-        clubs[club.id]
+        old_club = clubs[club.id]
     except KeyError:
         raise HTTPException(status_code=422, detail="Club doesnt exist")
 
@@ -91,6 +121,12 @@ async def update_club(
     await execute_safely(query)
 
     record = await select_club(club.club_name)
+
+    if old_club.name != club.club_name:
+        coro = update_account_uids(
+            club.id, club.club_name,
+        )
+        asyncio.create_task(coro)
 
     return ClubFactory.get_full_club(record)
 

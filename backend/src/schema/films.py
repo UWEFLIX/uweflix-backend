@@ -6,8 +6,8 @@ from pydantic import BaseModel, Field
 class Hall(BaseModel):
     id: int
     hall_name: str
-    seats_per_row: int
-    no_of_rows: int
+    seats_per_row: int = Field(..., ge=1)
+    no_of_rows: int = Field(..., ge=1)
 
 
 class FilmImage(BaseModel):
@@ -28,7 +28,7 @@ class Film(BaseModel):
     id: int
     title: str
     age_rating: str
-    duration_sec: int
+    duration_sec: int = Field(..., ge=1)
     trailer_desc: str
     on_air_from: datetime
     on_air_to: datetime
