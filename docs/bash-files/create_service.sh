@@ -10,4 +10,4 @@ Restart=always
 
 [Install]
 WantedBy=default.target
-" > /etc/systemd/user/dashboard.service
+" > /etc/systemd/user/uweflix-backend.service
