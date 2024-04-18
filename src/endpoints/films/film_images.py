@@ -1,7 +1,9 @@
+import os
+from pathlib import Path
 import time
 from typing import Annotated, List
 import aiofiles
-from aiofiles.os import remove, path, rename
+from aiofiles.os import remove, path, rename, makedirs
 from fastapi import APIRouter, Security, UploadFile, File, HTTPException
 from fastapi.params import Param
 from sqlalchemy import text, delete
@@ -16,14 +18,15 @@ from src.security.security import get_current_active_user
 
 router = APIRouter(prefix="/images", tags=["FilmImages"])
 
-_root_path = f'assets/images/films'
+_ASSETS_DIR = os.getenv('ASSETS_FOLDER')
+_FILMS_DIR = os.path.join(_ASSETS_DIR, 'images/films')
 
 
 async def rename_poster(new_title: str, old_title: str) -> None:
     try:
         await rename(
-            f"{_root_path}/{old_title}-poster.jpg",
-            f"{_root_path}/{new_title}-poster.jpg",
+            f"{_FILMS_DIR}/{old_title}-poster.jpg",
+            f"{_FILMS_DIR}/{new_title}-poster.jpg",
         )
     except FileNotFoundError:
         pass
@@ -39,7 +42,7 @@ async def update_film_poster(
 ) -> FileResponse:
     film_title.replace("/", "")
     film_title.replace("\\", "")
-    _path = f'{_root_path}/{film_title}-poster.jpg'
+    _path = f'{_FILMS_DIR}/{film_title}-poster.jpg'
     async with aiofiles.open(
             _path, 'wb'
     ) as f:
@@ -82,7 +85,7 @@ async def add_film_posters(
 
     for index, image in enumerate(images):
         file = files[index]
-        _path = f'{_root_path}/{image.filename}'
+        _path = f'{_FILMS_DIR}/{image.filename}'
 
         async with aiofiles.open(
                 _path, 'wb'
@@ -113,8 +116,8 @@ async def delete_film_posters(
     ).where(FilmImagesRecord.filename == _file_name)
     await execute_safely(query)
 
-    _path = f'{_root_path}/{file_name}'
-    _exists = await path.exists(f'{_root_path}/{file_name}')
+    _path = f'{_FILMS_DIR}/{file_name}'
+    _exists = await path.exists(f'{_FILMS_DIR}/{file_name}')
     if _exists:
         await remove(_path)
     else:
@@ -133,11 +136,11 @@ async def get_image(
     file_name.replace("/", "")
     file_name.replace("\\", "")
 
-    _path = f'{_root_path}/{file_name}'
-    _exists = await path.exists(f'{_root_path}/{file_name}')
+    _path = f'{_FILMS_DIR}/{file_name}'
+    _exists = await path.exists(_path)
     if _exists:
         return FileResponse(
-            f'assets/images/films/{file_name}', media_type="image/jpg"
+            f'{_FILMS_DIR}/{file_name}', media_type="image/jpg"
         )
     else:
         raise HTTPException(
