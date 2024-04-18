@@ -19,9 +19,6 @@ router = APIRouter(prefix="/accounts", tags=["Accounts"])
 router.include_router(cards)
 
 
-# todo test user and club get endpoints
-
-
 @router.get("/account", status_code=200, tags=["Unfinished"])
 async def get_account(
         current_user: Annotated[
@@ -29,7 +26,6 @@ async def get_account(
         ],
         account_id: int
 ) -> Account:
-
     record = await select_half_account(account_id)
 
     if not record:
@@ -68,7 +64,6 @@ async def get_accounts(
         start: Annotated[int, Param(title="Range starting ID to get", ge=1)],
         limit: Annotated[int, Param(title="Amount of resources to fetch", ge=1)]
 ) -> List[Account]:
-
     record = await select_half_accounts(start, limit)
     return AccountsFactory.get_half_accounts(record)
 
@@ -244,4 +239,29 @@ async def get_club_accounts(
     return AccountsFactory.get_half_accounts(records)
 
 
-# todo top up
+@router.post(
+    "/account/to-pup", status_code=201, tags=["Unfinished", "Clubs"]
+)
+async def club_top_up(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        account_id: Annotated[int, Param(title="Account ID", ge=1)],
+        amount: Annotated[float, Param(title="Amount to Top Up", ge=1)]
+):
+    # finalize on specifics regarding transactions
+    record = await select_half_account(account_id)
+
+    if not record:
+        raise HTTPException(404, "Account not found")
+
+    account = AccountsFactory.get_half_account(record)
+
+    query = update(
+        AccountsRecord
+    ).values(
+        balance=AccountsRecord.balance + amount
+    )
+    await execute_safely(query)
+    account.balance += amount
+    return account

@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class Hall(BaseModel):
@@ -21,7 +21,7 @@ class Schedule(BaseModel):
     film_id: int
     show_time: datetime
     on_schedule: bool
-    ticket_price: float
+    ticket_price: float = Field(..., ge=1)
 
 
 class Film(BaseModel):

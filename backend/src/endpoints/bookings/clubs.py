@@ -189,7 +189,6 @@ async def reassign_user_bookings(
         current_user.id, "CLUB", booking.schedule.id
     )
 
-    # todo verify if user_email is in club
     members = details["members"]
     try:
         members[new_assignee]

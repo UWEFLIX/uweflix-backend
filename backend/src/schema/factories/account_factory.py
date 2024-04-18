@@ -46,7 +46,8 @@ class AccountsFactory:
             entity_type=record.entity_type,
             discount_rate=record.discount_rate,
             entity_id=record.entity_id,
-            status=record.status
+            status=record.status,
+            balance=record.balance
         )
 
     @staticmethod

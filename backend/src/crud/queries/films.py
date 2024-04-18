@@ -211,3 +211,18 @@ async def select_film_by_id(film_id: int):
         async with session.begin():
             result = await session.execute(query)
             return result.scalar()
+
+
+async def select_schedules_by_hall_id(hall_id: int, limit: int):
+    query = select(
+        SchedulesRecord, FilmsRecord
+    ).join(
+        FilmsRecord, FilmsRecord.film_id == SchedulesRecord.film_id
+    ).where(
+        SchedulesRecord.hall_id == hall_id
+    ).limit(limit)
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+
+            return result.all()

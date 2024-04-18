@@ -94,3 +94,12 @@ class FilmFactory:
         return [
             FilmFactory.get_detailed_schedule(x) for x in records
         ]
+
+    @staticmethod
+    def get_schedules_film(records) -> List[ScheduleDetailed]:
+        return [
+            ScheduleDetailed(
+                **FilmFactory.get_schedule(record[0]).model_dump(),
+                film=FilmFactory.get_half_film(record[1])
+            ) for record in records
+        ]

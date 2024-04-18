@@ -20,10 +20,13 @@ _root_path = f'assets/images/films'
 
 
 async def rename_poster(new_title: str, old_title: str) -> None:
-    await rename(
-        f"{_root_path}/{old_title}.jpg",
-        f"{_root_path}/{new_title}.jpg",
-    )
+    try:
+        await rename(
+            f"{_root_path}/{old_title}-poster.jpg",
+            f"{_root_path}/{new_title}-poster.jpg",
+        )
+    except FileNotFoundError:
+        pass
 
 
 @router.patch("/poster", status_code=201, tags=["Unfinished"])

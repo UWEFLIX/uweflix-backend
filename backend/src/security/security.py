@@ -16,7 +16,7 @@ import os
 
 from src.utils.mailing import EmailClient
 
-# todo change on prod with: ```openssl rand -hex 32```
+# change with: ```openssl rand -hex 32```
 SECRET_KEY = os.getenv("OAUTH2_SECRET")
 ENCRYPTION_KEY = os.getenv("ENCRYPTION_SECRET")  # Fernet.generate_key()
 ALGORITHM = "HS256"

@@ -3,7 +3,7 @@ from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from sqlalchemy import update, delete
 from src.crud.models import HallsRecord
-from src.crud.queries.films import select_hall, select_halls
+from src.crud.queries.films import select_hall, select_halls, select_schedules_by_hall_id
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.films import Hall
 from src.schema.factories.film_factories import FilmFactory
@@ -108,7 +108,8 @@ async def get_schedules(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["read:halls"])
         ],
-        hall_name: str
+        hall_id: int, limit: int
 ):
-    # todo finish
-    pass
+    records = await select_schedules_by_hall_id(hall_id, limit)
+
+    return FilmFactory.get_schedules_film(records)
