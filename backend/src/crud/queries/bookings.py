@@ -4,9 +4,11 @@ from sqlalchemy import select, and_, text
 from src.crud.engine import async_session
 from src.crud.models import (
     PersonTypesRecord, BookingsRecord, SchedulesRecord, HallsRecord, FilmsRecord,
-    AccountsRecord, ClubMembersRecords, ClubsRecord, UsersRecord
+    AccountsRecord, UsersRecord
 )
-from src.crud.queries.raw_sql import select_batch_data, club_pre_booking_details, user_pre_booking_details
+from src.crud.queries.raw_sql import (
+    select_batch_data, club_pre_booking_details, user_pre_booking_details
+)
 from src.schema.bookings import BatchData
 
 
@@ -129,15 +131,15 @@ async def select_batches() -> Dict[str, BatchData]:
         async with session.begin():
             result = await session.execute(text(query))
             rows = result.fetchall()
-            return {
-                batch_ref: BatchData(
-                    batch_ref=batch_ref,
-                    count=count,
-                    created=created,
-                    total=total,
-                )
-                for batch_ref, created, count, total in rows
-            }
+
+    return {
+        batch_ref: BatchData(
+            batch_ref=batch_ref,
+            count=count,
+            created=created,
+            total=total
+        ) for batch_ref, created, count, total in rows
+    }
 
 
 async def get_details(entity_id: int, entity_type: str, schedule_id: int):
@@ -184,10 +186,10 @@ async def get_details(entity_id: int, entity_type: str, schedule_id: int):
                     email = row[26]
                     if member_id:
                         member = UsersRecord(
-                            member_id=member_id,
+                            user_id=member_id,
                             name=row[25],
                             email=email,
-                            passowrd=row[27],
+                            password=row[27],
                             status=row[28],
                         )
                         details["club_members"][email] = member
@@ -260,3 +262,30 @@ async def select_batch(batch: str):
             if len(rows) == 0:
                 return None
             return rows
+
+
+async def select_assigned_bookings(email: str):
+    query = select(
+        BookingsRecord, SchedulesRecord, FilmsRecord, HallsRecord,
+        AccountsRecord, PersonTypesRecord
+    ).join(
+        SchedulesRecord,
+        SchedulesRecord.schedule_id == BookingsRecord.schedule_id
+    ).join(
+        FilmsRecord, SchedulesRecord.film_id == FilmsRecord.film_id
+    ).join(
+        HallsRecord, HallsRecord.hall_id == SchedulesRecord.hall_id
+    ).join(
+        AccountsRecord, AccountsRecord.id == BookingsRecord.account_id
+    ).join(
+        PersonTypesRecord,
+        PersonTypesRecord.person_type_id == BookingsRecord.person_type_id
+    ).where(
+        BookingsRecord.assigned_user == email
+    )
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.fetchall()
+

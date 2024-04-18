@@ -7,7 +7,8 @@ from pydantic import EmailStr
 from sqlalchemy import update
 
 from src.crud.models import PersonTypesRecord, SchedulesRecord, BookingsRecord, AccountsRecord
-from src.crud.queries.bookings import select_user_bookings, get_details, select_batch, select_booking
+from src.crud.queries.bookings import select_user_bookings, get_details, select_batch, select_booking, \
+    select_assigned_bookings
 from src.crud.queries.utils import add_object, execute_safely
 from src.endpoints.bookings._utils import validate_seat
 from src.schema.bookings import Booking, SingleBooking
@@ -67,7 +68,7 @@ async def create_user_bookings(
         )
 
     try:
-        schedule_record: SchedulesRecord = details["schedule"]
+        schedule_record: SchedulesRecord = details["schedules"]
     except KeyError:
         raise HTTPException(
             404, "Schedule not found"
@@ -148,3 +149,14 @@ async def reassign_user_bookings(
 
     records = await select_booking(booking_id)
     return BookingsFactory.get_booking(records)
+
+
+@router.get("/bookings/me", tags=["Unfinished", "Users"])
+async def get_assigned_bookings(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+):
+    records = await select_assigned_bookings(current_user.email)
+
+    return BookingsFactory.get_bookings(records)

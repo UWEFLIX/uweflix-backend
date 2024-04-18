@@ -76,13 +76,13 @@ async def create_club_bookings(
         raise HTTPException(404, "Account not found")
 
     try:
-        schedule_record: SchedulesRecord = details["schedule"]
+        schedule_record: SchedulesRecord = details["schedules"]
     except KeyError:
         raise HTTPException(
             404, "Schedule not found"
         )
 
-    if schedule_record.on_schedule:
+    if not schedule_record.on_schedule:
         raise HTTPException(
             422, "Schedule is not on schedule"
         )

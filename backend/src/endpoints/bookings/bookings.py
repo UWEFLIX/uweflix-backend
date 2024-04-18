@@ -6,7 +6,7 @@ from src.crud.queries.bookings import (
 )
 from src.crud.queries.clubs import select_leader_clubs
 from src.endpoints.bookings.person_types import router as persons
-from src.schema.bookings import Booking
+from src.schema.bookings import Booking, BatchData
 from src.schema.factories.bookings_factory import BookingsFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
@@ -58,8 +58,8 @@ async def get_batch_bookings(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["read:bookings"])
         ],
-) -> Dict[str, int]:
-    """returns counts of batches"""
+) -> Dict[str, BatchData]:
+    """returns batch data"""
     return await select_batches()
 
 
@@ -70,7 +70,7 @@ async def get_batch_bookings(
         ],
         batch_reference: str
 ) -> List[Booking]:
-    records = select_batch(batch_reference)
+    records = await select_batch(batch_reference)
 
     if not records:
         raise HTTPException(404, "No bookings found")

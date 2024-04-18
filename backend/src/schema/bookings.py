@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Any
 from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr
 from src.schema.accounts import Account
@@ -46,4 +46,12 @@ class BatchData(BaseModel):
     batch_ref: str
     count: int
     created: datetime
-    total: float
+    total: int | float
+
+
+BatchData(
+    batch_ref="batch_ref",
+    count=1,
+    created=datetime.now(),
+    total=123
+)
