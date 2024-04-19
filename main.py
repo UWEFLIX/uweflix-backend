@@ -17,6 +17,6 @@ if __name__ == '__main__':
         host="0.0.0.0",
         app=app,
         port=443,
-        ssl_certfile=f"ssl/csr.pem",
+        ssl_certfile=f"ssl/certificate.crt",
         ssl_keyfile=f"ssl/private.key",
     )
