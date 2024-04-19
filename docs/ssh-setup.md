@@ -40,7 +40,7 @@ journalctl --user -u uweflix-backend -f
 
 ### Grant rights to user root with 
 ```
-GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' 
+GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1' 
   IDENTIFIED BY '123' WITH GRANT OPTION;
 ```
 
