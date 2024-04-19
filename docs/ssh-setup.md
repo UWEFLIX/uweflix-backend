@@ -42,3 +42,9 @@ journalctl --user -u uweflix-backend -f
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' 
   IDENTIFIED BY '123' WITH GRANT OPTION;
 ```
+
+### To reinit db, first enter python shell and execute this from root dir
+```python3
+from src.utils.db_initialzation import main
+main()
+```

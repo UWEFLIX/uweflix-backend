@@ -8,7 +8,7 @@ from src.crud.drop import create_new_db
 from src.crud.engine import db, host, port, user, password
 
 
-async def main():
+async def _main():
     print(f"db: {db}")
     print(f"host: {host}")
     print(f"port: {port}")
@@ -19,5 +19,5 @@ async def main():
     await close_db()
 
 
-if __name__ == '__main__':
-    asyncio.run(main())
+def main():
+    asyncio.run(_main())
