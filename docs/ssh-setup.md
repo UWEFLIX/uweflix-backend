@@ -8,6 +8,7 @@ ssh-keygen -t ed25519 -C "nishawl.naseer@outlook.com"
 
 ### Name it "github"
 ```bash
+eval "$(ssh-agent -s)"
 ssh-add ~/uweflix-backend/github
 ```
 
@@ -43,7 +44,7 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost'
   IDENTIFIED BY '123' WITH GRANT OPTION;
 ```
 
-### To reinit db, first enter python shell and execute this from root dir
+### To reinit db, first enter python shell from root dir and execute this 
 ```python3
 from src.utils.db_initialzation import main
 main()
