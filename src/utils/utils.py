@@ -30,7 +30,6 @@ async def create_assets_dir():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # await create_new_db()
     await create_assets_dir()
     yield
     await close_db()
