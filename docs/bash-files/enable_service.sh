@@ -1,3 +1,5 @@
+#!/bin/bash
+
 echo "Reloading systemd"
 systemctl --user daemon-reload
 # shellcheck disable=SC2086
