@@ -14,9 +14,9 @@ if __name__ == '__main__':
     port = int(os.getenv('PORT'))
 
     uvicorn.run(
-        host="0.0.0.0",
+        host=host,
         app=app,
-        port=443,
+        port=port,
         ssl_certfile=f"ssl/certificate.crt",
         ssl_keyfile=f"ssl/private.key",
     )
