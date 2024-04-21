@@ -20,8 +20,26 @@ sudo docker images
 
 #### Finally run
 ```bash
-sudo docker run -d --restart=always -p 8888:443 IMAGE_ID
+sudo docker run -d --restart=always -p 443:443 IMAGE_ID
 ```
-
 #### In this case python server inside docker is running in port 8888 and I want to run it in host's port 443
 
+#### To get the container ID
+```bash
+sudo docker ps
+```
+
+#### Stop container
+```bash
+sudo docker stop CONTAINER_ID
+```
+
+#### View log 
+```bash
+sudo docker logs CONTAINER_ID
+```
+
+#### Follow logs 
+```bash
+sudo docker logs -f CONTAINER_ID
+```
