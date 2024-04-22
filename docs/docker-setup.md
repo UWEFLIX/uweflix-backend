@@ -43,3 +43,8 @@ sudo docker logs CONTAINER_ID
 ```bash
 sudo docker logs -f CONTAINER_ID
 ```
+
+
+## Setting up the database
+#### We are setting it up on the same host as docker is hosted
+#### Edit ```/etc/mysql/mariadb.conf.d/50-server.cnf``` to bind DB server to IP ```172.17.0.1``` and uncomment ```skip-name-resolve```

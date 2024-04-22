@@ -49,3 +49,5 @@ GRANT ALL PRIVILEGES ON *.* TO 'root'@'127.0.0.1'
 from src.utils.db_initialzation import main
 main()
 ```
+
+
