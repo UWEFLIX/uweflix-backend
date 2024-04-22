@@ -20,7 +20,7 @@ sudo docker images
 
 #### Finally run
 ```bash
-sudo docker run -d --restart=always -p 443:443 IMAGE_ID
+sudo docker run -itd --restart=always --name uweflix-backend --network host uweflix-backend
 ```
 #### In this case python server inside docker is running in port 8888 and I want to run it in host's port 443
 
@@ -31,20 +31,20 @@ sudo docker ps
 
 #### Stop container
 ```bash
-sudo docker stop CONTAINER_ID
+sudo docker stop uweflix-backend
 ```
 
 #### View log 
 ```bash
-sudo docker logs CONTAINER_ID
+sudo docker logs uweflix-backend
 ```
 
 #### Follow logs 
 ```bash
-sudo docker logs -f CONTAINER_ID
+sudo docker logs -f uweflix-backend
 ```
 
 
 ## Setting up the database
 #### We are setting it up on the same host as docker is hosted
-#### Edit ```/etc/mysql/mariadb.conf.d/50-server.cnf``` to bind DB server to IP ```172.17.0.1``` and uncomment ```skip-name-resolve```
+#### Edit ```/etc/mysql/mariadb.conf.d/50-server.cnf```, uncomment ```skip-name-resolve```
