@@ -37,7 +37,6 @@ async def create_film(
         on_air_from=film.on_air_from,
         on_air_to=film.on_air_to,
         is_active=film.is_active,
-        poster_image=f"{film.title}-poster",
     )
 
     await add_object(record)
@@ -80,7 +79,6 @@ async def update_film(
         on_air_from=film.on_air_from,
         on_air_to=film.on_air_to,
         is_active=film.is_active,
-        # poster_image=f"{film.title}-poster"
     ).where(
         FilmsRecord.title == old_title
     )
@@ -109,7 +107,7 @@ async def get_film(
 
     if not records:
         raise HTTPException(
-            422, detail="Film not found"
+            404, detail="Film not found"
         )
 
     return FilmFactory.get_full_film(records)
