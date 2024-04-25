@@ -1,13 +1,8 @@
 import os
 import json
 import requests
-import logging
 
 from tests._test import Test
-
-# Set up basic configuration for logging
-logging.basicConfig(level=logging.CRITICAL)
-
 
 
 class Client:

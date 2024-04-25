@@ -1,6 +1,11 @@
+import logging
+
 from src.utils.db_initialzation import main as db_init
 from tests._test import Test
 from tests.client import Client
+
+# Set up basic configuration for logging
+logging.basicConfig(level=logging.CRITICAL)
 
 
 def main():
