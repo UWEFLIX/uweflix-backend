@@ -1,4 +1,5 @@
 import asyncio
+import os
 
 from sqlalchemy import text
 
@@ -11,6 +12,7 @@ from src.crud.queries.utils import add_object, add_objects
 from src.crud.queries.stored_procedures import (
     generate_unique_string, generate_filename
 )
+from src.security.security import get_password_hash
 
 
 async def get_permissions():
@@ -88,12 +90,14 @@ async def initialise_db():
 
     admin = RolesRecord(role_name="Admin")
 
+    _admin1_username = os.getenv("ADMIN1_EMAIL")
+    _admin1_password = os.getenv("ADMIN1_PASSWORD")
+
     objs2: list = admin_perms(len(objs))
     user1 = UsersRecord(
         name="Nishawl Naseer",
         email="nishawl.naseer@outlook.com",
-        password="$2b$12$qtCm88dd7JSa9SGlwKGp/e"
-                 "/VDEbZ0kbSmnUJEC7sgunD1whHFBjeW"
+        password=get_password_hash(_admin1_password)
     )
     account1 = AccountsRecord(
         account_uid="2",

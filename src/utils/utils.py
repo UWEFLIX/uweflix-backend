@@ -6,7 +6,6 @@ from contextlib import asynccontextmanager
 from src.crud.db_management import close_db
 from src.crud.drop import create_new_db
 from aiofiles.os import makedirs, path
-import aiofiles
 
 
 ALPHABETS = list(string.ascii_uppercase)
@@ -31,5 +30,6 @@ async def create_assets_dir():
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await create_assets_dir()
+    # await create_new_db()
     yield
     await close_db()
