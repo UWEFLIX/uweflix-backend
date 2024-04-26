@@ -13,10 +13,21 @@ if __name__ == '__main__':
     host = os.getenv('HOST')
     port = int(os.getenv('PORT'))
 
-    uvicorn.run(
-        host=host,
-        app=app,
-        port=port,
-        ssl_certfile=f"ssl/certificate.crt",
-        ssl_keyfile=f"ssl/private.key",
-    )
+    _ssl = int(os.getenv("SSL"))
+
+    if _ssl:
+        cert = os.getenv('SSL_CERT_FILE')
+        key = os.getenv('SSL_PRIVATE_KEY')
+        uvicorn.run(
+            host=host,
+            app=app,
+            port=port,
+            ssl_certfile=cert,
+            ssl_keyfile=key,
+        )
+    else:
+        uvicorn.run(
+            host=host,
+            app=app,
+            port=port
+        )

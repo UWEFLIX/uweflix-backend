@@ -13,7 +13,7 @@ class Client:
         host = os.getenv("host")
         port = os.getenv("port")
 
-        self._server = f"https://{host}"
+        self._server = f"http://{host}:{port}"
 
     def login(self):
         username = "nishawl.naseer@outlook.com"
