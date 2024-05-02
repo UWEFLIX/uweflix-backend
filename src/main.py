@@ -4,6 +4,7 @@ from typing import Annotated
 from fastapi import FastAPI, Depends, Security, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
+from starlette.middleware.cors import CORSMiddleware
 
 from src.schema.factories.user_factory import UserFactory
 from src.schema.security import Token
@@ -27,6 +28,14 @@ app.include_router(users)
 app.include_router(bookings)
 app.include_router(accounts)
 app.include_router(films)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # List your allowed origins here
+    allow_credentials=True,
+    allow_methods=["*"],  # You can restrict the HTTP methods if needed
+    allow_headers=["*"],  # You can restrict the headers if needed
+)
 
 
 @app.post(
