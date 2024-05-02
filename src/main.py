@@ -23,12 +23,6 @@ from src.endpoints.films.films import router as films
 
 app = FastAPI(lifespan=lifespan)
 
-app.include_router(clubs)
-app.include_router(users)
-app.include_router(bookings)
-app.include_router(accounts)
-app.include_router(films)
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # List your allowed origins here
@@ -36,7 +30,13 @@ app.add_middleware(
     allow_methods=["*"],  # You can restrict the HTTP methods if needed
     allow_headers=["*"],  # You can restrict the headers if needed
 )
-# cors added
+
+app.include_router(clubs)
+app.include_router(users)
+app.include_router(bookings)
+app.include_router(accounts)
+app.include_router(films)
+
 
 @app.post(
     "/token", response_model=Token, tags=["Users"],
