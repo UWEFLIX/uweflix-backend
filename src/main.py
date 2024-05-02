@@ -36,7 +36,7 @@ app.add_middleware(
     allow_methods=["*"],  # You can restrict the HTTP methods if needed
     allow_headers=["*"],  # You can restrict the headers if needed
 )
-
+# cors added
 
 @app.post(
     "/token", response_model=Token, tags=["Users"],
