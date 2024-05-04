@@ -55,7 +55,10 @@ def validate_token(
 
         if username is None:
             raise exception
-        token_data = TokenData(username=username, password=password)
+        token_data = TokenData(
+            username=username,
+            password=password,
+        )
     except JWTError:
         raise exception
 

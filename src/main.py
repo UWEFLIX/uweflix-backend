@@ -43,7 +43,9 @@ app.include_router(films)
     status_code=201
 )
 async def login_for_access_token(
-        form_data: Annotated[OAuth2PasswordRequestForm, Depends()]
+        form_data: Annotated[
+            OAuth2PasswordRequestForm, Depends()
+        ]
 ):
     """
     Create a token up to specification of Oauth2 Scope Authentication
@@ -83,11 +85,15 @@ async def login_for_access_token(
         data={
             "sub": user.email,
             "scopes": list(scopes),
-            "password": encrypted_password
+            "password": encrypted_password,
+            "full_name": user.name
         },
         expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    return {
+        "access_token": access_token,
+        "token_type": "bearer"
+    }
 
 
 @app.get(

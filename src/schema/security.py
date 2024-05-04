@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 class TokenData(BaseModel):
     username: str | None = None
+    name: str | None = None
     password: str | None = None
     scopes: List[str] = []
 

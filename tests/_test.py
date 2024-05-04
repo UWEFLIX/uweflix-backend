@@ -1,12 +1,18 @@
+from typing import List
+
+from pydantic import BaseModel
+
+
 class Test:
 
     def __init__(
-            self, test_id: int, req_url_path: str, res_status_code: int,
+            self, req_url_path: str, res_status_code: int,
             req_type: str,
             req_params: dict | None = None,
-            req_body: dict | None = None,
+            req_body: BaseModel | None | List[BaseModel] = None,
+            test_id: int | None = None,
             ):
-        self.test_id = test_id,
+        self.test_id = test_id
         self.req_url_path = req_url_path
         self.res_status_code = res_status_code
         self.req_type = req_type

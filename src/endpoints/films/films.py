@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
@@ -14,6 +15,7 @@ from src.schema.users import User
 from src.security.security import get_current_active_user
 from src.endpoints.films.film_images import router as images, rename_poster
 from src.endpoints.films.schedules import router as schedules
+from src.utils.utils import str_to_iso_format
 
 router = APIRouter(prefix="/films", tags=["Films"])
 router.include_router(halls)
@@ -28,14 +30,28 @@ async def create_film(
         ],
         film: Film
 ) -> Film:
+
+    if type(film.on_air_to) is str:
+        film.on_air_to = str_to_iso_format(film.on_air_to)
+
+    if type(film.on_air_from) is str:
+        film.on_air_from = str_to_iso_format(film.on_air_from)
+
+    on_air_to = film.on_air_to.strftime(
+        '%Y-%m-%d %H:%M:%S'
+    )
+    on_air_from = film.on_air_from.strftime(
+        '%Y-%m-%d %H:%M:%S'
+    )
+
     record = FilmsRecord(
         film_id=film.id,
         title=film.title,
         age_rating=film.age_rating,
         duration_sec=film.duration_sec,
         trailer_desc=film.trailer_desc,
-        on_air_from=film.on_air_from,
-        on_air_to=film.on_air_to,
+        on_air_from=on_air_from,
+        on_air_to=on_air_to,
         is_active=film.is_active,
     )
 

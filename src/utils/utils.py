@@ -1,5 +1,6 @@
 import os
 import string
+from datetime import datetime
 from random import choice
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
@@ -25,6 +26,12 @@ async def create_assets_dir():
 
     await makedirs(_FILMS_DIR)
     return _FILMS_DIR
+
+
+def str_to_iso_format(_string: str):
+    return datetime.fromisoformat(
+        _string.replace('Z', '+00:00')
+    )
 
 
 @asynccontextmanager

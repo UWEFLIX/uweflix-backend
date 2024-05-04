@@ -1,9 +1,6 @@
 import os
-
 from dotenv import load_dotenv
-from starlette.middleware.cors import CORSMiddleware
-
-load_dotenv()  # take environment variables from .env.
+load_dotenv()
 
 from src.main import app
 

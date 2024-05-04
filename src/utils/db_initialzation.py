@@ -9,12 +9,6 @@ from src.crud.engine import db, host, port, user, password
 
 
 async def _main():
-    print(f"db: {db}")
-    print(f"host: {host}")
-    print(f"port: {port}")
-    print(f"user: {user}")
-    print(f"password: {password}")
-
     await create_new_db()
     await close_db()
 
