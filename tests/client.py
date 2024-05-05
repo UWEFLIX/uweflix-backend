@@ -19,8 +19,14 @@ class Client:
             _host = "127.0.0.1"
         else:
             _host = host
+        _ssl = int(os.getenv("SSL"))
 
-        self._server = f"http://{_host}:{port}"
+        if _ssl:
+            schema = "https"
+        else:
+            schema = "http"
+
+        self._server = f"{schema}://{_host}:{port}"
         self._logger = get_logger(f"Logging {__name__}")
 
     def login(self):
