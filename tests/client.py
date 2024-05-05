@@ -23,10 +23,9 @@ class Client:
 
         if _ssl:
             schema = "https"
-            self._verify = True
         else:
             schema = "http"
-            self._verify = False
+        self._verify = False
 
         self._server = f"{schema}://{_host}:{port}"
         self._logger = get_logger(f"Logging {__name__}")
