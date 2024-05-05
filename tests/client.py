@@ -34,7 +34,8 @@ class Client:
     def login(self):
         data = (
             f'grant_type=&username={self._user}'
-            f'&password={self._pass}&scope=&client_id=&client_secret=')
+            f'&password={self._pass}&scope=&client_id=&client_secret='
+        )
         headers = {
             'accept': 'application/json',
             'Content-Type': 'application/x-www-form-urlencoded'

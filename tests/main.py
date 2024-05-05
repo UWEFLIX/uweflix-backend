@@ -345,22 +345,22 @@ def main(USER_COUNT: int, NO_CLUBS: int):
         reqs.update({str(count): _test})
         count += 1
 
-    normal_member_count = int((USER_COUNT - len(members)) * ((100 - NO_CLUBS) / 100))
-    for x in range(normal_member_count):
-        user = free_users.pop()
-        members[user] = True
-
-        club = random.randint(1, clubs_num)
-        _test = Test(
-            req_url_path="/clubs/clubs/member",
-            res_status_code=201,
-            req_type="post",
-            req_params={"user_id": user, "club_id": club},
-            req_body=None,
-        )
-
-        reqs.update({str(count): _test})
-        count += 1
+    # normal_member_count = int((USER_COUNT - len(members)) * ((100 - NO_CLUBS) / 100))
+    # for x in range(normal_member_count):
+    #     user = free_users.pop()
+    #     members[user] = True
+    #
+    #     club = random.randint(1, clubs_num)
+    #     _test = Test(
+    #         req_url_path="/clubs/clubs/member",
+    #         res_status_code=201,
+    #         req_type="post",
+    #         req_params={"user_id": user, "club_id": club},
+    #         req_body=None,
+    #     )
+    #
+    #     reqs.update({str(count): _test})
+    #     count += 1
 
     for i_id, item in reqs.items():
         try:
