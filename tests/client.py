@@ -9,8 +9,8 @@ from tests._test import Test
 class Client:
     def __init__(self):
         self._headers: dict | None = None
-        host = os.getenv("host")
-        port = os.getenv("port")
+        host = os.getenv("HOST")
+        port = os.getenv("PORT")
 
         self._pass = os.getenv("ADMIN1_PASSWORD")
         self._user = os.getenv("ADMIN1_EMAIL")
