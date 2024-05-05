@@ -4,4 +4,4 @@ load_dotenv()
 from tests.main import main
 
 if __name__ == '__main__':
-    main()
+    main(400, 5)

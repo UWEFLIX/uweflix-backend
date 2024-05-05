@@ -80,6 +80,7 @@ class Client:
                 f"Test ID: {_test.test_id} returned {response.status_code} "
                 f"expected: {_test.res_status_code}"
             )
+            self._logger.error(f"Request body: {_test.req_body}")
 
             if response.status_code >= 500 or response.status_code == 204:
                 return

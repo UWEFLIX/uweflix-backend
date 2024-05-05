@@ -38,6 +38,9 @@ async def update_club_account_uid(
     else:
         char = "C"
 
+    if new_record is None:
+        pass
+
     _account = AccountsFactory.get_half_account(new_record)
     uid = f"{char}{_account.id}#{get_initials(name)}"
     _account.uid = uid

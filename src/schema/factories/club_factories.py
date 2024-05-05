@@ -45,7 +45,8 @@ class ClubFactory:
             landline_number=club_record.landline_number,
             post_code=club_record.post_code,
             city=ClubFactory.get_city(city_record),
-            status=club_record.status
+            status=club_record.status,
+            leader=None
         )
 
     @staticmethod

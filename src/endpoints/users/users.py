@@ -70,11 +70,12 @@ async def create_user(
         name=user.name,
         entity_type="USER",
         entity_id=user.id,
-        discount_rate=0
+        discount_rate=0,
+        status="ENABLED"
     )
     await add_object(accounts_record)
 
-    coro = update_club_account_uid(user.name, current_user.id, "USER")
+    coro = update_club_account_uid(user.name, user.id, "USER")
     asyncio.create_task(coro)
 
     return user

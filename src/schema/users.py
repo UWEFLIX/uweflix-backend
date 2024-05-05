@@ -27,7 +27,7 @@ class User(BaseModel):
     id: int = Field(default=None, ge=0)
     name: str
     email: EmailStr
-    password: str = Field(exclude=True)
+    password: str | None = Field(exclude=True, default=None)
     roles: List[Role] | None = Field(default=None)
     permissions: Set[str] | None = Field(default=None, exclude=True)
     status: str

@@ -1,11 +1,17 @@
+import random
+from typing import Dict
+
 from src.schema.bookings import PersonType
+from src.schema.clubs import Club, City
 from src.schema.films import Hall, Film
+from src.schema.users import User
 from src.utils.db_initialzation import main as db_init
 from tests._test import Test
 from tests.client import Client
+from faker import Faker
 
 
-def main():
+def main(USER_COUNT: int, NO_CLUBS: int):
     db_init()
 
     client = Client()
@@ -280,24 +286,85 @@ def main():
         )
     }
 
-    user_reqs = {
-        "27": Test(
-            req_url_path="/films/halls/hall",
+    count = len(reqs)+1
+
+    for x in range(USER_COUNT):
+        fake = Faker("en_GB")
+        _test = Test(
+            req_url_path="/users/user",
             res_status_code=201,
             req_type="post",
-            req_body=Hall(
-                id=0,
-                hall_name="Ahmed Anwar Hall",
-                seats_per_row=11,
-                no_of_rows=11,
-            ),
-        ),
-    }
+            req_body=User(
+                id=1,
+                name=fake.name(),
+                email=fake.email(),
+                status="ENABLED",
+            )
+        )
+        reqs.update({str(count): _test})
 
-    reqs.update(user_reqs)
+        count += 1
+    
+    members = {}
+    free_users = [x for x in range(1, USER_COUNT+1)]
+    random.shuffle(free_users)
+    clubs_num = int(USER_COUNT / 10)
+    for x in range(clubs_num):
+        fake = Faker("en_GB")
+        leader = free_users.pop()
+            
+        members[leader] = True
+
+        _test = Test(
+            req_url_path="/clubs/club",
+            res_status_code=201,
+            req_type="post",
+            req_body=Club(
+                id=1,
+                leader=User(
+                    id=leader,
+                    name=fake.name(),
+                    email=fake.email(),
+                    status="ENABLED",
+                ),
+                club_name=fake.company(),
+                addr_street_number=str(random.randint(1, 200)),
+                addr_street_name=fake.street_name(),
+                email=fake.email(),
+                contact_number=fake.phone_number(),
+                landline_number=str(fake.random_number()),
+                post_code=random.randint(1, 20000),
+                city=City(
+                    id=random.randint(1, 5),
+                    name="Name"
+                ),
+                status="ENABLED",
+            )
+        )
+
+        reqs.update({str(count): _test})
+        count += 1
+
+    normal_member_count = int((USER_COUNT - len(members)) * ((100 - NO_CLUBS) / 100))
+    for x in range(normal_member_count):
+        user = free_users.pop()
+        members[user] = True
+
+        club = random.randint(1, clubs_num)
+        _test = Test(
+            req_url_path="/clubs/clubs/member",
+            res_status_code=201,
+            req_type="post",
+            req_params={"user_id": user, "club_id": club},
+            req_body=None,
+        )
+
+        reqs.update({str(count): _test})
+        count += 1
 
     for i_id, item in reqs.items():
-        item.test_id = i_id
+        try:
+            item.test_id = i_id
+        except AttributeError:
+            pass
         client.req(item)
-
-

@@ -12,7 +12,7 @@ class City(BaseModel):
 
 class Club(BaseModel):
     id: int
-    leader: User
+    leader: User | None
     club_name: str
     addr_street_number: str
     addr_street_name: str
