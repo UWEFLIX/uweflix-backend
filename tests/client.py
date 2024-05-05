@@ -23,8 +23,10 @@ class Client:
 
         if _ssl:
             schema = "https"
+            self._verify = True
         else:
             schema = "http"
+            self._verify = False
 
         self._server = f"{schema}://{_host}:{port}"
         self._logger = get_logger(f"Logging {__name__}")
@@ -41,7 +43,8 @@ class Client:
         response = requests.post(
             f"{self._server}/token",
             data=data,
-            headers=headers
+            headers=headers,
+            verify=self._verify
         )
         content = json.loads(response.content)
 
@@ -70,13 +73,15 @@ class Client:
             response = requests.post(
                 url=f"{self._server}{_test.req_url_path}",
                 json=_body, params=_test.req_params,
-                headers=self._headers
+                headers=self._headers,
+                verify=self._verify
             )
         elif _test.req_type == "patch":
             response = requests.patch(
                 url=f"{self._server}{_test.req_url_path}",
                 json=_body, params=_test.req_params,
-                headers=self._headers
+                headers=self._headers,
+                verify=self._verify
             )
         else:
             raise Exception("invalid req type")
