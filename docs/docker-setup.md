@@ -56,6 +56,34 @@ sudo docker logs uweflix-backend
 sudo docker logs -f uweflix-backend
 ```
 
+## Run CertBot
+
+```bash
+sudo docker build -t certbot .
+```
+
+```bash
+sudo docker run -itd --rm --name certbot --volume uweflix:/etc/letsencrypt certbot
+```
+```bash
+sudo docker exec -it certbot /bin/bash 
+```
+```bash
+certbot certonly --webroot
+```
+
+## Run NGINX
+```bash
+sudo docker build -t nginx .
+```
+
+```bash
+sudo docker run -itd --restart=always --name nginx --network host \
+-v ./nginx.conf:/etc/nginx/nginx.conf \
+-v uweflix:/volume \
+nginx
+```
+
 ## Setting up the database
 #### We are setting it up on the same host as docker is hosted (not on docker)
 #### Edit ```/etc/mysql/mariadb.conf.d/50-server.cnf```, uncomment ```skip-name-resolve```

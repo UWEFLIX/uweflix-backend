@@ -1,0 +1,20 @@
+services:
+  uweflix-backend:
+    image: uweflix-backend
+    restart: always
+    network_mode: "host"
+    volumes:
+      - uweflix:/volume
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - uweflix:/volume
+    depends_on:
+      - uweflix-backend
+    ports:
+      - "80:80"
+
+  volumes:
+    uweflix:

@@ -106,3 +106,8 @@ async def read_users_me(
 ):
     return current_user
 
+
+# @app.get("/.well-known/acme-challenge/{token}", status_code=200)
+# async def lets_encrypt(token: str):
+#     with open()
+
