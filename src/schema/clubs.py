@@ -1,13 +1,19 @@
 from typing import List
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 
 from src.schema.users import User
+from src.utils.utils import basic_string_validation
 
 
 class City(BaseModel):
     id: int
     name: str
+
+    @classmethod
+    @field_validator("name", mode="before")
+    def name_validation(cls, value: str):
+        return basic_string_validation(value, "name")
 
 
 class Club(BaseModel):
@@ -24,3 +30,8 @@ class Club(BaseModel):
     status: str
 
     members: List[User] | None = None
+
+    @classmethod
+    @field_validator("club_name", mode="before")
+    def club_name_validation(cls, value: str):
+        return basic_string_validation(value, "club_name")

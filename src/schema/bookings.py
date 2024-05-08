@@ -1,14 +1,20 @@
 from typing import List
 from datetime import datetime
-from pydantic import BaseModel, Field, EmailStr
+from pydantic import BaseModel, Field, EmailStr, field_validator
 from src.schema.accounts import Account
 from src.schema.films import ScheduleDetailed
+from src.utils.utils import basic_string_validation
 
 
 class PersonType(BaseModel):
     id: int
     person_type: str
     discount_amount: int = Field(ge=0, le=100)
+
+    @classmethod
+    @field_validator("person_type", mode="before")
+    def person_type_validation(cls, value: str):
+        return basic_string_validation(value, "person_type")
 
 
 class Booking(BaseModel):
@@ -24,6 +30,16 @@ class Booking(BaseModel):
     created: datetime
     assigned_user: EmailStr
 
+    @classmethod
+    @field_validator("seat_no", mode="before")
+    def seat_no_validation(cls, value: str):
+        return basic_string_validation(value, "seat_no")
+
+    @classmethod
+    @field_validator("status", mode="before")
+    def status_validation(cls, value: str):
+        return basic_string_validation(value, "status")
+
 
 class SingleBooking(BaseModel):
     seat_no: str
@@ -31,6 +47,11 @@ class SingleBooking(BaseModel):
     person_type: PersonType
     user_email: EmailStr
     account: Account
+
+    @classmethod
+    @field_validator("seat_no", mode="before")
+    def seat_no_validation(cls, value: str):
+        return basic_string_validation(value, "seat_no")
 
 
 class MultipleBookings(BaseModel):
@@ -45,11 +66,3 @@ class BatchData(BaseModel):
     count: int
     created: datetime
     total: int | float
-
-
-BatchData(
-    batch_ref="batch_ref",
-    count=1,
-    created=datetime.now(),
-    total=123
-)

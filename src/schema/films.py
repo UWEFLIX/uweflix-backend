@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import List
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
+
+from src.utils.utils import basic_string_validation
 
 
 class Hall(BaseModel):
@@ -9,10 +11,23 @@ class Hall(BaseModel):
     seats_per_row: int = Field(..., ge=1)
     no_of_rows: int = Field(..., ge=1)
 
+    @classmethod
+    @field_validator("hall_name", mode="before")
+    def hall_name_validation(cls, value: str):
+        return basic_string_validation(value, "hall_name")
+
 
 class FilmImage(BaseModel):
     id: int
     filename: str
+
+    @classmethod
+    @field_validator("filename", mode="before")
+    def filename_validation(cls, value: str):
+        new_value = basic_string_validation(value, "filename")
+        if "\\" in new_value or "/" in new_value:
+            raise ValueError("Invalid characters in filename")
+        return new_value
 
 
 class Schedule(BaseModel):
@@ -36,6 +51,16 @@ class Film(BaseModel):
     poster_image: bytes | None = None
     images: List[FilmImage] | None = None
     schedules: List[Schedule] | None = None
+
+    @classmethod
+    @field_validator("title", mode="before")
+    def title_validation(cls, value: str):
+        return basic_string_validation(value, "title")
+
+    @classmethod
+    @field_validator("age_rating", mode="before")
+    def age_rating_validation(cls, value: str):
+        return basic_string_validation(value, "age_rating")
 
 
 class ScheduleDetailed(Schedule):

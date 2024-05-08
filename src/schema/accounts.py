@@ -2,9 +2,10 @@ from datetime import datetime
 from typing import List
 
 from fastapi import HTTPException
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from src.security.security import fernet
+from src.utils.utils import basic_string_validation
 
 
 class Card(BaseModel):
@@ -49,7 +50,7 @@ class Card(BaseModel):
         except ValueError:
             raise HTTPException(
                 422, "Invalid date format. Please use 'mm/yy'."
-                )
+            )
 
     def encrypt(self):
         if self._encrypted:
@@ -83,6 +84,26 @@ class Card(BaseModel):
 
         self._encrypted = False
 
+    @classmethod
+    @field_validator("card_number", mode="before")
+    def card_number_validation(cls, value: str):
+        return basic_string_validation(value, "card_number")
+
+    @classmethod
+    @field_validator("holder_name", mode="before")
+    def holder_name_validation(cls, value: str):
+        return basic_string_validation(value, "holder_name")
+
+    @classmethod
+    @field_validator("status", mode="before")
+    def status_validation(cls, value: str):
+        return basic_string_validation(value, "status")
+
+    @classmethod
+    @field_validator("exp_date", mode="before")
+    def exp_date_validation(cls, value: str):
+        return basic_string_validation(value, "exp_date")
+
 
 class Account(BaseModel):
     id: int
@@ -94,3 +115,13 @@ class Account(BaseModel):
     discount_rate: int = Field(min_value=0, max_value=100)
     status: str
     balance: float
+
+    @classmethod
+    @field_validator("name", mode="before")
+    def name_validation(cls, value: str):
+        return basic_string_validation(value, "name")
+
+    @classmethod
+    @field_validator("status", mode="before")
+    def status_validation(cls, value: str):
+        return basic_string_validation(value, "status")
