@@ -3,7 +3,7 @@ from typing import List
 from pydantic import BaseModel, EmailStr, field_validator
 
 from src.schema.users import User
-from src.utils.utils import basic_string_validation
+from src.schema.validation import basic_string_validation
 
 
 class City(BaseModel):

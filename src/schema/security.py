@@ -1,7 +1,7 @@
 from typing import List
 from pydantic import BaseModel, field_validator
 
-from src.utils.utils import basic_string_validation
+from src.schema.validation import basic_string_validation
 
 
 class TokenData(BaseModel):

@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import BaseModel, Field, EmailStr, field_validator
 from src.schema.accounts import Account
 from src.schema.films import ScheduleDetailed
-from src.utils.utils import basic_string_validation
+from src.schema.validation import basic_string_validation
 
 
 class PersonType(BaseModel):

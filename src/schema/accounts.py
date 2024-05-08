@@ -4,8 +4,8 @@ from typing import List
 from fastapi import HTTPException
 from pydantic import BaseModel, Field, field_validator
 
+from src.schema.validation import basic_string_validation
 from src.security.security import fernet
-from src.utils.utils import basic_string_validation
 
 
 class Card(BaseModel):

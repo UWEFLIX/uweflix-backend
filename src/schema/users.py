@@ -1,8 +1,6 @@
 from typing import List, Set
-
 from pydantic import BaseModel, Field, EmailStr, field_validator
-
-from src.utils.utils import basic_string_validation
+from src.schema.validation import basic_string_validation
 
 
 class Permission(BaseModel):

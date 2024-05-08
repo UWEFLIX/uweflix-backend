@@ -40,11 +40,3 @@ async def lifespan(app: FastAPI):
     # await create_new_db()
     yield
     await close_db()
-
-
-def basic_string_validation(_string: str, variable: str) -> str:
-    value = _string.strip()
-    if value == "":
-        raise ValueError(f"{variable} cannot be empty")
-
-    return value
