@@ -1,3 +1,4 @@
+import asyncio
 from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
@@ -6,11 +7,11 @@ from src.crud.models import (
     RolesRecord, PermissionsRecord, RolePermissionsRecord, UserRolesRecord
 )
 from src.crud.queries.roles import (
-    select_roles
+    select_roles, update_role_query
 )
 from src.crud.queries.user import select_user_by_id
 from src.crud.queries.utils import (
-    add_object, delete_record, execute_safely, add_objects
+    add_object, execute_safely, add_objects
 )
 from src.schema.factories.role_factory import RoleFactory
 from src.schema.factories.user_factory import UserFactory
@@ -60,6 +61,21 @@ async def _get_role_by_id(role_id: int) -> Role:
     return roles[0]
 
 
+async def _update_role(role: Role):
+    delete_query = delete(
+        RolePermissionsRecord
+    ).where(RolePermissionsRecord.role_id == role.id)
+    await execute_safely(delete_query)
+
+    insert_queries = [
+        RolePermissionsRecord(
+            role_id=role.id,
+            permissions_id=x.id
+        ) for x in role.permissions
+    ]
+    await add_objects(insert_queries)
+
+
 @router.get("/roles", status_code=200, tags=["Unfinished"])
 async def get_roles(
         current_user: Annotated[
@@ -98,14 +114,18 @@ async def create_role(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:roles"])
         ],
-        role_name: str
+        role: Role
 ):
     role_record = RolesRecord(
-        role_name=role_name
+        role_name=role.name
     )
     await add_object(role_record)
+    _role = await _get_role_by_name(role.name)
 
-    return await _get_role_by_name(role_name)
+    role.id = _role.id
+    await _update_role(role)
+
+    return await _get_role_by_name(role.name)
 
 
 @router.patch("/role", status_code=201, tags=["Unfinished"])
@@ -115,7 +135,9 @@ async def update_role(
         ],
         role: Role
 ):
-    await update_role(role)
+    tasks = [update_role_query(role), _update_role(role)]
+    await asyncio.gather(*tasks)
+
     return await _get_role_by_name(role.name)
 
 

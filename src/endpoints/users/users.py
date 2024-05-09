@@ -5,10 +5,10 @@ from fastapi.params import Param
 from pydantic import EmailStr
 from sqlalchemy import delete, and_, update
 from src.crud.models import (
-    UsersRecord, AccountsRecord
+    UsersRecord, AccountsRecord, UserRolesRecord
 )
 from src.crud.queries.user import select_user_by_email, select_users
-from src.crud.queries.utils import add_object, execute_safely
+from src.crud.queries.utils import add_object, execute_safely, add_objects
 from src.endpoints.accounts.accounts import get_initials, update_club_account_uid
 from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User
@@ -19,6 +19,22 @@ from src.endpoints.users.roles import router as roles
 router = APIRouter(prefix="/users", tags=["Users"])
 router.include_router(passwords)
 router.include_router(roles)
+
+
+async def _update_roles(user: User):
+    if user.roles is None:
+        return
+
+    delete_query = delete(UserRolesRecord).where(UserRolesRecord.user_id == user.id)
+    await execute_safely(delete_query)
+
+    insert_queries = [
+        UserRolesRecord(
+            role_id=x.id,
+            user_id=user.id
+        ) for x in user.roles
+    ]
+    await add_objects(insert_queries)
 
 
 @router.get("/user", status_code=200, tags=["Unfinished"])
@@ -63,6 +79,12 @@ async def create_user(
     await add_object(record)
 
     user_record = await select_user_by_email(user.email)
+    _user = UserFactory.create_full_user(user_record)
+
+    user.id = _user.id
+    await _update_roles(user)
+
+    user_record = await select_user_by_email(user.email)
     user = UserFactory.create_full_user(user_record)
 
     accounts_record = AccountsRecord(
@@ -86,13 +108,13 @@ async def update_user(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
         ],
-        new_name: str
+        user: User
 ) -> User:
 
     query = update(
         UsersRecord
     ).values(
-        name=new_name,
+        name=user.name,
         # status=user.status
     ).where(
         UsersRecord.email == current_user.email
@@ -101,7 +123,7 @@ async def update_user(
     _accounts_update = update(
         AccountsRecord
     ).values(
-        account_uid=f"U{current_user.id}#{get_initials(new_name)}"
+        account_uid=f"U{current_user.id}#{get_initials(user.name)}"
     ).where(
         and_(
             AccountsRecord.entity_id == current_user.id,
@@ -110,7 +132,8 @@ async def update_user(
     )
     tasks = [
         execute_safely(query),
-        update_club_account_uid(new_name, current_user.id, "USER")
+        update_club_account_uid(user.name, user.id, "USER"),
+        _update_roles(user)
     ]
 
     await asyncio.gather(*tasks)

@@ -65,13 +65,13 @@ async def select_roles(
     }
 
 
-async def update_role(role: Role):
+async def update_role_query(role: Role):
     query = update(
         RolesRecord
     ).values(
-        role_name=role.role_name,
+        role_name=role.name,
     ).where(
-        RolesRecord.role_id == role.role_id
+        RolesRecord.role_id == role.id
     )
     await execute_safely(query)
 
@@ -89,6 +89,3 @@ async def get_user_role_data(username: str, role_name: str):
         async with session.begin():
             result = await session.execute(query)
             return result.scalars().all()
-
-
-
