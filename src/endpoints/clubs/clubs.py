@@ -131,30 +131,30 @@ async def update_club(
     return ClubFactory.get_full_club(record)
 
 
-@router.delete("/club", status_code=204, tags=["Unfinished"])
-async def delete_club(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:clubs"])
-        ],
-        club: Club
-) -> None:
-    query = delete(
-        ClubsRecord
-    ).where(
-        ClubsRecord.id == club.id
-    )
-
-    await execute_safely(query)
-
-    delete_accounts = delete(
-        AccountsRecord
-    ).where(
-        and_(
-            AccountsRecord.entity_type == "CLUB",
-            AccountsRecord.entity_id == club.id
-        )
-    )
-    await execute_safely(delete_accounts)
+# @router.delete("/club", status_code=204, tags=["Unfinished"])
+# async def delete_club(
+#         current_user: Annotated[
+#             User, Security(get_current_active_user, scopes=["write:clubs"])
+#         ],
+#         club: Club
+# ) -> None:
+#     query = delete(
+#         ClubsRecord
+#     ).where(
+#         ClubsRecord.id == club.id
+#     )
+#
+#     await execute_safely(query)
+#
+#     delete_accounts = delete(
+#         AccountsRecord
+#     ).where(
+#         and_(
+#             AccountsRecord.entity_type == "CLUB",
+#             AccountsRecord.entity_id == club.id
+#         )
+#     )
+#     await execute_safely(delete_accounts)
 
 
 @router.get("/club", status_code=200, tags=["Unfinished"])

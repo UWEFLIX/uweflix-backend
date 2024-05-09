@@ -119,19 +119,19 @@ async def update_role(
     return await _get_role_by_name(role.name)
 
 
-@router.delete("/role", status_code=204, tags=["Unfinished"])
-async def delete_role(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:roles"])
-        ],
-        role: Role
-):
-    role_record = RolesRecord(
-        role_id=role.id,
-        role_name=role.name
-    )
-    await delete_record(role_record)
-    return
+# @router.delete("/role", status_code=204, tags=["Unfinished"])
+# async def delete_role(
+#         current_user: Annotated[
+#             User, Security(get_current_active_user, scopes=["write:roles"])
+#         ],
+#         role: Role
+# ):
+#     role_record = RolesRecord(
+#         role_id=role.id,
+#         role_name=role.name
+#     )
+#     await delete_record(role_record)
+#     return
 
 
 @router.post("/user-role", status_code=201, tags=["Unfinished"])

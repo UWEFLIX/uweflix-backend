@@ -78,16 +78,16 @@ async def get_cities(
     return ClubFactory.get_cities(records)
 
 
-@router.delete("/city", status_code=204, tags=["Unfinished"])
-async def delete_city(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:halls"])
-        ],
-        city_name: str
-):
-    query = delete(
-        CitiesRecord
-    ).where(
-        CitiesRecord.city_name == city_name
-    )
-    await execute_safely(query)
+# @router.delete("/city", status_code=204, tags=["Unfinished"])
+# async def delete_city(
+#         current_user: Annotated[
+#             User, Security(get_current_active_user, scopes=["write:halls"])
+#         ],
+#         city_name: str
+# ):
+#     query = delete(
+#         CitiesRecord
+#     ).where(
+#         CitiesRecord.city_name == city_name
+#     )
+#     await execute_safely(query)

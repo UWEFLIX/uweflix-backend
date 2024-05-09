@@ -119,29 +119,29 @@ async def update_user(
     return UserFactory.create_full_user(user_record)
 
 
-@router.delete("/user", status_code=204, tags=["Unfinished"])
-async def delete_user(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:users"])
-        ],
-        user_id: int
-):
-    query = delete(
-        UsersRecord
-    ).where(
-        UsersRecord.user_id == user_id
-    )
-    await execute_safely(query)
-
-    delete_accounts = delete(
-        AccountsRecord
-    ).where(
-        and_(
-            AccountsRecord.entity_id == user_id,
-            AccountsRecord.entity_type == "USER"
-        )
-    )
-    await execute_safely(delete_accounts)
+# @router.delete("/user", status_code=204, tags=["Unfinished"])
+# async def delete_user(
+#         current_user: Annotated[
+#             User, Security(get_current_active_user, scopes=["write:users"])
+#         ],
+#         user_id: int
+# ):
+#     query = delete(
+#         UsersRecord
+#     ).where(
+#         UsersRecord.user_id == user_id
+#     )
+#     await execute_safely(query)
+#
+#     delete_accounts = delete(
+#         AccountsRecord
+#     ).where(
+#         and_(
+#             AccountsRecord.entity_id == user_id,
+#             AccountsRecord.entity_type == "USER"
+#         )
+#     )
+#     await execute_safely(delete_accounts)
 
 
 # todo patch method to soft delete

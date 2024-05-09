@@ -80,16 +80,16 @@ async def update_person(
     return BookingsFactory.get_person_type(record)
 
 
-@router.delete("/person-type", status_code=204, tags=["Unfinished"])
-async def delete_person(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:person-types"])
-        ],
-        person: PersonType
-):
-    query = delete(
-        PersonTypesRecord
-    ).where(
-        PersonTypesRecord.person_type == person.person_type
-    )
-    await execute_safely(query)
+# @router.delete("/person-type", status_code=204, tags=["Unfinished"])
+# async def delete_person(
+#         current_user: Annotated[
+#             User, Security(get_current_active_user, scopes=["write:person-types"])
+#         ],
+#         person: PersonType
+# ):
+#     query = delete(
+#         PersonTypesRecord
+#     ).where(
+#         PersonTypesRecord.person_type == person.person_type
+#     )
+#     await execute_safely(query)

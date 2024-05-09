@@ -174,16 +174,16 @@ async def get_schedules(
     return FilmFactory.get_detailed_schedules(records)
 
 
-@router.delete("/schedule", tags=["Unfinished"], status_code=204)
-async def delete_schedule(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:schedules"])
-        ],
-        schedule_id: int
-):
-    query = delete(
-        SchedulesRecord
-    ).where(
-        SchedulesRecord.schedule_id == schedule_id
-    )
-    await execute_safely(query)
+# @router.delete("/schedule", tags=["Unfinished"], status_code=204)
+# async def delete_schedule(
+#         current_user: Annotated[
+#             User, Security(get_current_active_user, scopes=["write:schedules"])
+#         ],
+#         schedule_id: int
+# ):
+#     query = delete(
+#         SchedulesRecord
+#     ).where(
+#         SchedulesRecord.schedule_id == schedule_id
+#     )
+#     await execute_safely(query)

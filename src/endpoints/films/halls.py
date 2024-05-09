@@ -88,19 +88,19 @@ async def get_halls(
     return FilmFactory.get_halls(records)
 
 
-@router.delete("/hall", status_code=204, tags=["Unfinished"])
-async def delete_hall(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:halls"])
-        ],
-        hall_name: str
-):
-    query = delete(
-        HallsRecord
-    ).where(
-        HallsRecord.hall_name == hall_name
-    )
-    await execute_safely(query)
+# @router.delete("/hall", status_code=204, tags=["Unfinished"])
+# async def delete_hall(
+#         current_user: Annotated[
+#             User, Security(get_current_active_user, scopes=["write:halls"])
+#         ],
+#         hall_name: str
+# ):
+#     query = delete(
+#         HallsRecord
+#     ).where(
+#         HallsRecord.hall_name == hall_name
+#     )
+#     await execute_safely(query)
 
 
 @router.get("/halls/schedules", tags=["Unfinished"])

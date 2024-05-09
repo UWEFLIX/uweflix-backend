@@ -60,19 +60,19 @@ async def create_film(
     return FilmFactory.get_full_film(records)
 
 
-@router.delete("/film", status_code=204, tags=["Unfinished"])
-async def delete_film(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:films"])
-        ],
-        title: str
-):
-    query = delete(
-        FilmsRecord
-    ).where(
-        FilmsRecord.title == title
-    )
-    await execute_safely(query)
+# @router.delete("/film", status_code=204, tags=["Unfinished"])
+# async def delete_film(
+#         current_user: Annotated[
+#             User, Security(get_current_active_user, scopes=["write:films"])
+#         ],
+#         title: str
+# ):
+#     query = delete(
+#         FilmsRecord
+#     ).where(
+#         FilmsRecord.title == title
+#     )
+#     await execute_safely(query)
 
 
 @router.patch("/film", status_code=201, tags=["Unfinished"])
