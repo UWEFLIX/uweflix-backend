@@ -63,7 +63,7 @@ sudo docker build -t certbot .
 ```
 
 ```bash
-sudo docker run -itd --rm --name certbot --volume uweflix:/etc/letsencrypt certbot
+sudo docker run -itd --restart=always --name certbot --volume uweflix:/etc/letsencrypt certbot
 ```
 ```bash
 sudo docker exec -it certbot /bin/bash 
@@ -71,7 +71,7 @@ sudo docker exec -it certbot /bin/bash
 ```bash
 certbot certonly --webroot
 ```
-
+#### The path to where the challenge is ```/etc/letsencrypt/ssl/certbot```
 ## Run NGINX
 ```bash
 sudo docker build -t nginx .
