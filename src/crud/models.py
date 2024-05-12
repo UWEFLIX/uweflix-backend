@@ -171,7 +171,7 @@ class UsersRecord(Base):
     password = Column(
         String(60, collation=_COLLATION),
         nullable=False,
-        default="$2b$12$qtCm88dd7JSa9SGlwKGp/e/VDEbZ0kbSmnUJEC7sgunD1whHFBjeW"
+        default="$2b$12$Q7hDNvEuKSHTD0ADJmDgu./ntzpUNpui37GrimlwDANV5IaGY0rz."
     )
     status = Column(
         Enum("ENABLED", "DISABLED", name="status", collation=_COLLATION),
