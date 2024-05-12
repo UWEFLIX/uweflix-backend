@@ -1,6 +1,6 @@
 from collections import defaultdict
 
-from sqlalchemy import select, and_, ScalarResult
+from sqlalchemy import select, and_, ScalarResult, asc
 
 from src.crud.engine import async_session
 from src.crud.models import AccountsRecord, CardsRecord, UsersRecord, ClubsRecord
@@ -130,7 +130,7 @@ async def select_half_accounts(start, limit):
         AccountsRecord
     ).where(
         AccountsRecord.id >= start
-    ).limit(limit)
+    ).limit(limit).order_by(asc(AccountsRecord.id))
 
     async with async_session() as session:
         async with session.begin():
@@ -183,7 +183,7 @@ async def select_club_accounts(
             AccountsRecord.entity_id == club_id,
             AccountsRecord.entity_type == "CLUB"
         )
-    ).limit(limit)
+    ).limit(limit).order_by(asc(AccountsRecord.id))
 
     async with async_session() as session:
         async with session.begin():

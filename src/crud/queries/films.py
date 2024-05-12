@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import select, and_
+from sqlalchemy import select, and_, asc
 
 from src.crud.engine import async_session
 from src.crud.models import (
@@ -25,7 +25,7 @@ async def select_halls(start: int, limit: int):
         HallsRecord
     ).where(
         HallsRecord.hall_id >= start
-    ).limit(limit)
+    ).limit(limit).order_by(asc(HallsRecord.id))
 
     async with async_session() as session:
         async with session.begin():
@@ -64,7 +64,7 @@ async def select_films(start: int, limit: int):
         FilmsRecord
     ).where(
         FilmsRecord.film_id >= start
-    ).limit(limit)
+    ).limit(limit).order_by(asc(FilmsRecord.id))
 
     async with async_session() as session:
         async with session.begin():
@@ -97,7 +97,7 @@ async def select_images(film_id: int, batch: int):
             FilmImagesRecord.film_id == film_id,
             FilmImagesRecord.batch == batch
         )
-    )
+    ).order_by(asc(FilmImagesRecord.id))
     async with async_session() as session:
         async with session.begin():
             result = await session.execute(query)
@@ -136,7 +136,7 @@ async def select_inserted_schedules(film_id: int, hall_id: int, show_time: str):
             HallsRecord.hall_id == hall_id,
             SchedulesRecord.show_time == show_time
         )
-    )
+    ).order_by(asc(SchedulesRecord.id))
 
     async with async_session() as session:
         async with session.begin():
@@ -177,7 +177,7 @@ async def select_schedules(start: int, limit: int):
         HallsRecord, HallsRecord.hall_id == SchedulesRecord.hall_id
     ).where(
         SchedulesRecord.schedule_id >= start
-    ).limit(limit)
+    ).limit(limit).order_by(asc(SchedulesRecord.id))
     async with async_session() as session:
         async with session.begin():
             result = await session.execute(query)
@@ -192,7 +192,7 @@ async def select_all_schedules():
         FilmsRecord, FilmsRecord.film_id == SchedulesRecord.film_id
     ).join(
         HallsRecord, HallsRecord.hall_id == SchedulesRecord.hall_id
-    )
+    ).order_by(asc(SchedulesRecord.id))
     async with async_session() as session:
         async with session.begin():
             result = await session.execute(query)
@@ -220,7 +220,7 @@ async def select_schedules_by_hall_id(hall_id: int, limit: int):
         FilmsRecord, FilmsRecord.film_id == SchedulesRecord.film_id
     ).where(
         SchedulesRecord.hall_id == hall_id
-    ).limit(limit)
+    ).limit(limit).order_by(asc(SchedulesRecord.id))
     async with async_session() as session:
         async with session.begin():
             result = await session.execute(query)

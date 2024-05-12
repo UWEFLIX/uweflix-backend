@@ -1,6 +1,6 @@
 from collections import defaultdict
 from typing import Dict
-from sqlalchemy import select, and_, text
+from sqlalchemy import select, and_, text, asc
 from src.crud.engine import async_session
 from src.crud.models import (
     PersonTypesRecord, BookingsRecord, SchedulesRecord, HallsRecord, FilmsRecord,
@@ -30,7 +30,7 @@ async def select_person_types(start, limit):
         PersonTypesRecord
     ).where(
         PersonTypesRecord.person_type_id >= start
-    ).limit(limit)
+    ).limit(limit).order_by(asc(PersonTypesRecord.person_type_id))
 
     async with async_session() as session:
         async with session.begin():
@@ -86,7 +86,7 @@ async def select_club_bookings(start: int, limit: int, club_id: int):
             AccountsRecord.entity_id == club_id,
             AccountsRecord.entity_type == "CLUB"
         )
-    ).limit(limit)
+    ).limit(limit).order_by(asc(BookingsRecord.id))
 
     async with async_session() as session:
         async with session.begin():
@@ -116,7 +116,7 @@ async def select_user_bookings(start: int, limit: int, user_id: int):
             AccountsRecord.entity_id == user_id,
             AccountsRecord.entity_type == "USER"
         )
-    ).limit(limit)
+    ).limit(limit).order_by(asc(BookingsRecord.id))
 
     async with async_session() as session:
         async with session.begin():
@@ -282,7 +282,7 @@ async def select_assigned_bookings(email: str):
         PersonTypesRecord.person_type_id == BookingsRecord.person_type_id
     ).where(
         BookingsRecord.assigned_user == email
-    )
+    ).order_by(asc(BookingsRecord.id))
 
     async with async_session() as session:
         async with session.begin():

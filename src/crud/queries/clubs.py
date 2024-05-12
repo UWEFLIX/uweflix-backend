@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, asc
 from sqlalchemy.orm import aliased
 
 from src.crud.engine import async_session
@@ -40,7 +40,7 @@ async def select_cities(start, limit):
         CitiesRecord.city_id >= start
     ).limit(
         limit
-    )
+    ).order_by(asc(CitiesRecord.id))
 
     async with async_session() as session:
         async with session.begin():
@@ -88,7 +88,7 @@ async def select_clubs(start, limit):
         CitiesRecord, CitiesRecord.city_id == ClubsRecord.city_id
     ).where(
         ClubsRecord.id >= start
-    ).limit(limit)
+    ).limit(limit).order_by(asc(ClubsRecord.id))
 
     async with async_session() as session:
         async with session.begin():

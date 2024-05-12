@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, asc
 
 from src.crud.engine import async_session
 from src.crud.models import (
@@ -21,7 +21,7 @@ async def select_user_by_email(username: str) -> dict | None:
     ).outerjoin(
         PermissionsRecord,
         PermissionsRecord.permission_id == RolePermissionsRecord.permissions_id
-    ).where(UsersRecord.email == username)
+    ).where(UsersRecord.email == username).order_by(asc(UsersRecord.id))
 
     permissions = {}
     roles = {}
@@ -132,7 +132,7 @@ async def select_users(start, limit):
         UsersRecord
     ).where(
         UsersRecord.user_id >= start
-    ).limit(limit)
+    ).limit(limit).order_by(asc(UsersRecord.id))
 
     async with async_session() as session:
         async with session.begin():

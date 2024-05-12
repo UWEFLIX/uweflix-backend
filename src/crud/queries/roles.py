@@ -1,4 +1,4 @@
-from sqlalchemy import select, update, and_
+from sqlalchemy import select, update, and_, asc
 from src.crud.engine import async_session
 from src.crud.models import (
     RolesRecord, UsersRecord
@@ -17,7 +17,7 @@ async def select_roles(
 
     async with async_session() as session:
         async with session.begin():
-            result = await session.execute(query)
+            result = await session.execute(query.order_by(asc(RolesRecord.id)))
 
             if not result:
                 return
