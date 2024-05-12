@@ -4,7 +4,7 @@ from typing import Dict
 from src.schema.bookings import PersonType
 from src.schema.clubs import Club, City
 from src.schema.films import Hall, Film
-from src.schema.users import User
+from src.schema.users import User, Role
 from src.utils.db_initialzation import main as db_init
 from tests._test import Test
 from tests.client import Client
@@ -228,43 +228,61 @@ def main(USER_COUNT: int, NO_CLUBS: int):
             req_url_path="/users/roles/role",
             res_status_code=201,
             req_type="post",
-            req_body=None,
-            req_params={"role_name": "Account Manager"}
+            req_body=Role(
+                id=0,
+                name="Account Manager",
+                permissions=[]
+            ),
         ),
         "20": Test(
             req_url_path="/users/roles/role",
             res_status_code=201,
             req_type="post",
-            req_body=None,
-            req_params={"role_name": "Clerk"}
+            req_body=Role(
+                id=0,
+                name="Clerk",
+                permissions=[]
+            ),
         ),
         "21": Test(
             req_url_path="/users/roles/role",
             res_status_code=201,
             req_type="post",
-            req_body=None,
-            req_params={"role_name": "Cinema Manager"}
+            req_body=Role(
+                id=0,
+                name="Cinema Manager",
+                permissions=[]
+            ),
         ),
         "22": Test(
             req_url_path="/users/roles/role",
             res_status_code=201,
             req_type="post",
-            req_body=None,
-            req_params={"role_name": "Receptionist"}
+            req_body=Role(
+                id=0,
+                name="Receptionist",
+                permissions=[]
+            ),
         ),
         "23": Test(
             req_url_path="/users/roles/role",
             res_status_code=201,
             req_type="post",
-            req_body=None,
-            req_params={"role_name": "Sales Manager"}
+            req_body=Role(
+                id=0,
+                name="Sales Manager",
+                permissions=[]
+            ),
         ),
         "24": Test(
             req_url_path="/users/roles/role",
             res_status_code=201,
             req_type="post",
-            req_body=None,
-            req_params={"role_name": "Sales Representative"}
+            req_body=Role(
+                id=0,
+                name="Sales Representative",
+                permissions=[]
+            ),
         ),
         "25": Test(
             req_url_path="/bookings/person-types/person-type",
