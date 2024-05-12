@@ -71,12 +71,6 @@ async def login_for_access_token(
         )
 
     scopes = user.permissions
-    if len(scopes) == 0:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="No scopes",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
 
     encrypted_password = fernet.encrypt(user.password.encode()).decode()
 
