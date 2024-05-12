@@ -40,7 +40,7 @@ async def select_cities(start, limit):
         CitiesRecord.city_id >= start
     ).limit(
         limit
-    ).order_by(asc(CitiesRecord.id))
+    ).order_by(asc(CitiesRecord.city_id))
 
     async with async_session() as session:
         async with session.begin():

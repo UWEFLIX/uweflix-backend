@@ -21,7 +21,7 @@ async def select_user_by_email(username: str) -> dict | None:
     ).outerjoin(
         PermissionsRecord,
         PermissionsRecord.permission_id == RolePermissionsRecord.permissions_id
-    ).where(UsersRecord.email == username).order_by(asc(UsersRecord.id))
+    ).where(UsersRecord.email == username).order_by(asc(UsersRecord.user_id))
 
     permissions = {}
     roles = {}
@@ -132,7 +132,7 @@ async def select_users(start, limit):
         UsersRecord
     ).where(
         UsersRecord.user_id >= start
-    ).limit(limit).order_by(asc(UsersRecord.id))
+    ).limit(limit).order_by(asc(UsersRecord.user_id))
 
     async with async_session() as session:
         async with session.begin():

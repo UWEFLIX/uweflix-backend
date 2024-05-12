@@ -17,7 +17,7 @@ async def select_roles(
 
     async with async_session() as session:
         async with session.begin():
-            result = await session.execute(query.order_by(asc(RolesRecord.id)))
+            result = await session.execute(query.order_by(asc(RolesRecord.role_id)))
 
             if not result:
                 return
