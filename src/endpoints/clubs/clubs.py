@@ -1,11 +1,11 @@
 import asyncio
 from random import randint
-from typing import Annotated
+from typing import Annotated, List
 from fastapi.params import Param
-from sqlalchemy import update, delete, and_
+from sqlalchemy import update, delete, and_, select, or_
 from src.crud.models import ClubsRecord, AccountsRecord, ClubMembersRecords
 from src.crud.queries.accounts import select_club_accounts
-from src.crud.queries.clubs import select_club, select_leader_clubs, select_clubs
+from src.crud.queries.clubs import select_club, select_leader_clubs, select_clubs, select_club_members
 from src.crud.queries.utils import add_object, execute_safely, add_objects
 from src.endpoints.accounts.accounts import get_initials, update_club_account_uid
 from src.endpoints.clubs.club_members import router as club_members
@@ -42,6 +42,48 @@ async def update_account_uids(club_id: int, new_name: str):
     tasks = [
         execute_safely(query) for query in queries
     ]
+    await asyncio.gather(*tasks)
+
+
+async def _add_members(
+        members: List[User] | None, club_id: int, leader_id: int
+) -> None:
+    if not members:
+        return
+
+    records: List[ClubMembersRecords] = await select_club_members(club_id)
+
+    members_in_record = set(record.member for record in records)
+    members_in_request = set(member.id for member in members)
+
+    members_to_delete = members_in_record - members_in_request
+    members_to_add = members_in_request - members_in_record
+
+    if leader_id in members_to_delete:
+        raise HTTPException(
+            403,
+            "Wrong endpoint to delete leader"
+        )
+
+    delete_query = delete(
+        ClubMembersRecords
+    ).where(
+        or_(
+            [
+                and_(
+                    ClubMembersRecords.club == club_id,
+                    ClubMembersRecords.member == member_id
+                )
+            ] for member_id in members_to_delete
+        )
+    )
+    add_query = [
+        ClubMembersRecords(
+            member=member,
+            club=club_id
+        ) for member in members_to_add
+    ]
+    tasks = [add_objects(add_query), execute_safely(delete_query)]
     await asyncio.gather(*tasks)
 
 
@@ -105,7 +147,6 @@ async def update_club(
     query = update(
         ClubsRecord
     ).values(
-        leader=club.leader.id,
         club_name=club.club_name,
         addr_street_number=club.addr_street_number,
         addr_street_name=club.addr_street_name,
@@ -118,7 +159,11 @@ async def update_club(
         ClubsRecord.id == club.id
     )
 
-    await execute_safely(query)
+    tasks = [
+        _add_members(club.members, club.id, club.leader.id),
+        execute_safely(query)
+    ]
+    await asyncio.gather(*tasks)
 
     record = await select_club(club.club_name)
 

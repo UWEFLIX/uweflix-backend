@@ -94,3 +94,15 @@ async def select_clubs(start, limit):
         async with session.begin():
             result = await session.execute(query)
             return result.all()
+
+
+async def select_club_members(club_id: int):
+    members_query = select(
+        ClubMembersRecords
+    ).where(
+        ClubMembersRecords.club == club_id
+    )
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(members_query)
+            return result.scalars()
