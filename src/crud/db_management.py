@@ -91,13 +91,20 @@ async def initialise_db():
     admin = RolesRecord(role_name="Admin")
 
     _admin1_username = os.getenv("ADMIN1_EMAIL")
+    _admin2_username = os.getenv("ADMIN2_EMAIL")
     _admin1_password = os.getenv("ADMIN1_PASSWORD")
+    hashed_pass = get_password_hash(_admin1_password)
 
     objs2: list = admin_perms(len(objs))
     user1 = UsersRecord(
         name="Nishawl Naseer",
         email="nishawl.naseer@outlook.com",
-        password=get_password_hash(_admin1_password)
+        password=hashed_pass
+    )
+    user2 = UsersRecord(
+        name="Naffah Rasheed",
+        email=_admin2_username,
+        password=hashed_pass
     )
     account1 = AccountsRecord(
         account_uid="2",
@@ -107,24 +114,29 @@ async def initialise_db():
         discount_rate=0,
         status="ENABLED"
     )
+    account2 = AccountsRecord(
+        account_uid="3",
+        name="Naffah Rasheed",
+        entity_type="USER",
+        entity_id=2,
+        discount_rate=0,
+        status="ENABLED"
+    )
     user_role1 = UserRolesRecord(user_id=1, role_id=1)
+    user_role2 = UserRolesRecord(user_id=2, role_id=1)
     person_type = PersonTypesRecord(
         person_type="ADULT",
         discount_amount=0
     )
 
-    await add_object(admin)
-
-    objs.append(user1)
-
+    objs.extend([user1, user2, admin])
     await add_objects(objs)
 
     # tasks = [add_object(x) for x in objs]
     # await asyncio.gather(*tasks)
 
-    objs2.extend([user_role1, account1, person_type])
-    tasks2 = [add_object(x) for x in objs2]
-    await asyncio.gather(*tasks2)
+    objs2.extend([user_role1, account1, person_type, user_role2, account2])
+    await add_objects(objs2)
 
 
 async def close_db():
