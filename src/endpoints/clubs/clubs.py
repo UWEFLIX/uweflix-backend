@@ -65,25 +65,39 @@ async def _add_members(
             "Wrong endpoint to delete leader"
         )
 
-    delete_query = delete(
-        ClubMembersRecords
-    ).where(
-        or_(
-            [
+    tasks = [
+        execute_safely(
+            delete(
+                ClubMembersRecords
+            ).where(
                 and_(
                     ClubMembersRecords.club == club_id,
                     ClubMembersRecords.member == member_id
                 )
-            ] for member_id in members_to_delete
-        )
-    )
+            )
+        ) for member_id in members_to_delete
+    ]
+    # delete_query = delete(
+    #     ClubMembersRecords
+    # ).where(
+    #     [
+    #         and_(
+    #             ClubMembersRecords.club == club_id,
+    #             ClubMembersRecords.member == member_id
+    #         )
+    #     ] for member_id in members_to_delete
+    # )
+
     add_query = [
         ClubMembersRecords(
             member=member,
             club=club_id
         ) for member in members_to_add
     ]
-    tasks = [add_objects(add_query), execute_safely(delete_query)]
+
+    if len(members_to_add):
+        tasks.append(add_objects(add_query))
+
     await asyncio.gather(*tasks)
 
 
@@ -140,7 +154,7 @@ async def update_club(
 
     clubs = await select_leader_clubs(current_user.id)
     try:
-        old_club = clubs[club.id]
+        old_club = clubs[club.id][0]
     except KeyError:
         raise HTTPException(status_code=422, detail="Club doesnt exist")
 
@@ -154,7 +168,7 @@ async def update_club(
         city_id=club.city.id,
         landline_number=club.landline_number,
         contact_number=club.contact_number,
-        status=club.status
+        # status=club.status
     ).where(
         ClubsRecord.id == club.id
     )
@@ -167,7 +181,7 @@ async def update_club(
 
     record = await select_club(club.club_name)
 
-    if old_club.name != club.club_name:
+    if old_club.club_name != club.club_name:
         coro = update_account_uids(
             club.id, club.club_name,
         )
