@@ -266,15 +266,6 @@ async def get_club_accounts(
         start: Annotated[int, Param(title="Range starting ID to get", ge=1)],
         limit: Annotated[int, Param(title="Amount of resources to fetch", ge=1)]
 ) -> List[Account]:
-    clubs = await select_leader_clubs(current_user.id)
-
-    try:
-        clubs[club_id]
-    except KeyError:
-        raise HTTPException(
-            422, "You are not the leader of the club"
-        )
-
     records = await select_club_accounts(club_id, start, limit)
     return AccountsFactory.get_half_accounts(records)
 
