@@ -308,7 +308,10 @@ class AccountsRecord(Base):
         nullable=False,
     )
     status = Column(
-        Enum("ENABLED", "DISABLED", collation=_COLLATION),
+        Enum(
+            "ENABLED", "DISABLED", "REQUESTED", "REJECTED",
+            collation=_COLLATION
+        ),
         nullable=False,
     )
     balance = Column(

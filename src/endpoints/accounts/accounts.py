@@ -295,7 +295,7 @@ async def get_club_accounts(
 
 
 @router.post(
-    "/account/to-pup", status_code=201, tags=["Unfinished", "Clubs"]
+    "/account/to-up", status_code=201, tags=["Unfinished", "Clubs"]
 )
 async def club_top_up(
         current_user: Annotated[
