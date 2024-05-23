@@ -151,7 +151,7 @@ async def update_schedule(
     return FilmFactory.get_detailed_schedule(records)
 
 
-@router.get("/schedule", tags=["Unfinished"])
+@router.get("/schedule/{schedule_id}", tags=["Unfinished"])
 async def get_schedule(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])

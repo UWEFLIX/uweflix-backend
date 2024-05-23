@@ -8,10 +8,12 @@ from src.crud.queries.accounts import (
     select_account, select_half_account, select_half_accounts,
     select_last_entered_account, select_full_account, select_club_accounts
 )
-from src.crud.queries.clubs import select_leader_clubs
+from src.crud.queries.clubs import select_leader_clubs, select_club_with_accounts
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.accounts import Account
+from src.schema.clubs import Club
 from src.schema.factories.account_factory import AccountsFactory
+from src.schema.factories.club_factories import ClubFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
 from src.endpoints.accounts.cards import router as cards
@@ -255,6 +257,28 @@ async def get_club_account(
         raise HTTPException(422, "Invalid input")
 
     return await _select_account(account_id, club_id, "CLUB")
+
+
+@router.get(
+    "/club/account/id/{account_id}",
+    status_code=201, tags=["Unfinished", "Clubs"]
+)
+async def get_account_with_club(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        account_id: int
+) -> Club:
+    records = await select_club_with_accounts(account_id)
+
+    if records is None:
+        raise HTTPException(404, "Account not found")
+
+    account = AccountsFactory.get_account(records)
+    club = ClubFactory.get_full_club(records)
+    club.account = account
+
+    return club
 
 
 @router.get("/club/accounts", status_code=201, tags=["Unfinished", "Clubs"])

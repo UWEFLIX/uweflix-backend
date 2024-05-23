@@ -3,7 +3,7 @@ from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from sqlalchemy import update, delete
 from src.crud.models import CitiesRecord
-from src.crud.queries.clubs import select_city, select_cities
+from src.crud.queries.clubs import select_city, select_cities, select_city_by_id
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.clubs import City
 from src.schema.factories.club_factories import ClubFactory
@@ -14,13 +14,28 @@ router = APIRouter(prefix="/cities", tags=["Cities"])
 
 
 @router.get("/city", status_code=200, tags=["Unfinished"])
-async def get_cities(
+async def get_city(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["read:cities"])
         ],
         city_name: str
 ) -> City:
     record = await select_city(city_name)
+
+    if record is None:
+        raise HTTPException(404, "City not found")
+
+    return ClubFactory.get_city(record)
+
+
+@router.get("/city/id/{city_id}", status_code=200, tags=["Unfinished"])
+async def get_city_by_id(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:cities"])
+        ],
+        city_id: int
+) -> City:
+    record = await select_city_by_id(city_id)
 
     if record is None:
         raise HTTPException(404, "City not found")

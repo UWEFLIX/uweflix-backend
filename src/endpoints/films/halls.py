@@ -3,7 +3,7 @@ from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from sqlalchemy import update, delete
 from src.crud.models import HallsRecord
-from src.crud.queries.films import select_hall, select_halls, select_schedules_by_hall_id
+from src.crud.queries.films import select_hall, select_halls, select_schedules_by_hall_id, select_hall_by_id
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.films import Hall
 from src.schema.factories.film_factories import FilmFactory
@@ -21,6 +21,21 @@ async def get_halls(
         hall_name: str
 ) -> Hall:
     record = await select_hall(hall_name)
+
+    if record is None:
+        raise HTTPException(404, "Hall not found")
+
+    return FilmFactory.get_hall(record)
+
+
+@router.get("/hall/id/{hall_id}", status_code=200, tags=["Unfinished"])
+async def get_halls_by_hall_id(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:halls"])
+        ],
+        hall_id: int
+) -> Hall:
+    record = await select_hall_by_id(hall_id)
 
     if record is None:
         raise HTTPException(404, "Hall not found")

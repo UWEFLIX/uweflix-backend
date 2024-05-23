@@ -14,6 +14,9 @@ from src.security.security import get_current_active_user
 router = APIRouter(prefix="/cards", tags=["Cards"])
 
 
+# todo ask for logic to get card, checks and stuff
+
+
 @router.post("/card", status_code=201, tags=["Unfinished"])
 async def create_card(
         current_user: Annotated[

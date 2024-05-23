@@ -46,3 +46,10 @@ async def add_objects(records) -> None:
         code = e.orig.args[0]
         message = e.orig.args[1]
         raise HTTPException(status_code=422, detail=message)
+
+
+async def scalar_selection(query):
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.scalar()

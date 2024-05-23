@@ -6,6 +6,7 @@ from src.schema.validation import basic_string_validation
 class Permission(BaseModel):
     id: int
     name: str
+    class_name: str = "PERMISSION"
 
     def __repr__(self):
         return f"[id: {self.id}, name: {self.name}]"
@@ -20,6 +21,7 @@ class Role(BaseModel):
     id: int
     name: str
     permissions: List[Permission]
+    class_name: str = "ROLE"
 
     def __repr__(self):
         return (
@@ -41,6 +43,7 @@ class User(BaseModel):
     roles: List[Role] | None = Field(default=None)
     permissions: Set[str] | None = Field(default=None, exclude=True)
     status: str
+    class_name: str = "USER"
 
     def __repr__(self):
         return (
@@ -62,6 +65,7 @@ class User(BaseModel):
 class PasswordChange(BaseModel):
     old_password: str
     new_password: str
+    class_name: str = "PASSWORD_CHANGE"
 
     @classmethod
     @field_validator("old_password", mode="before")
@@ -77,6 +81,7 @@ class PasswordChange(BaseModel):
 class ResetRequest(BaseModel):
     email: EmailStr
     otp: str
+    class_name: str = "RESET_REQUEST"
 
     @classmethod
     @field_validator("otp", mode="before")
@@ -86,6 +91,7 @@ class ResetRequest(BaseModel):
 
 class PasswordResetConfirmation(ResetRequest):
     new_password: str
+    class_name: str = "PASSWORD_RESET_CONFIRMATION"
 
     @classmethod
     @field_validator("new_password", mode="before")

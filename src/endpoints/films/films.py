@@ -5,7 +5,7 @@ from fastapi.params import Param
 from sqlalchemy import delete, update, select
 from src.crud.models import FilmsRecord, SchedulesRecord
 from src.crud.queries.films import (
-    select_film, select_films, select_film_schedules
+    select_film, select_films, select_film_schedules, select_film_by_id
 )
 from src.crud.queries.utils import add_object, execute_safely
 from src.endpoints.films.halls import router as halls
@@ -112,6 +112,23 @@ async def update_film(
     return FilmFactory.get_full_film(records)
 
 
+@router.get("/film/{film_id}", tags=["Unfinished"])
+async def get_film_by_id(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        film_id: int
+) -> Film:
+    records = await select_film_by_id(film_id)
+
+    if not records:
+        raise HTTPException(
+            404, detail="Film not found"
+        )
+
+    return FilmFactory.get_full_film(records)
+
+
 @router.get("/film", tags=["Unfinished"])
 async def get_film(
         current_user: Annotated[
@@ -166,3 +183,30 @@ async def get_schedules(
         )
 
     return FilmFactory.get_film_schedules(records)
+
+
+@router.get("/film/schedules/id/{film_id}", tags=["Unfinished"])
+async def get_schedules_by_film_id(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        film_id: int
+):
+    query = select(
+        FilmsRecord, SchedulesRecord
+    ).outerjoin(
+        SchedulesRecord,
+        FilmsRecord.film_id == SchedulesRecord.film_id
+    ).where(
+        FilmsRecord.film_id == film_id
+    )
+
+    records = await select_film_schedules(query)
+
+    if records is None:
+        raise HTTPException(
+            404, "Film not found"
+        )
+
+    return FilmFactory.get_film_schedules(records)
+

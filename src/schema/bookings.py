@@ -10,6 +10,7 @@ class PersonType(BaseModel):
     id: int
     person_type: str
     discount_amount: int = Field(ge=0, le=100)
+    class_name: str = "PERSON_TYPE"
 
     @classmethod
     @field_validator("person_type", mode="before")
@@ -29,6 +30,7 @@ class Booking(BaseModel):
     batch_ref: str
     created: datetime
     assigned_user: EmailStr
+    class_name: str = "BOOKING"
 
     @classmethod
     @field_validator("seat_no", mode="before")
@@ -47,6 +49,7 @@ class SingleBooking(BaseModel):
     person_type: PersonType
     user_email: EmailStr
     account: Account
+    class_name: str = "SINGLE_BOOKING"
 
     @classmethod
     @field_validator("seat_no", mode="before")
@@ -59,6 +62,7 @@ class MultipleBookings(BaseModel):
     club_id: int
     schedule_id: int
     account_id: int
+    class_name: str = "MULTIPLE_BOOKINGS"
 
 
 class BatchData(BaseModel):
@@ -66,3 +70,5 @@ class BatchData(BaseModel):
     count: int
     created: datetime
     total: int | float
+    class_name: str = "BATCH_DATA"
+

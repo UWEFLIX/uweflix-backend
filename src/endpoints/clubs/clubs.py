@@ -5,7 +5,8 @@ from fastapi.params import Param
 from sqlalchemy import update, delete, and_, select, or_
 from src.crud.models import ClubsRecord, AccountsRecord, ClubMembersRecords
 from src.crud.queries.accounts import select_club_accounts
-from src.crud.queries.clubs import select_club, select_leader_clubs, select_clubs, select_club_members
+from src.crud.queries.clubs import select_club, select_leader_clubs, select_clubs, select_club_members, \
+    select_club_by_id
 from src.crud.queries.utils import add_object, execute_safely, add_objects
 from src.endpoints.accounts.accounts import get_initials, update_club_account_uid
 from src.endpoints.clubs.club_members import router as club_members
@@ -190,32 +191,6 @@ async def update_club(
     return ClubFactory.get_full_club(record)
 
 
-# @router.delete("/club", status_code=204, tags=["Unfinished"])
-# async def delete_club(
-#         current_user: Annotated[
-#             User, Security(get_current_active_user, scopes=["write:clubs"])
-#         ],
-#         club: Club
-# ) -> None:
-#     query = delete(
-#         ClubsRecord
-#     ).where(
-#         ClubsRecord.id == club.id
-#     )
-#
-#     await execute_safely(query)
-#
-#     delete_accounts = delete(
-#         AccountsRecord
-#     ).where(
-#         and_(
-#             AccountsRecord.entity_type == "CLUB",
-#             AccountsRecord.entity_id == club.id
-#         )
-#     )
-#     await execute_safely(delete_accounts)
-
-
 @router.get("/club", status_code=200, tags=["Unfinished"])
 async def get_club(
         current_user: Annotated[
@@ -224,6 +199,17 @@ async def get_club(
         club_name: str
 ):
     record = await select_club(club_name)
+    club = ClubFactory.get_full_club(record)
+
+
+@router.get("/club/id/{club_id}", status_code=200, tags=["Unfinished"])
+async def get_club(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:clubs"])
+        ],
+        club_id: int
+):
+    record = await select_club_by_id(club_id)
     return ClubFactory.get_full_club(record)
 
 

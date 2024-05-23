@@ -7,7 +7,7 @@ from sqlalchemy import delete, and_, update
 from src.crud.models import (
     UsersRecord, AccountsRecord, UserRolesRecord
 )
-from src.crud.queries.user import select_user_by_email, select_users
+from src.crud.queries.user import select_user_by_email, select_users, select_user_by_id
 from src.crud.queries.utils import add_object, execute_safely, add_objects
 from src.endpoints.accounts.accounts import get_initials, update_club_account_uid
 from src.schema.factories.user_factory import UserFactory
@@ -45,6 +45,20 @@ async def get_user(
         email: EmailStr
 ) -> User:
     user_record = await select_user_by_email(email)
+    if not user_record:
+        raise HTTPException(404, "User not found")
+
+    return UserFactory.create_full_user(user_record)
+
+
+@router.get("/user/id/{user_id}/", status_code=200, tags=["Unfinished"])
+async def get_user_by_id(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:users"])
+        ],
+        user_id: int
+) -> User:
+    user_record = await select_user_by_id(user_id)
     if not user_record:
         raise HTTPException(404, "User not found")
 

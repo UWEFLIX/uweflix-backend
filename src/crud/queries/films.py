@@ -59,6 +59,32 @@ async def select_film(title: str):
             }
 
 
+async def select_film_by_id(film_id: int):
+    query = select(
+        FilmsRecord, FilmImagesRecord
+    ).outerjoin(
+        FilmImagesRecord, FilmImagesRecord.film_id == FilmsRecord.film_id
+    ).where(
+        FilmsRecord.film_id == film_id
+    )
+
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            rows = result.all()
+
+            if len(rows) == 0:
+                return
+
+            film = rows[0][0]
+            images = [row[1] for row in rows if row[1]]
+
+            return {
+                "film": film,
+                "images": images
+            }
+
+
 async def select_films(start: int, limit: int):
     query = select(
         FilmsRecord
@@ -226,3 +252,15 @@ async def select_schedules_by_hall_id(hall_id: int, limit: int):
             result = await session.execute(query)
 
             return result.all()
+
+
+async def select_hall_by_id(hall_id: int):
+    query = select(
+        HallsRecord
+    ).where(
+        HallsRecord.hall_id == hall_id
+    )
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.scalar()

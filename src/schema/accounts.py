@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List
+from typing import List, Literal
 
 from fastapi import HTTPException
 from pydantic import BaseModel, Field, field_validator
@@ -15,6 +15,7 @@ class Card(BaseModel):
     holder_name: str
     exp_date: str
     status: str
+    class_name: str = "CARD"
 
     _encrypted: bool = False
 
@@ -115,6 +116,7 @@ class Account(BaseModel):
     discount_rate: int = Field(min_value=0, max_value=100)
     status: str
     balance: float
+    class_name: str = "ACCOUNT"
 
     @classmethod
     @field_validator("name", mode="before")

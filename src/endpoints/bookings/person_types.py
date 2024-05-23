@@ -13,7 +13,7 @@ from src.security.security import get_current_active_user
 router = APIRouter(prefix="/person-types", tags=["Persons"])
 
 
-@router.get("/person-type", status_code=200, tags=["Unfinished"])
+@router.get("/person-type/{person_type}", status_code=200, tags=["Unfinished"])
 async def get_person(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["read:person-types"])

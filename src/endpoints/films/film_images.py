@@ -126,7 +126,7 @@ async def delete_film_posters(
         )
 
 
-@router.get("/image", tags=["Unfinished"])
+@router.get("/image/{file_name}", tags=["Unfinished"])
 async def get_image(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])

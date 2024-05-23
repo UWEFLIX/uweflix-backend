@@ -18,7 +18,7 @@ router.include_router(users_router)
 router.include_router(clubs_router)
 
 
-@router.get("/paid/booking", tags=["Unfinished"])
+@router.get("/paid/booking/{booking_id}", tags=["Unfinished"])
 async def get_booking(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
@@ -62,7 +62,7 @@ async def get_batch_bookings(
     return await select_batches()
 
 
-@router.get("/batch/bookings", tags=["Unfinished"])
+@router.get("/batch/bookings/{batch_reference}", tags=["Unfinished"])
 async def get_batch_bookings(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["read:bookings"])

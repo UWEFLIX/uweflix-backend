@@ -2,6 +2,7 @@ from typing import List
 
 from pydantic import BaseModel, EmailStr, field_validator
 
+from src.schema.accounts import Account
 from src.schema.users import User
 from src.schema.validation import basic_string_validation
 
@@ -9,6 +10,7 @@ from src.schema.validation import basic_string_validation
 class City(BaseModel):
     id: int
     name: str
+    class_name: str = "CITY"
 
     @classmethod
     @field_validator("name", mode="before")
@@ -28,6 +30,8 @@ class Club(BaseModel):
     post_code: int
     city: City
     status: str
+    account: Account | None = None
+    class_name: str = "CLUB"
 
     members: List[User] | None = None
 

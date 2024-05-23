@@ -10,6 +10,7 @@ class Hall(BaseModel):
     hall_name: str
     seats_per_row: int = Field(..., ge=1)
     no_of_rows: int = Field(..., ge=1)
+    class_name: str = "HALL"
 
     @classmethod
     @field_validator("hall_name", mode="before")
@@ -20,6 +21,7 @@ class Hall(BaseModel):
 class FilmImage(BaseModel):
     id: int
     filename: str
+    class_name: str = "FILM_IMAGE"
 
     @classmethod
     @field_validator("filename", mode="before")
@@ -37,6 +39,7 @@ class Schedule(BaseModel):
     show_time: datetime
     on_schedule: bool
     ticket_price: float = Field(..., ge=1)
+    class_name: str = "SCHEDULE"
 
 
 class Film(BaseModel):
@@ -51,6 +54,7 @@ class Film(BaseModel):
     poster_image: bytes | None = None
     images: List[FilmImage] | None = None
     schedules: List[Schedule] | None = None
+    class_name: str = "FILM"
 
     @classmethod
     @field_validator("title", mode="before")

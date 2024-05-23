@@ -35,7 +35,14 @@ class AccountsFactory:
             status=record.status,
         )
         card._encrypted = True
+        card.decrypt()
         return card
+
+    @staticmethod
+    def get_cards(records) -> List[Card]:
+        return [
+            AccountsFactory.get_card(record) for record in records
+        ]
 
     @staticmethod
     def get_half_account(record) -> Account:

@@ -1,7 +1,7 @@
 import asyncio
 from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
-from fastapi.params import Param
+from fastapi.params import Param, Path
 from sqlalchemy import select, delete, and_
 from src.crud.models import (
     RolesRecord, PermissionsRecord, RolePermissionsRecord, UserRolesRecord
@@ -107,6 +107,16 @@ async def get_role(
         role_name: str
 ) -> Role:
     return await _get_role_by_name(role_name)
+
+
+@router.get("/role/id/{role_id}", status_code=200, tags=["Unfinished"])
+async def get_role_by_id(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:roles"])
+        ],
+        role_id: int
+) -> Role:
+    return await _get_role_by_id(role_id)
 
 
 @router.post("/role", status_code=201, tags=["Unfinished"])
