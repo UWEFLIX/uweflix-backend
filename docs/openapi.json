@@ -1,0 +1,5401 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "FastAPI",
+        "version": "0.1.0"
+    },
+    "paths": {
+        "/clubs/clubs/member": {
+            "post": {
+                "tags": [
+                    "Clubs",
+                    "Unfinished"
+                ],
+                "summary": "Add Club Member",
+                "operationId": "add_club_member_clubs_clubs_member_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    },
+                    {
+                        "name": "club_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Club Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "title": "Response Add Club Member Clubs Clubs Member Post"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Clubs",
+                    "Unfinished"
+                ],
+                "summary": "Remove Club Member",
+                "operationId": "remove_club_member_clubs_clubs_member_delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    },
+                    {
+                        "name": "club_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Club Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clubs/cities/city": {
+            "get": {
+                "tags": [
+                    "Clubs",
+                    "Cities",
+                    "Unfinished"
+                ],
+                "summary": "Get City",
+                "operationId": "get_city_clubs_cities_city_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:cities"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "city_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "City Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/City"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Clubs",
+                    "Cities",
+                    "Unfinished"
+                ],
+                "summary": "Create City",
+                "operationId": "create_city_clubs_cities_city_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:cities"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "city_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "City Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/City"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Clubs",
+                    "Cities",
+                    "Unfinished"
+                ],
+                "summary": "Update City",
+                "operationId": "update_city_clubs_cities_city_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:cities"
+                        ]
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/City"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clubs/cities/city/id/{city_id}": {
+            "get": {
+                "tags": [
+                    "Clubs",
+                    "Cities",
+                    "Unfinished"
+                ],
+                "summary": "Get City By Id",
+                "operationId": "get_city_by_id_clubs_cities_city_id__city_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:cities"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "city_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "City Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/City"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clubs/cities/cities": {
+            "get": {
+                "tags": [
+                    "Clubs",
+                    "Cities",
+                    "Unfinished"
+                ],
+                "summary": "Get Cities",
+                "operationId": "get_cities_clubs_cities_cities_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:cities"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Start id"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 2,
+                            "title": "limit id to update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/City"
+                                    },
+                                    "title": "Response Get Cities Clubs Cities Cities Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clubs/club": {
+            "post": {
+                "tags": [
+                    "Clubs",
+                    "Unfinished"
+                ],
+                "summary": "Add Club",
+                "operationId": "add_club_clubs_club_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:clubs"
+                        ]
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Club-Input"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Club-Output"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Clubs",
+                    "Unfinished"
+                ],
+                "summary": "Update Club",
+                "operationId": "update_club_clubs_club_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Club-Input"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Club-Output"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Clubs",
+                    "Unfinished"
+                ],
+                "summary": "Get Club",
+                "operationId": "get_club_clubs_club_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:clubs"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "club_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Club Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clubs/club/id/{club_id}": {
+            "get": {
+                "tags": [
+                    "Clubs",
+                    "Unfinished"
+                ],
+                "summary": "Get Club",
+                "operationId": "get_club_clubs_club_id__club_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:clubs"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "club_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Club Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/clubs/clubs": {
+            "get": {
+                "tags": [
+                    "Clubs",
+                    "Unfinished"
+                ],
+                "summary": "Get Clubs",
+                "operationId": "get_clubs_clubs_clubs_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:clubs"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Range starting ID to get"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Amount of resources to fetch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/passwords/change": {
+            "post": {
+                "tags": [
+                    "Users",
+                    "Passwords",
+                    "Unfinished"
+                ],
+                "summary": "Change Password",
+                "operationId": "change_password_users_passwords_change_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordChange"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/users/passwords/reset/request": {
+            "post": {
+                "tags": [
+                    "Users",
+                    "Passwords",
+                    "Unfinished"
+                ],
+                "summary": "Reset Request",
+                "operationId": "reset_request_users_passwords_reset_request_post",
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email",
+                            "title": "Email"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/passwords/reset/reset": {
+            "post": {
+                "tags": [
+                    "Users",
+                    "Passwords",
+                    "Unfinished"
+                ],
+                "summary": "Password Reset Confirmation",
+                "operationId": "password_reset_confirmation_users_passwords_reset_reset_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PasswordResetConfirmation"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/roles/roles": {
+            "get": {
+                "tags": [
+                    "Users",
+                    "Roles",
+                    "Unfinished"
+                ],
+                "summary": "Get Roles",
+                "operationId": "get_roles_users_roles_roles_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:roles"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Range starting ID to get"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Amount of resources to fetch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/roles/role": {
+            "get": {
+                "tags": [
+                    "Users",
+                    "Roles",
+                    "Unfinished"
+                ],
+                "summary": "Get Role",
+                "operationId": "get_role_users_roles_role_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:roles"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "role_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Role Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Role"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Users",
+                    "Roles",
+                    "Unfinished"
+                ],
+                "summary": "Create Role",
+                "operationId": "create_role_users_roles_role_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:roles"
+                        ]
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Role"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Users",
+                    "Roles",
+                    "Unfinished"
+                ],
+                "summary": "Update Role",
+                "operationId": "update_role_users_roles_role_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:roles"
+                        ]
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Role"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/roles/role/id/{role_id}": {
+            "get": {
+                "tags": [
+                    "Users",
+                    "Roles",
+                    "Unfinished"
+                ],
+                "summary": "Get Role By Id",
+                "operationId": "get_role_by_id_users_roles_role_id__role_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:roles"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "role_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Role Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Role"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/roles/user-role": {
+            "post": {
+                "tags": [
+                    "Users",
+                    "Roles",
+                    "Unfinished"
+                ],
+                "summary": "Append User Role",
+                "operationId": "append_user_role_users_roles_user_role_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:roles"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Role Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Role"
+                                    },
+                                    "title": "Response Append User Role Users Roles User Role Post"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Users",
+                    "Roles",
+                    "Unfinished"
+                ],
+                "summary": "Append User Role",
+                "operationId": "append_user_role_users_roles_user_role_delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:roles"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Role Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Role"
+                                    },
+                                    "title": "Response Append User Role Users Roles User Role Delete"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/roles/role-permission": {
+            "post": {
+                "tags": [
+                    "Users",
+                    "Roles",
+                    "Unfinished"
+                ],
+                "summary": "Append User Role",
+                "operationId": "append_user_role_users_roles_role_permission_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:roles"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "role_id"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Permission"
+                                },
+                                "title": "Permissions"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Role"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Users",
+                    "Roles",
+                    "Unfinished"
+                ],
+                "summary": "Append User Role",
+                "operationId": "append_user_role_users_roles_role_permission_delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:roles"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "permission_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Permission Id"
+                        }
+                    },
+                    {
+                        "name": "role_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Role Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Role"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/user": {
+            "get": {
+                "tags": [
+                    "Users",
+                    "Unfinished"
+                ],
+                "summary": "Get User",
+                "operationId": "get_user_users_user_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:users"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "email",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email",
+                            "title": "Email"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User-Output"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Users",
+                    "Unfinished"
+                ],
+                "summary": "Create User",
+                "operationId": "create_user_users_user_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:users"
+                        ]
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User-Input"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User-Output"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Users",
+                    "Unfinished"
+                ],
+                "summary": "Update User",
+                "operationId": "update_user_users_user_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/User-Input"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User-Output"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/user/id/{user_id}/": {
+            "get": {
+                "tags": [
+                    "Users",
+                    "Unfinished"
+                ],
+                "summary": "Get User By Id",
+                "operationId": "get_user_by_id_users_user_id__user_id___get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:users"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User-Output"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/users": {
+            "get": {
+                "tags": [
+                    "Users",
+                    "Unfinished"
+                ],
+                "summary": "Get Users",
+                "operationId": "get_users_users_users_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:users"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Range starting ID to get"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Amount of resources to fetch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User-Output"
+                                    },
+                                    "title": "Response Get Users Users Users Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/person-types/person-type/{person_type}": {
+            "get": {
+                "tags": [
+                    "Bookings",
+                    "Persons",
+                    "Unfinished"
+                ],
+                "summary": "Get Person",
+                "operationId": "get_person_bookings_person_types_person_type__person_type__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:person-types"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "person_type",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Person Type"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PersonType"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/person-types/person-types": {
+            "get": {
+                "tags": [
+                    "Bookings",
+                    "Persons",
+                    "Unfinished"
+                ],
+                "summary": "Get Person Types",
+                "operationId": "get_person_types_bookings_person_types_person_types_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:person-types"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Start id"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 2,
+                            "title": "limit id to update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/PersonType"
+                                    },
+                                    "title": "Response Get Person Types Bookings Person Types Person Types Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/person-types/person-type": {
+            "post": {
+                "tags": [
+                    "Bookings",
+                    "Persons",
+                    "Unfinished"
+                ],
+                "summary": "Create Person",
+                "operationId": "create_person_bookings_person_types_person_type_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PersonType"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PersonType"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:person-types"
+                        ]
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Bookings",
+                    "Persons",
+                    "Unfinished"
+                ],
+                "summary": "Update Person",
+                "operationId": "update_person_bookings_person_types_person_type_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/PersonType"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:person-types"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/bookings/users/bookings": {
+            "get": {
+                "tags": [
+                    "Bookings",
+                    "Users",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Get User Bookings",
+                "operationId": "get_user_bookings_bookings_users_bookings_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Range starting ID to get"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Amount of resources to fetch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Booking"
+                                    },
+                                    "title": "Response Get User Bookings Bookings Users Bookings Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/users/booking": {
+            "post": {
+                "tags": [
+                    "Bookings",
+                    "Users",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Create User Bookings",
+                "operationId": "create_user_bookings_bookings_users_booking_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SingleBooking"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Booking"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Bookings",
+                    "Users",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Reassign User Bookings",
+                "operationId": "reassign_user_bookings_bookings_users_booking_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "booking_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Booking Id"
+                        }
+                    },
+                    {
+                        "name": "new_assignee",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email",
+                            "title": "New Assignee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Booking"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/users/bookings/me": {
+            "get": {
+                "tags": [
+                    "Bookings",
+                    "Users",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Get Assigned Bookings",
+                "operationId": "get_assigned_bookings_bookings_users_bookings_me_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/bookings/club/bookings": {
+            "get": {
+                "tags": [
+                    "Bookings",
+                    "Clubs",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Get Club Bookings",
+                "operationId": "get_club_bookings_bookings_club_bookings_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Range starting ID to get"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Amount of resources to fetch"
+                        }
+                    },
+                    {
+                        "name": "club_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Club ID"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Booking"
+                                    },
+                                    "title": "Response Get Club Bookings Bookings Club Bookings Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/club/booking": {
+            "post": {
+                "tags": [
+                    "Bookings",
+                    "Clubs",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Create Club Bookings",
+                "operationId": "create_club_bookings_bookings_club_booking_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MultipleBookings"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Booking"
+                                    },
+                                    "title": "Response Create Club Bookings Bookings Club Booking Post"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Bookings",
+                    "Clubs",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Reassign User Bookings",
+                "operationId": "reassign_user_bookings_bookings_club_booking_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "booking_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Booking Id"
+                        }
+                    },
+                    {
+                        "name": "new_assignee",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "email",
+                            "title": "New Assignee"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Booking"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/paid/booking/{booking_id}": {
+            "get": {
+                "tags": [
+                    "Bookings",
+                    "Unfinished"
+                ],
+                "summary": "Get Booking",
+                "operationId": "get_booking_bookings_paid_booking__booking_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "booking_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Booking Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Booking"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/batches": {
+            "get": {
+                "tags": [
+                    "Bookings",
+                    "Unfinished"
+                ],
+                "summary": "Get Batch Bookings",
+                "description": "returns batch data",
+                "operationId": "get_batch_bookings_bookings_batches_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "$ref": "#/components/schemas/BatchData"
+                                    },
+                                    "type": "object",
+                                    "title": "Response Get Batch Bookings Bookings Batches Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:bookings"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/bookings/batch/bookings/{batch_reference}": {
+            "get": {
+                "tags": [
+                    "Bookings",
+                    "Unfinished"
+                ],
+                "summary": "Get Batch Bookings",
+                "operationId": "get_batch_bookings_bookings_batch_bookings__batch_reference__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:bookings"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "batch_reference",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Batch Reference"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Booking"
+                                    },
+                                    "title": "Response Get Batch Bookings Bookings Batch Bookings  Batch Reference  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/cards/card": {
+            "post": {
+                "tags": [
+                    "Accounts",
+                    "Cards",
+                    "Unfinished"
+                ],
+                "summary": "Create Card",
+                "operationId": "create_card_accounts_cards_card_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/accounts/cards/user/card": {
+            "delete": {
+                "tags": [
+                    "Accounts",
+                    "Cards",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Delete User Card",
+                "operationId": "delete_user_card_accounts_cards_user_card_delete",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Accounts",
+                    "Cards",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Update User Card",
+                "operationId": "update_user_card_accounts_cards_user_card_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/accounts/cards/club/card": {
+            "delete": {
+                "tags": [
+                    "Accounts",
+                    "Cards",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Delete Club Card",
+                "operationId": "delete_club_card_accounts_cards_club_card_delete",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Accounts",
+                    "Cards",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Update Club Card",
+                "operationId": "update_club_card_accounts_cards_club_card_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Card"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/accounts/account": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished"
+                ],
+                "summary": "Get Account",
+                "operationId": "get_account_accounts_account_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:accounts"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "account_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Account Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/club/account": {
+            "patch": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Update Club Account",
+                "operationId": "update_club_account_accounts_club_account_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Account"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Create Account",
+                "operationId": "create_account_accounts_club_account_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Account"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Get Club Account",
+                "operationId": "get_club_account_accounts_club_account_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "account_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Account Id"
+                        }
+                    },
+                    {
+                        "name": "club_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Club Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/accounts": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished"
+                ],
+                "summary": "Get Accounts",
+                "operationId": "get_accounts_accounts_accounts_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:accounts"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Range starting ID to get"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Amount of resources to fetch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Account"
+                                    },
+                                    "title": "Response Get Accounts Accounts Accounts Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/user/account": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Get User Account",
+                "operationId": "get_user_account_accounts_user_account_get",
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Update User Account",
+                "operationId": "update_user_account_accounts_user_account_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Account"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/accounts/club/account/id/{account_id}": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Get Account With Club",
+                "operationId": "get_account_with_club_accounts_club_account_id__account_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "account_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Account Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Club-Output"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/club/accounts": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Get Club Accounts",
+                "operationId": "get_club_accounts_accounts_club_accounts_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "club_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Club ID off accounts"
+                        }
+                    },
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Range starting ID to get"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Amount of resources to fetch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Account"
+                                    },
+                                    "title": "Response Get Club Accounts Accounts Club Accounts Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/account/to-up": {
+            "post": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Club Top Up",
+                "operationId": "club_top_up_accounts_account_to_up_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "account_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Account ID"
+                        }
+                    },
+                    {
+                        "name": "amount",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "number",
+                            "minimum": 1.0,
+                            "title": "Amount to Top Up"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/halls/hall": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Halls",
+                    "Unfinished"
+                ],
+                "summary": "Get Halls",
+                "operationId": "get_halls_films_halls_hall_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:halls"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "hall_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Hall Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Hall"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Films",
+                    "Halls",
+                    "Unfinished"
+                ],
+                "summary": "Create Hall",
+                "operationId": "create_hall_films_halls_hall_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:halls"
+                        ]
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Hall"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Hall"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Films",
+                    "Halls",
+                    "Unfinished"
+                ],
+                "summary": "Update Hall",
+                "operationId": "update_hall_films_halls_hall_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:halls"
+                        ]
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Hall"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/halls/hall/id/{hall_id}": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Halls",
+                    "Unfinished"
+                ],
+                "summary": "Get Halls By Hall Id",
+                "operationId": "get_halls_by_hall_id_films_halls_hall_id__hall_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:halls"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "hall_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hall Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Hall"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/halls/halls": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Halls",
+                    "Unfinished"
+                ],
+                "summary": "Get Halls",
+                "operationId": "get_halls_films_halls_halls_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:halls"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Start id"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 2,
+                            "title": "limit id to update"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Hall"
+                                    },
+                                    "title": "Response Get Halls Films Halls Halls Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/halls/halls/schedules": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Halls",
+                    "Unfinished"
+                ],
+                "summary": "Get Schedules",
+                "operationId": "get_schedules_films_halls_halls_schedules_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:halls"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "hall_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Hall Id"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Limit"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/images/poster": {
+            "patch": {
+                "tags": [
+                    "Films",
+                    "FilmImages",
+                    "Unfinished"
+                ],
+                "summary": "Update Film Poster",
+                "operationId": "update_film_poster_films_images_poster_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:films"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "film_title",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Title of the film"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_update_film_poster_films_images_poster_patch"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/images/posters": {
+            "post": {
+                "tags": [
+                    "Films",
+                    "FilmImages",
+                    "Unfinished"
+                ],
+                "summary": "Add Film Posters",
+                "operationId": "add_film_posters_films_images_posters_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:films"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "film_title",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Title of the film"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_add_film_posters_films_images_posters_post"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Films",
+                    "FilmImages",
+                    "Unfinished"
+                ],
+                "summary": "Delete Film Posters",
+                "operationId": "delete_film_posters_films_images_posters_delete",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:films"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "file_name",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful Response"
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/images/image/{file_name}": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "FilmImages",
+                    "Unfinished"
+                ],
+                "summary": "Get Image",
+                "operationId": "get_image_films_images_image__file_name__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "file_name",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "File Name"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/schedules/schedule": {
+            "post": {
+                "tags": [
+                    "Films",
+                    "Schedules",
+                    "Unfinished"
+                ],
+                "summary": "Create Schedule",
+                "operationId": "create_schedule_films_schedules_schedule_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Schedule"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:schedules"
+                        ]
+                    }
+                ]
+            },
+            "patch": {
+                "tags": [
+                    "Films",
+                    "Schedules",
+                    "Unfinished"
+                ],
+                "summary": "Update Schedule",
+                "operationId": "update_schedule_films_schedules_schedule_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Schedule"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:schedules"
+                        ]
+                    }
+                ]
+            }
+        },
+        "/films/schedules/schedule/{schedule_id}": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Schedules",
+                    "Unfinished"
+                ],
+                "summary": "Get Schedule",
+                "operationId": "get_schedule_films_schedules_schedule__schedule_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "schedule_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Schedule Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/schedules/schedules": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Schedules",
+                    "Unfinished"
+                ],
+                "summary": "Get Schedules",
+                "operationId": "get_schedules_films_schedules_schedules_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Range starting ID to get"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Amount of resources to fetch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/film": {
+            "post": {
+                "tags": [
+                    "Films",
+                    "Unfinished"
+                ],
+                "summary": "Create Film",
+                "operationId": "create_film_films_film_post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:films"
+                        ]
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Film"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Film"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "patch": {
+                "tags": [
+                    "Films",
+                    "Unfinished"
+                ],
+                "summary": "Update Film",
+                "operationId": "update_film_films_film_patch",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:films"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "old_title",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Old title of the film"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Film"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "tags": [
+                    "Films",
+                    "Unfinished"
+                ],
+                "summary": "Get Film",
+                "operationId": "get_film_films_film_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Title"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Film"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/film/{film_id}": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Unfinished"
+                ],
+                "summary": "Get Film By Id",
+                "operationId": "get_film_by_id_films_film__film_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "film_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Film Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Film"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/films": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Unfinished"
+                ],
+                "summary": "Get Films",
+                "operationId": "get_films_films_films_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "start",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Range starting ID to get"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Amount of resources to fetch"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Film"
+                                    },
+                                    "title": "Response Get Films Films Films Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/film/schedules": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Unfinished"
+                ],
+                "summary": "Get Schedules",
+                "operationId": "get_schedules_films_film_schedules_get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "title",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Title"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/film/schedules/id/{film_id}": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Unfinished"
+                ],
+                "summary": "Get Schedules By Film Id",
+                "operationId": "get_schedules_by_film_id_films_film_schedules_id__film_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "film_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Film Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/token": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Login For Access Token",
+                "description": "Create a token up to specification of Oauth2 Scope Authentication\ndb tables are checked to see if the user should have those modules",
+                "operationId": "login_for_access_token_token_post",
+                "requestBody": {
+                    "content": {
+                        "application/x-www-form-urlencoded": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Body_login_for_access_token_token_post"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Token"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/me": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Read Users Me",
+                "operationId": "read_users_me_users_me_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User-Output"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Account": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "uid": {
+                        "type": "string",
+                        "title": "Uid"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "cards": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/Card"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Cards"
+                    },
+                    "entity_type": {
+                        "type": "string",
+                        "title": "Entity Type"
+                    },
+                    "entity_id": {
+                        "type": "integer",
+                        "title": "Entity Id"
+                    },
+                    "discount_rate": {
+                        "type": "integer",
+                        "title": "Discount Rate",
+                        "max_value": 100,
+                        "min_value": 0
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "balance": {
+                        "type": "number",
+                        "title": "Balance"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "ACCOUNT"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "uid",
+                    "name",
+                    "entity_type",
+                    "entity_id",
+                    "discount_rate",
+                    "status",
+                    "balance"
+                ],
+                "title": "Account"
+            },
+            "BatchData": {
+                "properties": {
+                    "batch_ref": {
+                        "type": "string",
+                        "title": "Batch Ref"
+                    },
+                    "count": {
+                        "type": "integer",
+                        "title": "Count"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created"
+                    },
+                    "total": {
+                        "anyOf": [
+                            {
+                                "type": "integer"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ],
+                        "title": "Total"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "BATCH_DATA"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "batch_ref",
+                    "count",
+                    "created",
+                    "total"
+                ],
+                "title": "BatchData"
+            },
+            "Body_add_film_posters_films_images_posters_post": {
+                "properties": {
+                    "files": {
+                        "items": {
+                            "type": "string",
+                            "format": "binary"
+                        },
+                        "type": "array",
+                        "title": "Files"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "files"
+                ],
+                "title": "Body_add_film_posters_films_images_posters_post"
+            },
+            "Body_login_for_access_token_token_post": {
+                "properties": {
+                    "grant_type": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "pattern": "password"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Grant Type"
+                    },
+                    "username": {
+                        "type": "string",
+                        "title": "Username"
+                    },
+                    "password": {
+                        "type": "string",
+                        "title": "Password"
+                    },
+                    "scope": {
+                        "type": "string",
+                        "title": "Scope",
+                        "default": ""
+                    },
+                    "client_id": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Id"
+                    },
+                    "client_secret": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Client Secret"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "username",
+                    "password"
+                ],
+                "title": "Body_login_for_access_token_token_post"
+            },
+            "Body_update_film_poster_films_images_poster_patch": {
+                "properties": {
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "file"
+                ],
+                "title": "Body_update_film_poster_films_images_poster_patch"
+            },
+            "Booking": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "seat_no": {
+                        "type": "string",
+                        "title": "Seat No"
+                    },
+                    "schedule": {
+                        "$ref": "#/components/schemas/ScheduleDetailed-Output"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "account": {
+                        "$ref": "#/components/schemas/Account"
+                    },
+                    "person_type": {
+                        "$ref": "#/components/schemas/PersonType"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "title": "Amount"
+                    },
+                    "serial_no": {
+                        "type": "string",
+                        "title": "Serial No"
+                    },
+                    "batch_ref": {
+                        "type": "string",
+                        "title": "Batch Ref"
+                    },
+                    "created": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Created"
+                    },
+                    "assigned_user": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Assigned User"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "BOOKING"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "seat_no",
+                    "schedule",
+                    "status",
+                    "account",
+                    "person_type",
+                    "amount",
+                    "serial_no",
+                    "batch_ref",
+                    "created",
+                    "assigned_user"
+                ],
+                "title": "Booking"
+            },
+            "Card": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "account_id": {
+                        "type": "integer",
+                        "title": "Account Id"
+                    },
+                    "card_number": {
+                        "type": "string",
+                        "title": "Card Number"
+                    },
+                    "holder_name": {
+                        "type": "string",
+                        "title": "Holder Name"
+                    },
+                    "exp_date": {
+                        "type": "string",
+                        "title": "Exp Date"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "CARD"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "account_id",
+                    "card_number",
+                    "holder_name",
+                    "exp_date",
+                    "status"
+                ],
+                "title": "Card"
+            },
+            "City": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "CITY"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "title": "City"
+            },
+            "Club-Input": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "leader": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/User-Input"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "club_name": {
+                        "type": "string",
+                        "title": "Club Name"
+                    },
+                    "addr_street_number": {
+                        "type": "string",
+                        "title": "Addr Street Number"
+                    },
+                    "addr_street_name": {
+                        "type": "string",
+                        "title": "Addr Street Name"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "contact_number": {
+                        "type": "string",
+                        "title": "Contact Number"
+                    },
+                    "landline_number": {
+                        "type": "string",
+                        "title": "Landline Number"
+                    },
+                    "post_code": {
+                        "type": "integer",
+                        "title": "Post Code"
+                    },
+                    "city": {
+                        "$ref": "#/components/schemas/City"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "account": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Account"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "CLUB"
+                    },
+                    "members": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/User-Input"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Members"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "club_name",
+                    "addr_street_number",
+                    "addr_street_name",
+                    "email",
+                    "contact_number",
+                    "landline_number",
+                    "post_code",
+                    "city",
+                    "status"
+                ],
+                "title": "Club"
+            },
+            "Club-Output": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "leader": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/User-Output"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "club_name": {
+                        "type": "string",
+                        "title": "Club Name"
+                    },
+                    "addr_street_number": {
+                        "type": "string",
+                        "title": "Addr Street Number"
+                    },
+                    "addr_street_name": {
+                        "type": "string",
+                        "title": "Addr Street Name"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "contact_number": {
+                        "type": "string",
+                        "title": "Contact Number"
+                    },
+                    "landline_number": {
+                        "type": "string",
+                        "title": "Landline Number"
+                    },
+                    "post_code": {
+                        "type": "integer",
+                        "title": "Post Code"
+                    },
+                    "city": {
+                        "$ref": "#/components/schemas/City"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "account": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Account"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "CLUB"
+                    },
+                    "members": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/User-Output"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Members"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "club_name",
+                    "addr_street_number",
+                    "addr_street_name",
+                    "email",
+                    "contact_number",
+                    "landline_number",
+                    "post_code",
+                    "city",
+                    "status"
+                ],
+                "title": "Club"
+            },
+            "Film": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "title": {
+                        "type": "string",
+                        "title": "Title"
+                    },
+                    "age_rating": {
+                        "type": "string",
+                        "title": "Age Rating"
+                    },
+                    "duration_sec": {
+                        "type": "integer",
+                        "minimum": 1.0,
+                        "title": "Duration Sec"
+                    },
+                    "trailer_desc": {
+                        "type": "string",
+                        "title": "Trailer Desc"
+                    },
+                    "on_air_from": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "On Air From"
+                    },
+                    "on_air_to": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            {
+                                "type": "string"
+                            }
+                        ],
+                        "title": "On Air To"
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "title": "Is Active"
+                    },
+                    "poster_image": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "binary"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Poster Image"
+                    },
+                    "images": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/FilmImage"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Images"
+                    },
+                    "schedules": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/Schedule"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Schedules"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "FILM"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "title",
+                    "age_rating",
+                    "duration_sec",
+                    "trailer_desc",
+                    "on_air_from",
+                    "on_air_to",
+                    "is_active"
+                ],
+                "title": "Film"
+            },
+            "FilmImage": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "filename": {
+                        "type": "string",
+                        "title": "Filename"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "FILM_IMAGE"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "filename"
+                ],
+                "title": "FilmImage"
+            },
+            "HTTPValidationError": {
+                "properties": {
+                    "detail": {
+                        "items": {
+                            "$ref": "#/components/schemas/ValidationError"
+                        },
+                        "type": "array",
+                        "title": "Detail"
+                    }
+                },
+                "type": "object",
+                "title": "HTTPValidationError"
+            },
+            "Hall": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "hall_name": {
+                        "type": "string",
+                        "title": "Hall Name"
+                    },
+                    "seats_per_row": {
+                        "type": "integer",
+                        "minimum": 1.0,
+                        "title": "Seats Per Row"
+                    },
+                    "no_of_rows": {
+                        "type": "integer",
+                        "minimum": 1.0,
+                        "title": "No Of Rows"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "HALL"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "hall_name",
+                    "seats_per_row",
+                    "no_of_rows"
+                ],
+                "title": "Hall"
+            },
+            "MultipleBookings": {
+                "properties": {
+                    "bookings": {
+                        "items": {
+                            "$ref": "#/components/schemas/SingleBooking"
+                        },
+                        "type": "array",
+                        "title": "Bookings"
+                    },
+                    "club_id": {
+                        "type": "integer",
+                        "title": "Club Id"
+                    },
+                    "schedule_id": {
+                        "type": "integer",
+                        "title": "Schedule Id"
+                    },
+                    "account_id": {
+                        "type": "integer",
+                        "title": "Account Id"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "MULTIPLE_BOOKINGS"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "bookings",
+                    "club_id",
+                    "schedule_id",
+                    "account_id"
+                ],
+                "title": "MultipleBookings"
+            },
+            "PasswordChange": {
+                "properties": {
+                    "old_password": {
+                        "type": "string",
+                        "title": "Old Password"
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "title": "New Password"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "PASSWORD_CHANGE"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "old_password",
+                    "new_password"
+                ],
+                "title": "PasswordChange"
+            },
+            "PasswordResetConfirmation": {
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "otp": {
+                        "type": "string",
+                        "title": "Otp"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "PASSWORD_RESET_CONFIRMATION"
+                    },
+                    "new_password": {
+                        "type": "string",
+                        "title": "New Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "email",
+                    "otp",
+                    "new_password"
+                ],
+                "title": "PasswordResetConfirmation"
+            },
+            "Permission": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "PERMISSION"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name"
+                ],
+                "title": "Permission"
+            },
+            "PersonType": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "person_type": {
+                        "type": "string",
+                        "title": "Person Type"
+                    },
+                    "discount_amount": {
+                        "type": "integer",
+                        "maximum": 100.0,
+                        "minimum": 0.0,
+                        "title": "Discount Amount"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "PERSON_TYPE"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "person_type",
+                    "discount_amount"
+                ],
+                "title": "PersonType"
+            },
+            "Role": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "permissions": {
+                        "items": {
+                            "$ref": "#/components/schemas/Permission"
+                        },
+                        "type": "array",
+                        "title": "Permissions"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "ROLE"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "name",
+                    "permissions"
+                ],
+                "title": "Role"
+            },
+            "Schedule": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "hall_id": {
+                        "type": "integer",
+                        "title": "Hall Id"
+                    },
+                    "film_id": {
+                        "type": "integer",
+                        "title": "Film Id"
+                    },
+                    "show_time": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Show Time"
+                    },
+                    "on_schedule": {
+                        "type": "boolean",
+                        "title": "On Schedule"
+                    },
+                    "ticket_price": {
+                        "type": "number",
+                        "minimum": 1.0,
+                        "title": "Ticket Price"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "SCHEDULE"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "hall_id",
+                    "film_id",
+                    "show_time",
+                    "on_schedule",
+                    "ticket_price"
+                ],
+                "title": "Schedule"
+            },
+            "ScheduleDetailed-Input": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "hall_id": {
+                        "type": "integer",
+                        "title": "Hall Id"
+                    },
+                    "film_id": {
+                        "type": "integer",
+                        "title": "Film Id"
+                    },
+                    "show_time": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Show Time"
+                    },
+                    "on_schedule": {
+                        "type": "boolean",
+                        "title": "On Schedule"
+                    },
+                    "ticket_price": {
+                        "type": "number",
+                        "minimum": 1.0,
+                        "title": "Ticket Price"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "SCHEDULE"
+                    },
+                    "hall": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Hall"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "film": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Film"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "hall_id",
+                    "film_id",
+                    "show_time",
+                    "on_schedule",
+                    "ticket_price"
+                ],
+                "title": "ScheduleDetailed"
+            },
+            "ScheduleDetailed-Output": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "hall_id": {
+                        "type": "integer",
+                        "title": "Hall Id"
+                    },
+                    "film_id": {
+                        "type": "integer",
+                        "title": "Film Id"
+                    },
+                    "show_time": {
+                        "type": "string",
+                        "format": "date-time",
+                        "title": "Show Time"
+                    },
+                    "on_schedule": {
+                        "type": "boolean",
+                        "title": "On Schedule"
+                    },
+                    "ticket_price": {
+                        "type": "number",
+                        "minimum": 1.0,
+                        "title": "Ticket Price"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "SCHEDULE"
+                    },
+                    "hall": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Hall"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "film": {
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Film"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "hall_id",
+                    "film_id",
+                    "show_time",
+                    "on_schedule",
+                    "ticket_price"
+                ],
+                "title": "ScheduleDetailed"
+            },
+            "SingleBooking": {
+                "properties": {
+                    "seat_no": {
+                        "type": "string",
+                        "title": "Seat No"
+                    },
+                    "schedule": {
+                        "$ref": "#/components/schemas/ScheduleDetailed-Input"
+                    },
+                    "person_type": {
+                        "$ref": "#/components/schemas/PersonType"
+                    },
+                    "user_email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "User Email"
+                    },
+                    "account": {
+                        "$ref": "#/components/schemas/Account"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "SINGLE_BOOKING"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "seat_no",
+                    "schedule",
+                    "person_type",
+                    "user_email",
+                    "account"
+                ],
+                "title": "SingleBooking"
+            },
+            "Token": {
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "title": "Access Token"
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "title": "Token Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "access_token",
+                    "token_type"
+                ],
+                "title": "Token"
+            },
+            "User-Input": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "minimum": 0.0,
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "password": {
+                        "anyOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Password"
+                    },
+                    "roles": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/Role"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Roles"
+                    },
+                    "permissions": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "type": "string"
+                                },
+                                "type": "array",
+                                "uniqueItems": true
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Permissions"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "USER"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "email",
+                    "status"
+                ],
+                "title": "User"
+            },
+            "User-Output": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "minimum": 0.0,
+                        "title": "Id"
+                    },
+                    "name": {
+                        "type": "string",
+                        "title": "Name"
+                    },
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "Email"
+                    },
+                    "roles": {
+                        "anyOf": [
+                            {
+                                "items": {
+                                    "$ref": "#/components/schemas/Role"
+                                },
+                                "type": "array"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "title": "Roles"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "USER"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "name",
+                    "email",
+                    "status"
+                ],
+                "title": "User"
+            },
+            "ValidationError": {
+                "properties": {
+                    "loc": {
+                        "items": {
+                            "anyOf": [
+                                {
+                                    "type": "string"
+                                },
+                                {
+                                    "type": "integer"
+                                }
+                            ]
+                        },
+                        "type": "array",
+                        "title": "Location"
+                    },
+                    "msg": {
+                        "type": "string",
+                        "title": "Message"
+                    },
+                    "type": {
+                        "type": "string",
+                        "title": "Error Type"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "loc",
+                    "msg",
+                    "type"
+                ],
+                "title": "ValidationError"
+            }
+        },
+        "securitySchemes": {
+            "OAuth2PasswordBearer": {
+                "type": "oauth2",
+                "flows": {
+                    "password": {
+                        "scopes": {},
+                        "tokenUrl": "token"
+                    }
+                }
+            }
+        }
+    }
+}
