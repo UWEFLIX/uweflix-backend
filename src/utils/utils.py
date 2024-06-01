@@ -11,6 +11,7 @@ from src.crud.db_management import close_db
 from src.crud.drop import create_new_db
 from aiofiles.os import makedirs, path
 
+from src.crud.queries.user import select_user_by_id
 
 ALPHABETS = list(string.ascii_uppercase)
 
@@ -61,14 +62,21 @@ def str_to_iso_format(_string: str):
     )
 
 
+async def keep_resetting_db_conns():
+    while True:
+        await asyncio.sleep(3600)
+        await select_user_by_id(1)
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     await create_assets_dir()
 
     is_dev = int(os.getenv('DEV'))
-    print(is_dev)
     if is_dev:
         asyncio.create_task(save_openai())
+
+    asyncio.create_task(keep_resetting_db_conns())
 
     yield
     await close_db()
