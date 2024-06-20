@@ -9,7 +9,7 @@ _COLLATION = "utf8mb4_general_ci"
 
 
 class CitiesRecord(Base):
-    __tablename__ = "cities"
+    __tablename__ = "city"
     city_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -24,7 +24,7 @@ class CitiesRecord(Base):
 
 
 class PermissionsRecord(Base):
-    __tablename__ = "permissions"
+    __tablename__ = "permission"
     permission_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -43,7 +43,7 @@ class PermissionsRecord(Base):
 
 
 class HallsRecord(Base):
-    __tablename__ = "halls"
+    __tablename__ = "hall"
     hall_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -66,7 +66,7 @@ class HallsRecord(Base):
 
 
 class RolePermissionsRecord(Base):
-    __tablename__ = "role_permissions"
+    __tablename__ = "role_permission"
     id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -76,12 +76,12 @@ class RolePermissionsRecord(Base):
     )
     role_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("roles.role_id", ondelete="CASCADE"),
+        ForeignKey("role.role_id", ondelete="CASCADE"),
         nullable=False,
     )
     permissions_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("permissions.permission_id"),
+        ForeignKey("permission.permission_id"),
         nullable=False,
     )
     # role: Mapped[List["RolesRecord"]] = relationship(
@@ -98,7 +98,7 @@ class RolePermissionsRecord(Base):
 
 
 class RolesRecord(Base):
-    __tablename__ = "roles"
+    __tablename__ = "role"
     role_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -120,7 +120,7 @@ class RolesRecord(Base):
 
 
 class UserRolesRecord(Base):
-    __tablename__ = "user_roles"
+    __tablename__ = "user_role"
     id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -130,12 +130,12 @@ class UserRolesRecord(Base):
     )
     role_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("roles.role_id", ondelete="CASCADE"),
+        ForeignKey("role.role_id", ondelete="CASCADE"),
         nullable=False,
     )
     user_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("users.user_id", ondelete="CASCADE"),
+        ForeignKey("user.user_id", ondelete="CASCADE"),
         nullable=False,
     )
     __table_args__ = (
@@ -152,7 +152,7 @@ class UserRolesRecord(Base):
 
 
 class UsersRecord(Base):
-    __tablename__ = "users"
+    __tablename__ = "user"
     user_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -183,7 +183,7 @@ class UsersRecord(Base):
 
 
 class CardsRecord(Base):
-    __tablename__ = "cards"
+    __tablename__ = "card"
     card_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -212,7 +212,7 @@ class CardsRecord(Base):
             "ENABLED", "DISABLED", collation=_COLLATION,
             # native_enum=False
         ),
-        nullable=False, default="ENABLED "
+        nullable=False, default="ENABLED"
     )
 
     # __table_args__ = (
@@ -224,7 +224,7 @@ class CardsRecord(Base):
 
 
 class ClubsRecord(Base):
-    __tablename__ = "clubs"
+    __tablename__ = "club"
     id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -234,7 +234,7 @@ class ClubsRecord(Base):
     )
     leader = Column(
         INTEGER(unsigned=True),
-        ForeignKey("users.user_id", ondelete="CASCADE"),
+        ForeignKey("user.user_id", ondelete="CASCADE"),
         nullable=False,
     )
     club_name = Column(
@@ -256,7 +256,7 @@ class ClubsRecord(Base):
     )
     city_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("cities.city_id", ondelete="CASCADE"),
+        ForeignKey("city.city_id", ondelete="CASCADE"),
         nullable=False,
     )
     contact_number = Column(
@@ -278,7 +278,7 @@ class ClubsRecord(Base):
 
 
 class AccountsRecord(Base):
-    __tablename__ = "accounts"
+    __tablename__ = "account"
     id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -328,7 +328,7 @@ class AccountsRecord(Base):
 
 
 class ClubMembersRecords(Base):
-    __tablename__ = "club_members"
+    __tablename__ = "club_member"
     id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -338,18 +338,18 @@ class ClubMembersRecords(Base):
     )
     member = Column(
         INTEGER(unsigned=True),
-        ForeignKey("users.user_id", ondelete="CASCADE"),
+        ForeignKey("user.user_id", ondelete="CASCADE"),
         nullable=False,
     )
     club = Column(
         INTEGER(unsigned=True),
-        ForeignKey("clubs.id", ondelete="CASCADE"),
+        ForeignKey("club.id", ondelete="CASCADE"),
         nullable=False,
     )
 
 
 class PersonTypesRecord(Base):
-    __tablename__ = "person_types"
+    __tablename__ = "person_type"
     person_type_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -367,7 +367,7 @@ class PersonTypesRecord(Base):
 
 
 class FilmsRecord(Base):
-    __tablename__ = "films"
+    __tablename__ = "film"
     film_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -409,7 +409,7 @@ class FilmsRecord(Base):
 
 
 class FilmImagesRecord(Base):
-    __tablename__ = "film_images"
+    __tablename__ = "film_image"
     image_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -419,7 +419,7 @@ class FilmImagesRecord(Base):
     )
     film_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("films.film_id", ondelete="CASCADE"),
+        ForeignKey("film.film_id", ondelete="CASCADE"),
         nullable=False,
     )
     filename = Column(
@@ -433,7 +433,7 @@ class FilmImagesRecord(Base):
 
 
 class SchedulesRecord(Base):
-    __tablename__ = "schedules"
+    __tablename__ = "schedule"
     schedule_id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -443,12 +443,12 @@ class SchedulesRecord(Base):
     )
     hall_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("halls.hall_id", ondelete="CASCADE"),
+        ForeignKey("hall.hall_id", ondelete="CASCADE"),
         nullable=False,
     )
     film_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("films.film_id", ondelete="CASCADE"),
+        ForeignKey("film.film_id", ondelete="CASCADE"),
         nullable=False,
     )
     show_time = Column(
@@ -470,7 +470,7 @@ class SchedulesRecord(Base):
 
 
 class BookingsRecord(Base):
-    __tablename__ = "bookings"
+    __tablename__ = "booking"
     id = Column(
         INTEGER(unsigned=True),
         primary_key=True,
@@ -484,7 +484,7 @@ class BookingsRecord(Base):
     )
     schedule_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("schedules.schedule_id"),
+        ForeignKey("schedule.schedule_id"),
         nullable=False,
     )
     status = Column(
@@ -493,7 +493,7 @@ class BookingsRecord(Base):
     )
     account_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("accounts.id"),
+        ForeignKey("account.id"),
         nullable=False,
     )
     amount = Column(
@@ -502,7 +502,7 @@ class BookingsRecord(Base):
     )
     person_type_id = Column(
         INTEGER(unsigned=True),
-        ForeignKey("person_types.person_type_id"),
+        ForeignKey("person_type.person_type_id"),
         nullable=False,
     )
     serial_no = Column(
@@ -517,7 +517,7 @@ class BookingsRecord(Base):
         DateTime(), default=func.now(), nullable=False
     )
     assigned_user = Column(
-        String(50, collation=_COLLATION), ForeignKey("users.email"),
+        String(50, collation=_COLLATION), ForeignKey("user.email"),
         nullable=False,
     )
     __table_args__ = (
