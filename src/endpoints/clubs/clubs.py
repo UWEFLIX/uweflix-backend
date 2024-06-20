@@ -199,7 +199,13 @@ async def get_club(
         club_name: str
 ):
     record = await select_club(club_name)
-    club = ClubFactory.get_full_club(record)
+
+    if record is None:
+        raise HTTPException(
+            404, "Club not found"
+        )
+
+    return ClubFactory.get_full_club(record)
 
 
 @router.get("/club/id/{club_id}", status_code=200, tags=["Unfinished"])
@@ -210,6 +216,12 @@ async def get_club(
         club_id: int
 ):
     record = await select_club_by_id(club_id)
+
+    if record is None:
+        raise HTTPException(
+            404, "Club not found"
+        )
+
     return ClubFactory.get_full_club(record)
 
 
