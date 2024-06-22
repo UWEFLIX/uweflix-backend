@@ -44,9 +44,6 @@ async def _check_time_conflicts(new_schedule: Schedule):
 
     Returns: true none, raises 422 if conflict
     """
-    query = select(
-        SchedulesRecord, FilmsRecord, HallsRecord
-    )
     records = await select_all_schedules()
     schedules = FilmFactory.get_detailed_schedules(records)
 
@@ -61,8 +58,6 @@ async def _check_time_conflicts(new_schedule: Schedule):
         ) or (
                 that_start <= this_end <= that_end
         ):
-            ic(that_start <= this_start <= that_end)
-            ic(that_start <= this_end <= that_end)
             raise HTTPException(
                 422,
                 f"Time Conflict with schedule ID {schedule.id}"
