@@ -3227,7 +3227,7 @@
                 }
             }
         },
-        "/films/halls/halls/schedules": {
+        "/films/halls/hall/schedules/{hall_id}/{limit}": {
             "get": {
                 "tags": [
                     "Films",
@@ -3235,7 +3235,7 @@
                     "Unfinished"
                 ],
                 "summary": "Get Schedules",
-                "operationId": "get_schedules_films_halls_halls_schedules_get",
+                "operationId": "get_schedules_films_halls_hall_schedules__hall_id___limit__get",
                 "security": [
                     {
                         "OAuth2PasswordBearer": [
@@ -3246,7 +3246,7 @@
                 "parameters": [
                     {
                         "name": "hall_id",
-                        "in": "query",
+                        "in": "path",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -3255,7 +3255,7 @@
                     },
                     {
                         "name": "limit",
-                        "in": "query",
+                        "in": "path",
                         "required": true,
                         "schema": {
                             "type": "integer",

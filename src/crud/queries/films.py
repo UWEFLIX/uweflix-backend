@@ -182,7 +182,7 @@ async def select_schedule(schedule_id: int):
     ).join(
         HallsRecord, HallsRecord.hall_id == SchedulesRecord.hall_id
     ).where(
-        SchedulesRecord.id == schedule_id
+        SchedulesRecord.schedule_id == schedule_id
     )
     async with async_session() as session:
         async with session.begin():
