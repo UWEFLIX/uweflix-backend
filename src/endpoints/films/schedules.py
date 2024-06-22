@@ -3,6 +3,7 @@ from datetime import timedelta, timezone
 from typing import Annotated
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
+from icecream import ic
 from sqlalchemy import delete, update, select
 from src.crud.models import SchedulesRecord, HallsRecord, FilmsRecord
 from src.crud.queries.films import (
@@ -28,6 +29,7 @@ def _get_timings(schedule: Schedule, duration: int):
         day=schedule.show_time.day,
         minute=schedule.show_time.minute,
         second=schedule.show_time.second,
+        hour=schedule.show_time.hour
     )
     end = start + timedelta(seconds=duration, minutes=15)
 
@@ -50,16 +52,17 @@ async def _check_time_conflicts(new_schedule: Schedule):
 
     _film_record = await select_film_by_id(new_schedule.film_id)
     _film = FilmFactory.get_half_film(_film_record)
-    startTimeB, endTimeB = _get_timings(new_schedule, _film.duration_sec)
+    this_start, this_end = _get_timings(new_schedule, _film.duration_sec)
 
     for schedule in schedules:
-        startTimeA, endTimeA = _get_timings(new_schedule, _film.duration_sec)
-
+        that_start, that_end = _get_timings(schedule, schedule.film.duration_sec)
         if (
-                startTimeA <= startTimeB <= endTimeA
+                that_start <= this_start <= that_end
         ) or (
-                startTimeA <= endTimeB <= endTimeA
+                that_start <= this_end <= that_end
         ):
+            ic(that_start <= this_start <= that_end)
+            ic(that_start <= this_end <= that_end)
             raise HTTPException(
                 422,
                 f"Time Conflict with schedule ID {schedule.id}"

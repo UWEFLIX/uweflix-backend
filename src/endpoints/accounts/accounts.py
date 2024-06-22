@@ -1,4 +1,5 @@
-import asyncio
+import random
+import string
 from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
@@ -125,7 +126,7 @@ async def create_account(
         raise HTTPException(422, "Invalid input")
 
     record = AccountsRecord(
-        account_uid=account.uid,
+        account_uid=''.join(random.choices(string.ascii_letters + string.digits, k=4)),
         name=account.name,
         entity_type="CLUB",
         entity_id=account.entity_id,

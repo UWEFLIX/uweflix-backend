@@ -2503,52 +2503,6 @@
             }
         },
         "/accounts/club/account": {
-            "patch": {
-                "tags": [
-                    "Accounts",
-                    "Unfinished",
-                    "Clubs"
-                ],
-                "summary": "Update Club Account",
-                "operationId": "update_club_account_accounts_club_account_patch",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
-                "requestBody": {
-                    "required": true,
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Account"
-                            }
-                        }
-                    }
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Account"
-                                }
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                }
-            },
             "post": {
                 "tags": [
                     "Accounts",
@@ -2557,20 +2511,15 @@
                 ],
                 "summary": "Create Account",
                 "operationId": "create_account_accounts_club_account_post",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/Account"
                             }
                         }
-                    }
+                    },
+                    "required": true
                 },
                 "responses": {
                     "201": {
@@ -2593,32 +2542,31 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
             },
-            "get": {
+            "patch": {
                 "tags": [
                     "Accounts",
                     "Unfinished",
                     "Clubs"
                 ],
-                "summary": "Get Club Account",
-                "operationId": "get_club_account_accounts_club_account_get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "account_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "title": "Account Id"
+                "summary": "Update Club Account",
+                "operationId": "update_club_account_accounts_club_account_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Account"
+                            }
                         }
-                    }
-                ],
+                    },
+                    "required": true
+                },
                 "responses": {
                     "201": {
                         "description": "Successful Response",
@@ -2640,7 +2588,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
             }
         },
         "/accounts/accounts": {
@@ -2780,6 +2733,55 @@
                         "OAuth2PasswordBearer": []
                     }
                 ]
+            }
+        },
+        "/accounts/club/account/{account_id}/": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Get Club Account",
+                "operationId": "get_club_account_accounts_club_account__account_id___get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "account_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Account Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/accounts/club/account/id/{account_id}": {
