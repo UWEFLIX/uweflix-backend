@@ -1,9 +1,10 @@
 import random
+from datetime import datetime
 from typing import Dict
 
 from src.schema.bookings import PersonType
 from src.schema.clubs import Club, City
-from src.schema.films import Hall, Film
+from src.schema.films import Hall, Film, Schedule
 from src.schema.users import User, Role
 from src.utils.db_initialzation import main as db_init
 from tests._test import Test
@@ -363,24 +364,61 @@ def main(USER_COUNT: int, NO_CLUBS: int):
         reqs.update({str(count): _test})
         count += 1
 
-    # normal_member_count = int((USER_COUNT - len(members)) * ((100 - NO_CLUBS) / 100))
-    # for x in range(normal_member_count):
-    #     user = free_users.pop()
-    #     members[user] = True
-    #
-    #     club = random.randint(1, clubs_num)
-    #     _test = Test(
-    #         req_url_path="/clubs/clubs/member",
-    #         res_status_code=201,
-    #         req_type="post",
-    #         req_params={"user_id": user, "club_id": club},
-    #         req_body=None,
-    #     )
-    #
-    #     reqs.update({str(count): _test})
-    #     count += 1
-
     for i_id, item in reqs.items():
+        try:
+            item.test_id = i_id
+        except AttributeError:
+            pass
+        client.req(item)
+
+    schedules = {
+        count+1: Test(
+            req_url_path="/films/schedules/schedule",
+            res_status_code=201,
+            req_type="post",
+            req_body=Schedule(
+                id=1,
+                hall_id=1,
+                film_id=1,
+                show_time=datetime(year=2024, day=22, month=11, hour=13, minute=00),
+                on_schedule=1,
+                ticket_price=7,
+                class_name="0",
+            ),
+        ),
+        count + 2: Test(
+            req_url_path="/films/schedules/schedule",
+            res_status_code=201,
+            req_type="post",
+            req_body=Schedule(
+                id=1,
+                hall_id=1,
+                film_id=1,
+                show_time=datetime(year=2024, day=22, month=11, hour=17, minute=00),
+                on_schedule=1,
+                ticket_price=7,
+                class_name="0",
+            ),
+        ),
+        count + 3: Test(
+            req_url_path="/films/schedules/schedule",
+            res_status_code=201,
+            req_type="post",
+            req_body=Schedule(
+                id=1,
+                hall_id=1,
+                film_id=1,
+                show_time=datetime(year=2024, day=22, month=11, hour=21, minute=00),
+                on_schedule=1,
+                ticket_price=7,
+                class_name="0",
+            ),
+        )
+    }
+
+    count += len(schedules)
+
+    for i_id, item in schedules.items():
         try:
             item.test_id = i_id
         except AttributeError:

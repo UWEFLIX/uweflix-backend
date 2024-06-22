@@ -2,6 +2,7 @@ import os
 import json
 import requests
 
+from src.schema.films import Schedule
 from tests._logger import get_logger
 from tests._test import Test
 

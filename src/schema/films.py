@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List
-from pydantic import BaseModel, Field, field_validator
+from pydantic import BaseModel, Field, field_validator, field_serializer
 
 from src.schema.validation import basic_string_validation
 
@@ -40,6 +40,10 @@ class Schedule(BaseModel):
     on_schedule: bool
     ticket_price: float = Field(..., ge=1)
     class_name: str = "SCHEDULE"
+
+    @field_serializer('show_time')
+    def serialize_dt(self, show_time: datetime, _info):
+        return show_time.isoformat()
 
 
 class Film(BaseModel):

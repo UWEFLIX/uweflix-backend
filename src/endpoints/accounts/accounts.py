@@ -204,16 +204,15 @@ async def update_user_account(
 
 
 async def _select_account(
-        account_id: int, entity_id: int, entity_type: str
+        account_id: int, entity_type: str
 ) -> Account:
     query = select(
         AccountsRecord, CardsRecord
     ).outerjoin(
-        CardsRecord.account_id == AccountsRecord.id
+        CardsRecord, CardsRecord.account_id == AccountsRecord.id
     ).where(
         and_(
             AccountsRecord.id == account_id,
-            AccountsRecord.entity_id == entity_id,
             AccountsRecord.entity_type == entity_type
         )
     )
@@ -242,21 +241,21 @@ async def get_user_account(
     return AccountsFactory.get_account(records)
 
 
-@router.get("/club/account", status_code=201, tags=["Unfinished", "Clubs"])
+@router.get("/club/account/{account_id}/", status_code=201, tags=["Unfinished", "Clubs"])
 async def get_club_account(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
         ],
-        account_id: int, club_id: int
+        account_id: int
 ) -> Account:
-    clubs = await select_leader_clubs(current_user.id)
+    # clubs = await select_leader_clubs(current_user.id)
+    #
+    # try:
+    #     clubs[club_id]
+    # except KeyError:
+    #     raise HTTPException(422, "Invalid input")
 
-    try:
-        clubs[club_id]
-    except KeyError:
-        raise HTTPException(422, "Invalid input")
-
-    return await _select_account(account_id, club_id, "CLUB")
+    return await _select_account(account_id, "CLUB")
 
 
 @router.get(

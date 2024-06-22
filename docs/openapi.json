@@ -2617,15 +2617,6 @@
                             "type": "integer",
                             "title": "Account Id"
                         }
-                    },
-                    {
-                        "name": "club_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "title": "Club Id"
-                        }
                     }
                 ],
                 "responses": {
