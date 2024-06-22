@@ -118,7 +118,7 @@ async def get_halls(
 #     await execute_safely(query)
 
 
-@router.get("/halls/schedules", tags=["Unfinished"])
+@router.get("/hall/schedules/{hall_id}/{limit}", tags=["Unfinished"])
 async def get_schedules(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["read:halls"])
