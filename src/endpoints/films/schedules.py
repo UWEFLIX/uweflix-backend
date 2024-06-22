@@ -83,7 +83,6 @@ async def create_schedule(
     if not _film.is_active or not (
         _film.on_air_from <= schedule.show_time <= _film.on_air_to
     ):
-        print(not (_film.on_air_from <= schedule.show_time <= _film.on_air_to))
         raise HTTPException(
             422,
             "Film is not active or not on air during this period"
