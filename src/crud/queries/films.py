@@ -226,17 +226,17 @@ async def select_all_schedules():
             return result.all()
 
 
-async def select_film_by_id(film_id: int):
-    query = select(
-        FilmsRecord
-    ).where(
-        FilmsRecord.film_id == film_id
-    )
-
-    async with async_session() as session:
-        async with session.begin():
-            result = await session.execute(query)
-            return result.scalar()
+# async def select_film_by_id(film_id: int):
+#     query = select(
+#         FilmsRecord
+#     ).where(
+#         FilmsRecord.film_id == film_id
+#     )
+#
+#     async with async_session() as session:
+#         async with session.begin():
+#             result = await session.execute(query)
+#             return result.scalar()
 
 
 async def select_schedules_by_hall_id(hall_id: int, limit: int):
