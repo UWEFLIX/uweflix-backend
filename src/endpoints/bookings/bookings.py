@@ -1,9 +1,13 @@
 from typing import Annotated, Dict, List
 from fastapi import APIRouter, Security, HTTPException
+from sqlalchemy import select
+
+from src.crud.models import BookingsRecord
 from src.crud.queries.bookings import (
     select_booking, select_batches, select_batch
 )
 from src.crud.queries.clubs import select_leader_clubs
+from src.crud.queries.utils import scalars_selection
 from src.endpoints.bookings.person_types import router as persons
 from src.schema.bookings import Booking, BatchData
 from src.schema.factories.bookings_factory import BookingsFactory
@@ -75,3 +79,22 @@ async def get_batch_bookings(
         raise HTTPException(404, "No bookings found")
 
     return BookingsFactory.get_bookings(records)
+
+
+@router.get("/bookings/booked-seats/{schedule_id}", tags=["Unfinished"])
+async def get_batch_bookings(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:bookings"])
+        ],
+        schedule_id: int
+) -> List[str]:
+    query = select(
+        BookingsRecord
+    ).where(
+        BookingsRecord.schedule_id == schedule_id
+    )
+    records = await scalars_selection(query)
+
+    return [
+        record.seat_no for record in records
+    ]

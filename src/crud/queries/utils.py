@@ -53,3 +53,10 @@ async def scalar_selection(query):
         async with session.begin():
             result = await session.execute(query)
             return result.scalar()
+
+
+async def scalars_selection(query):
+    async with async_session() as session:
+        async with session.begin():
+            result = await session.execute(query)
+            return result.scalars()

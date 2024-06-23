@@ -2232,6 +2232,60 @@
                 }
             }
         },
+        "/bookings/bookings/booked-seats/{schedule_id}": {
+            "get": {
+                "tags": [
+                    "Bookings",
+                    "Unfinished"
+                ],
+                "summary": "Get Batch Bookings",
+                "operationId": "get_batch_bookings_bookings_bookings_booked_seats__schedule_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:bookings"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "schedule_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Schedule Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    },
+                                    "title": "Response Get Batch Bookings Bookings Bookings Booked Seats  Schedule Id  Get"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/accounts/cards/card": {
             "post": {
                 "tags": [

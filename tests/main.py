@@ -413,6 +413,20 @@ def main(USER_COUNT: int, NO_CLUBS: int):
                 ticket_price=7,
                 class_name="0",
             ),
+        ),
+        count + 4: Test(
+            req_url_path="/films/schedules/schedule",
+            res_status_code=201,
+            req_type="post",
+            req_body=Schedule(
+                id=1,
+                hall_id=1,
+                film_id=1,
+                show_time=datetime(year=2024, day=22, month=11, hour=21, minute=00),
+                on_schedule=1,
+                ticket_price=7,
+                class_name="0",
+            ),
         )
     }
 
