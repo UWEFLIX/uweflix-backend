@@ -177,7 +177,7 @@ async def get_details(entity_id: int, entity_type: str, schedule_id: int):
                     person_type = PersonTypesRecord(
                         person_type_id=person_id,
                         person_type=[9],
-                        discount_amount=[10],
+                        discount_amount=[10][0],
                     )
                     details["persons"][person_id] = person_type
 

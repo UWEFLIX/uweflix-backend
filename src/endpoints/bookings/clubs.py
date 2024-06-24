@@ -12,7 +12,7 @@ from src.crud.queries.bookings import (
 )
 from src.crud.queries.clubs import select_leader_clubs
 from src.crud.queries.utils import add_objects, execute_safely
-from src.endpoints.bookings._utils import validate_seat
+from src.endpoints.bookings._utils import validate_seat_per_hall
 from src.schema.bookings import Booking, MultipleBookings
 from src.schema.factories.bookings_factory import BookingsFactory
 from src.schema.users import User
@@ -60,13 +60,13 @@ async def create_club_bookings(
         )
 
     details = await get_details(
-        current_user.id, "CLUB", requests.schedule_id
+        requests.club_id, "CLUB", requests.schedule_id
     )
 
     _persons = details["persons"]
     accounts = details["accounts"]
     batches = details["batches"]
-    members = details["members"]
+    members = details["club_members"]
     hall = details["halls"]
 
     try:
@@ -110,7 +110,7 @@ async def create_club_bookings(
                 f"Person type ID {request.person_type.id} not found"
             )
 
-        validate_seat(request.seat_no, hall)
+        validate_seat_per_hall(request.seat_no, hall)
 
         try:
             members[request.user_email]
@@ -138,7 +138,7 @@ async def create_club_bookings(
             batch_ref=batch_reference,
             amount=amount,
             account_id=account.id,
-            email=request.user_email
+            assigned_user=request.user_email
         )
         final_booking_records.append(record)
         batches[batch_reference] = batch_reference
@@ -152,7 +152,7 @@ async def create_club_bookings(
     ).where(AccountsRecord.id == account.id)
     await execute_safely(query)
 
-    records = select_batch(batch_reference)
+    records = await select_batch(batch_reference)
     return BookingsFactory.get_bookings(records)
 
 

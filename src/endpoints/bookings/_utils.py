@@ -1,4 +1,6 @@
 from fastapi import HTTPException
+
+from src.schema.bookings import SeatNoStr, SEAT_NO_DELIMITER
 from src.utils.utils import ALPHABETS
 from src.crud.models import HallsRecord
 
@@ -6,32 +8,34 @@ from src.crud.models import HallsRecord
 _ALPH_TO_INT = {key: value for value, key in enumerate(ALPHABETS)}
 
 
-def validate_seat(seat: str, hall: HallsRecord):
-    row = 0
-    index = 0
+def titleToNumber(string: str) -> int:
+    """
+    Author: GeeksForGeeks
+    https://www.geeksforgeeks.org/find-excel-column-number-column-title/
+    This process is similar to binary-to-decimal conversion
+    """
+    result = 0
+    for B in range(len(string)):
+        result *= 26
+        result += ord(string[B]) - ord('A') + 1
 
-    for _index, alph in enumerate(seat):
-        if alph.isalpha():
-            try:
-                letter_int = _ALPH_TO_INT[alph] + 1
-            except KeyError:
-                raise HTTPException(422, detail="Invalid seat")
+    return result
 
-            row += letter_int
-            _index += 1
-        else:
-            break
 
-    try:
-        column = int(seat[index:])
-    except ValueError:
-        raise HTTPException(422, detail="Invalid seat")
+def validate_seat_per_hall(seat: SeatNoStr, hall: HallsRecord):
+    split = seat.split(SEAT_NO_DELIMITER)
 
-    if row == 0 or column <= 0:
-        raise HTTPException(422, detail="Invalid seat")
+    row_alph = split[0]
+    column = int(split[1])
+    row = titleToNumber(row_alph)
 
-    if (row > hall.no_of_rows or
-            column > hall.seats_per_row):
-        raise HTTPException(status_code=422, detail="Seat out of range")
+    if row > hall.no_of_rows:
+        raise HTTPException(
+            422, "This hall doesnt have this row number"
+        )
+    if column > hall.seats_per_row:
+        raise HTTPException(
+            422, "This hall doesnt have this column number"
+        )
 
     return row, column

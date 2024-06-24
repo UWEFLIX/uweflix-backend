@@ -12,7 +12,7 @@ from src.crud.queries.bookings import (
     select_assigned_bookings
 )
 from src.crud.queries.utils import add_object, execute_safely
-from src.endpoints.bookings._utils import validate_seat
+from src.endpoints.bookings._utils import validate_seat_per_hall
 from src.schema.bookings import Booking, SingleBooking
 from src.schema.factories.bookings_factory import BookingsFactory
 from src.schema.users import User
@@ -60,7 +60,7 @@ async def create_user_bookings(
             "Account not found, or not available for you"
         )
 
-    validate_seat(booking_request.seat_no, hall)
+    validate_seat_per_hall(booking_request.seat_no, hall)
 
     try:
         person_record: PersonTypesRecord = _persons[booking_request.person_type.id]
