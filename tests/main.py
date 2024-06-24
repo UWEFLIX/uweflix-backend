@@ -2,6 +2,8 @@ import random
 from datetime import datetime
 from typing import Dict
 
+from icecream import ic
+
 from src.schema.bookings import PersonType
 from src.schema.clubs import Club, City
 from src.schema.films import Hall, Film, Schedule
@@ -371,6 +373,8 @@ def main(USER_COUNT: int, NO_CLUBS: int):
             pass
         client.req(item)
 
+    ic(f"Count before schedules: {count}")
+
     schedules = {
         count+1: Test(
             req_url_path="/films/schedules/schedule",
@@ -380,7 +384,10 @@ def main(USER_COUNT: int, NO_CLUBS: int):
                 id=1,
                 hall_id=1,
                 film_id=1,
-                show_time=datetime(year=2024, day=22, month=11, hour=13, minute=00),
+                show_time=datetime(
+                    year=2024, day=22, month=11, hour=13,
+                    minute=00
+                ),
                 on_schedule=1,
                 ticket_price=7,
                 class_name="0",
@@ -394,7 +401,10 @@ def main(USER_COUNT: int, NO_CLUBS: int):
                 id=1,
                 hall_id=1,
                 film_id=1,
-                show_time=datetime(year=2024, day=22, month=11, hour=17, minute=00),
+                show_time=datetime(
+                    year=2024, day=22, month=11, hour=17,
+                    minute=00
+                ),
                 on_schedule=1,
                 ticket_price=7,
                 class_name="0",
@@ -408,7 +418,10 @@ def main(USER_COUNT: int, NO_CLUBS: int):
                 id=1,
                 hall_id=1,
                 film_id=1,
-                show_time=datetime(year=2024, day=22, month=11, hour=21, minute=00),
+                show_time=datetime(
+                    year=2024, day=22, month=11, hour=21,
+                    minute=00
+                ),
                 on_schedule=1,
                 ticket_price=7,
                 class_name="0",
@@ -422,7 +435,10 @@ def main(USER_COUNT: int, NO_CLUBS: int):
                 id=1,
                 hall_id=1,
                 film_id=1,
-                show_time=datetime(year=2024, day=22, month=11, hour=21, minute=00),
+                show_time=datetime(
+                    year=2024, day=23, month=11, hour=17,
+                    minute=00
+                ),
                 on_schedule=1,
                 ticket_price=7,
                 class_name="0",
@@ -436,7 +452,10 @@ def main(USER_COUNT: int, NO_CLUBS: int):
                 id=1,
                 hall_id=1,
                 film_id=1,
-                show_time=datetime(year=2024, day=22, month=11, hour=21, minute=00),
+                show_time=datetime(
+                    year=2024, day=23, month=11, hour=21,
+                    minute=00
+                ),
                 on_schedule=1,
                 ticket_price=7,
                 class_name="0",

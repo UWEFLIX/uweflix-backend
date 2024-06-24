@@ -48,7 +48,7 @@ async def _check_time_conflicts(new_schedule: Schedule):
     schedules = FilmFactory.get_detailed_schedules(records)
 
     _film_record = await select_film_by_id(new_schedule.film_id)
-    _film = FilmFactory.get_half_film(_film_record)
+    _film = FilmFactory.get_half_film(_film_record["film"])
     this_start, this_end = _get_timings(new_schedule, _film.duration_sec)
 
     for schedule in schedules:
@@ -78,7 +78,7 @@ async def create_schedule(
             404, "Film not found"
         )
 
-    _film: Film = FilmFactory.get_half_film(film_record)
+    _film: Film = FilmFactory.get_half_film(film_record["film"])
 
     if not _film.is_active or not (
         _film.on_air_from <= schedule.show_time <= _film.on_air_to
