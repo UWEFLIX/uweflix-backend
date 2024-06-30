@@ -101,18 +101,18 @@ async def create_user(
     user_record = await select_user_by_email(user.email)
     user = UserFactory.create_full_user(user_record)
 
-    accounts_record = AccountsRecord(
-        account_uid=f"U{current_user.id}#{get_initials(user.name)}",
-        name=user.name,
-        entity_type="USER",
-        entity_id=user.id,
-        discount_rate=0,
-        status="ENABLED"
-    )
-    await add_object(accounts_record)
+    # accounts_record = AccountsRecord(
+    #     account_uid=f"U{current_user.id}#{get_initials(user.name)}",
+    #     name=user.name,
+    #     entity_type="USER",
+    #     entity_id=user.id,
+    #     discount_rate=0,
+    #     status="ENABLED"
+    # )
+    # await add_object(accounts_record)
 
-    coro = update_club_account_uid(user.name, user.id, "USER")
-    asyncio.create_task(coro)
+    # coro = update_club_account_uid(user.name, user.id, "USER")
+    # asyncio.create_task(coro)
 
     return user
 

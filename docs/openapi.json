@@ -2599,7 +2599,9 @@
                 },
                 "security": [
                     {
-                        "OAuth2PasswordBearer": []
+                        "OAuth2PasswordBearer": [
+                            "write:accounts"
+                        ]
                     }
                 ]
             },
@@ -2716,32 +2718,6 @@
             }
         },
         "/accounts/user/account": {
-            "get": {
-                "tags": [
-                    "Accounts",
-                    "Unfinished",
-                    "Users"
-                ],
-                "summary": "Get User Account",
-                "operationId": "get_user_account_accounts_user_account_get",
-                "responses": {
-                    "201": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/Account"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ]
-            },
             "patch": {
                 "tags": [
                     "Accounts",

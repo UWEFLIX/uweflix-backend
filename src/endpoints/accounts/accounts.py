@@ -9,7 +9,7 @@ from src.crud.queries.accounts import (
     select_account, select_half_account, select_half_accounts,
     select_last_entered_account, select_full_account, select_club_accounts
 )
-from src.crud.queries.clubs import select_leader_clubs, select_club_with_accounts
+from src.crud.queries.clubs import select_leader_clubs, select_club_with_accounts, select_club_by_id
 from src.crud.queries.utils import add_object, execute_safely
 from src.schema.accounts import Account
 from src.schema.clubs import Club
@@ -111,32 +111,42 @@ async def get_accounts(
     return AccountsFactory.get_half_accounts(record)
 
 
-@router.post("/club/account", status_code=201, tags=["Unfinished", "Clubs"])
+@router.post(
+    "/club/account",
+    status_code=201, tags=["Unfinished", "Clubs"]
+)
 async def create_account(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
+            User, Security(get_current_active_user, scopes=[
+                "write:accounts"
+            ])
         ],
         account: Account
 ) -> Account:
-    clubs = await select_leader_clubs(current_user.id)
-
-    try:
-        club = clubs[account.entity_id]
-    except KeyError:
-        raise HTTPException(422, "Invalid input")
+    record = await select_club_by_id(account.entity_id)
+    club = record["club"]
+    if club is None:
+        raise HTTPException(
+            404, "Club not found"
+        )
 
     record = AccountsRecord(
-        account_uid=''.join(random.choices(string.ascii_letters + string.digits, k=4)),
+        account_uid=''.join(
+            random.choices(
+                string.ascii_letters + string.digits, k=4
+            )
+        ),
         name=account.name,
         entity_type="CLUB",
         entity_id=account.entity_id,
         discount_rate=0,
+        status="ENABLED"
     )
 
     await add_object(record)
 
     return await update_club_account_uid(
-        club.name, account.entity_id, "CLUB"
+        club.club_name, account.entity_id, "CLUB"
     )
 
 
@@ -222,24 +232,24 @@ async def _select_account(
     return AccountsFactory.get_account(records)
 
 
-@router.get("/user/account", status_code=201, tags=["Unfinished", "Users"])
-async def get_user_account(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
-        ]
-) -> Account:
-    query = select(
-        AccountsRecord, CardsRecord
-    ).join(
-        CardsRecord.account_id == AccountsRecord.id
-    ).where(
-        and_(
-            AccountsRecord.entity_id == current_user.id,
-            AccountsRecord.entity_type == "USER"
-        )
-    )
-    records = await select_full_account(query)
-    return AccountsFactory.get_account(records)
+# @router.get("/user/account", status_code=201, tags=["Unfinished", "Users"])
+# async def get_user_account(
+#         current_user: Annotated[
+#             User, Security(get_current_active_user, scopes=[])
+#         ]
+# ) -> Account:
+#     query = select(
+#         AccountsRecord, CardsRecord
+#     ).join(
+#         CardsRecord.account_id == AccountsRecord.id
+#     ).where(
+#         and_(
+#             AccountsRecord.entity_id == current_user.id,
+#             AccountsRecord.entity_type == "USER"
+#         )
+#     )
+#     records = await select_full_account(query)
+#     return AccountsFactory.get_account(records)
 
 
 @router.get("/club/account/{account_id}/", status_code=201, tags=["Unfinished", "Clubs"])

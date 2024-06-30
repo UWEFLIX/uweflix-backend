@@ -1,7 +1,5 @@
 from typing import List
-
 from pydantic import BaseModel, EmailStr, field_validator
-
 from src.schema.accounts import Account
 from src.schema.users import User
 from src.schema.validation import basic_string_validation
