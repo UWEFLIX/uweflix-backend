@@ -121,10 +121,6 @@ async def get_current_user(
         authenticate_value
     )
 
-    validate_token_password(
-        token_data, user.password, credentials_exception
-    )
-
     return user
 
 

@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
-from sqlalchemy import delete, update, select
+from sqlalchemy import update, select, and_, func, asc
 from src.crud.models import FilmsRecord, SchedulesRecord
 from src.crud.queries.films import (
     select_film, select_films, select_film_schedules, select_film_by_id
@@ -198,8 +198,11 @@ async def get_schedules_by_film_id(
         SchedulesRecord,
         FilmsRecord.film_id == SchedulesRecord.film_id
     ).where(
-        FilmsRecord.film_id == film_id
-    )
+        and_(
+            FilmsRecord.film_id == film_id,
+            SchedulesRecord.show_time > func.now()
+        )
+    ).order_by(asc(SchedulesRecord.show_time))
 
     records = await select_film_schedules(query)
 

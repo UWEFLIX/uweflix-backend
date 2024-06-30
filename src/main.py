@@ -72,14 +72,11 @@ async def login_for_access_token(
 
     scopes = user.permissions
 
-    encrypted_password = fernet.encrypt(user.password.encode()).decode()
-
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
     access_token = create_access_token(
         data={
             "sub": user.email,
             "scopes": list(scopes),
-            "password": encrypted_password,
             "full_name": user.name
         },
         expires_delta=access_token_expires
