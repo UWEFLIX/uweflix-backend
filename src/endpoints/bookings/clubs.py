@@ -103,11 +103,11 @@ async def create_club_bookings(
     total = 0
     for request in requests.bookings:
         try:
-            person_record: PersonTypesRecord = _persons[request.person_type.id]
+            person_record: PersonTypesRecord = _persons[request.person_type_id]
         except KeyError:
             raise HTTPException(
                 404,
-                f"Person type ID {request.person_type.id} not found"
+                f"Person type ID {request.person_type_id} not found"
             )
 
         validate_seat_per_hall(request.seat_no, hall)
@@ -133,8 +133,8 @@ async def create_club_bookings(
 
         record = BookingsRecord(
             seat_no=request.seat_no,
-            schedule_id=request.schedule.id,
-            person_type_id=request.person_type.id,
+            schedule_id=request.schedule_id,
+            person_type_id=request.person_type_id,
             batch_ref=batch_reference,
             amount=amount,
             account_id=account.id,

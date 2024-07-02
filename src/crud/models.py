@@ -494,7 +494,7 @@ class BookingsRecord(Base):
     account_id = Column(
         INTEGER(unsigned=True),
         ForeignKey("account.id"),
-        nullable=False,
+        nullable=True,
     )
     amount = Column(
         Float(),

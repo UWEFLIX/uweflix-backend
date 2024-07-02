@@ -22,6 +22,11 @@ class BookingsFactory:
     def get_booking(records):
         booking_record = records[0]
 
+        if records[4]:
+            account = AccountsFactory.get_half_account(records[4])
+        else:
+            account = None
+
         return Booking(
             id=booking_record.id,
             seat_no=booking_record.seat_no,
@@ -31,7 +36,7 @@ class BookingsFactory:
                 records[1], records[2], records[3]
             ]),
             status=booking_record.status,
-            account=AccountsFactory.get_half_account(records[4]),
+            account=account,
             person_type=BookingsFactory.get_person_type(records[5]),
             amount=booking_record.amount,
             serial_no=booking_record.serial_no,

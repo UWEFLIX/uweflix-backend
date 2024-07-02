@@ -84,7 +84,7 @@ class Booking(BaseModel):
     seat_no: SeatNoStr
     schedule: ScheduleDetailed
     status: str
-    account: Account
+    account: Account | None
     person_type: PersonType
     amount: float
     serial_no: str
@@ -101,10 +101,9 @@ class Booking(BaseModel):
 
 class SingleBooking(BaseModel):
     seat_no: SeatNoStr
-    schedule: ScheduleDetailed
-    person_type: PersonType
+    schedule_id: int
+    person_type_id: int
     user_email: EmailStr
-    account: Account
     class_name: str = "SINGLE_BOOKING"
 
 

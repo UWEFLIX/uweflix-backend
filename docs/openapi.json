@@ -1788,7 +1788,9 @@
                 "operationId": "create_user_bookings_bookings_users_booking_post",
                 "security": [
                     {
-                        "OAuth2PasswordBearer": []
+                        "OAuth2PasswordBearer": [
+                            "write:bookings"
+                        ]
                     }
                 ],
                 "requestBody": {
@@ -4355,14 +4357,21 @@
                         "title": "Seat No"
                     },
                     "schedule": {
-                        "$ref": "#/components/schemas/ScheduleDetailed-Output"
+                        "$ref": "#/components/schemas/ScheduleDetailed"
                     },
                     "status": {
                         "type": "string",
                         "title": "Status"
                     },
                     "account": {
-                        "$ref": "#/components/schemas/Account"
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/Account"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
                     },
                     "person_type": {
                         "$ref": "#/components/schemas/PersonType"
@@ -5069,72 +5078,7 @@
                 ],
                 "title": "Schedule"
             },
-            "ScheduleDetailed-Input": {
-                "properties": {
-                    "id": {
-                        "type": "integer",
-                        "title": "Id"
-                    },
-                    "hall_id": {
-                        "type": "integer",
-                        "title": "Hall Id"
-                    },
-                    "film_id": {
-                        "type": "integer",
-                        "title": "Film Id"
-                    },
-                    "show_time": {
-                        "type": "string",
-                        "format": "date-time",
-                        "title": "Show Time"
-                    },
-                    "on_schedule": {
-                        "type": "boolean",
-                        "title": "On Schedule"
-                    },
-                    "ticket_price": {
-                        "type": "number",
-                        "minimum": 1.0,
-                        "title": "Ticket Price"
-                    },
-                    "class_name": {
-                        "type": "string",
-                        "title": "Class Name",
-                        "default": "SCHEDULE"
-                    },
-                    "hall": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/Hall"
-                            },
-                            {
-                                "type": "null"
-                            }
-                        ]
-                    },
-                    "film": {
-                        "anyOf": [
-                            {
-                                "$ref": "#/components/schemas/Film"
-                            },
-                            {
-                                "type": "null"
-                            }
-                        ]
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "id",
-                    "hall_id",
-                    "film_id",
-                    "show_time",
-                    "on_schedule",
-                    "ticket_price"
-                ],
-                "title": "ScheduleDetailed"
-            },
-            "ScheduleDetailed-Output": {
+            "ScheduleDetailed": {
                 "properties": {
                     "id": {
                         "type": "integer",
@@ -5205,19 +5149,18 @@
                         "type": "string",
                         "title": "Seat No"
                     },
-                    "schedule": {
-                        "$ref": "#/components/schemas/ScheduleDetailed-Input"
+                    "schedule_id": {
+                        "type": "integer",
+                        "title": "Schedule Id"
                     },
-                    "person_type": {
-                        "$ref": "#/components/schemas/PersonType"
+                    "person_type_id": {
+                        "type": "integer",
+                        "title": "Person Type Id"
                     },
                     "user_email": {
                         "type": "string",
                         "format": "email",
                         "title": "User Email"
-                    },
-                    "account": {
-                        "$ref": "#/components/schemas/Account"
                     },
                     "class_name": {
                         "type": "string",
@@ -5228,10 +5171,9 @@
                 "type": "object",
                 "required": [
                     "seat_no",
-                    "schedule",
-                    "person_type",
-                    "user_email",
-                    "account"
+                    "schedule_id",
+                    "person_type_id",
+                    "user_email"
                 ],
                 "title": "SingleBooking"
             },

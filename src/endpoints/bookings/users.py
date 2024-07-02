@@ -38,32 +38,35 @@ async def get_user_bookings(
 @router.post("/booking", tags=["Unfinished", "Users"])
 async def create_user_bookings(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
+            User, Security(get_current_active_user, scopes=["write:bookings"])
         ],
         booking_request: SingleBooking
 ) -> Booking:
 
     details = await get_details(
-        current_user.id, "USER", booking_request.schedule.id
+        current_user.id, "USER", booking_request.schedule_id
     )
+
+    if details["schedules"] is None:
+        raise HTTPException(404, "No schedule found")
 
     _persons = details["persons"]
     batches = details["batches"]
-    accounts: dict = details["accounts"]
+    # accounts: dict = details["accounts"]
     hall = details["halls"]
 
-    try:
-        account = accounts[booking_request.account.id]
-    except KeyError:
-        raise HTTPException(
-            404,
-            "Account not found, or not available for you"
-        )
+    # try:
+    #     account = accounts[booking_request.account_id]
+    # except KeyError:
+    #     raise HTTPException(
+    #         404,
+    #         "Account not found, or not available for you"
+    #     )
 
     validate_seat_per_hall(booking_request.seat_no, hall)
 
     try:
-        person_record: PersonTypesRecord = _persons[booking_request.person_type.id]
+        person_record: PersonTypesRecord = _persons[booking_request.person_type_id]
     except KeyError:
         raise HTTPException(
             404, "Person type not found"
@@ -76,9 +79,9 @@ async def create_user_bookings(
             404, "Schedule not found"
         )
 
-    if schedule_record.on_schedule:
+    if not schedule_record.on_schedule:
         raise HTTPException(
-            422, "Schedule is not on schedule"
+            422, "Schedule cancelled"
         )
 
     if schedule_record.show_time < datetime.now():
@@ -97,21 +100,21 @@ async def create_user_bookings(
 
     record = BookingsRecord(
         seat_no=booking_request.seat_no,
-        schedule_id=booking_request.schedule.id,
-        person_type_id=booking_request.person_type.id,
+        schedule_id=booking_request.schedule_id,
+        person_type_id=booking_request.person_type_id,
         batch_ref=batch_reference,
         amount=amount,
         assigned_user=booking_request.user_email,
-        account_id=account.id,
+        # account_id=account.id,
     )
     await add_object(record)
 
-    query = update(
-        AccountsRecord
-    ).values(
-        balance=AccountsRecord.balance - amount
-    ).where(AccountsRecord.id == account.id)
-    await execute_safely(query)
+    # query = update(
+    #     AccountsRecord
+    # ).values(
+    #     balance=AccountsRecord.balance - amount
+    # ).where(AccountsRecord.id == account.id)
+    # await execute_safely(query)
 
     records = await select_batch(batch_reference)
 

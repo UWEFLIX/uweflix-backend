@@ -245,7 +245,7 @@ async def select_batch(batch: str):
     ).join(
         HallsRecord,
         HallsRecord.hall_id == SchedulesRecord.hall_id
-    ).join(
+    ).outerjoin(
         AccountsRecord, AccountsRecord.id == BookingsRecord.account_id
     ).join(
         PersonTypesRecord,
@@ -257,10 +257,7 @@ async def select_batch(batch: str):
     async with async_session() as session:
         async with session.begin():
             result = await session.execute(query)
-            rows = result.fetchall()
-
-            if len(rows) == 0:
-                return None
+            rows = result.all()
             return rows
 
 
