@@ -205,26 +205,6 @@ async def get_details(entity_id: int, entity_type: str, schedule_id: int):
                     balance=row[7],
                 )
                 details["accounts"][account_record.id] = account_record
-                # account_record = row[0]
-                # persons_record = row[1]
-                # schedule_record = row[2]
-                # hall_record = row[3]
-                #
-                # if account_record:
-                #     details["accounts"][account_record.id] = account_record
-                #
-                # if persons_record:
-                #     details["persons"][persons_record.person_type_id] = \
-                #         persons_record
-                #
-                # if schedule_record:
-                #     details["schedules"] = schedule_record
-                #     details["halls"] = hall_record
-                #
-                # if entity_type == "CLUB":
-                #     club_member_record = row[4]
-                #     if club_member_record:
-                #         details["club_members"][club_member_record.email] = True
 
     details["schedules"] = schedule_record
     details["halls"] = hall_record

@@ -99,16 +99,21 @@ class Booking(BaseModel):
         return basic_string_validation(value, "status")
 
 
-class SingleBooking(BaseModel):
+class _BookPerson(BaseModel):
     seat_no: SeatNoStr
-    schedule_id: int
     person_type_id: int
     user_email: EmailStr
+
+
+class SingleBooking(BaseModel):
+    person: _BookPerson
+    schedule_id: int
+    account_id: int
     class_name: str = "SINGLE_BOOKING"
 
 
 class MultipleBookings(BaseModel):
-    bookings: List[SingleBooking]
+    bookings: List[_BookPerson]
     club_id: int
     schedule_id: int
     account_id: int

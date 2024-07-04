@@ -4865,7 +4865,7 @@
                 "properties": {
                     "bookings": {
                         "items": {
-                            "$ref": "#/components/schemas/SingleBooking"
+                            "$ref": "#/components/schemas/_BookPerson"
                         },
                         "type": "array",
                         "title": "Bookings"
@@ -5145,22 +5145,16 @@
             },
             "SingleBooking": {
                 "properties": {
-                    "seat_no": {
-                        "type": "string",
-                        "title": "Seat No"
+                    "person": {
+                        "$ref": "#/components/schemas/_BookPerson"
                     },
                     "schedule_id": {
                         "type": "integer",
                         "title": "Schedule Id"
                     },
-                    "person_type_id": {
+                    "account_id": {
                         "type": "integer",
-                        "title": "Person Type Id"
-                    },
-                    "user_email": {
-                        "type": "string",
-                        "format": "email",
-                        "title": "User Email"
+                        "title": "Account Id"
                     },
                     "class_name": {
                         "type": "string",
@@ -5170,10 +5164,9 @@
                 },
                 "type": "object",
                 "required": [
-                    "seat_no",
+                    "person",
                     "schedule_id",
-                    "person_type_id",
-                    "user_email"
+                    "account_id"
                 ],
                 "title": "SingleBooking"
             },
@@ -5349,6 +5342,30 @@
                     "type"
                 ],
                 "title": "ValidationError"
+            },
+            "_BookPerson": {
+                "properties": {
+                    "seat_no": {
+                        "type": "string",
+                        "title": "Seat No"
+                    },
+                    "person_type_id": {
+                        "type": "integer",
+                        "title": "Person Type Id"
+                    },
+                    "user_email": {
+                        "type": "string",
+                        "format": "email",
+                        "title": "User Email"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "seat_no",
+                    "person_type_id",
+                    "user_email"
+                ],
+                "title": "_BookPerson"
             }
         },
         "securitySchemes": {

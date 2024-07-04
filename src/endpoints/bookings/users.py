@@ -1,3 +1,4 @@
+import asyncio
 from datetime import datetime
 from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
@@ -52,24 +53,15 @@ async def create_user_bookings(
 
     _persons = details["persons"]
     batches = details["batches"]
-    # accounts: dict = details["accounts"]
+    accounts: dict = details["accounts"]
     hall = details["halls"]
 
-    # try:
-    #     account = accounts[booking_request.account_id]
-    # except KeyError:
-    #     raise HTTPException(
-    #         404,
-    #         "Account not found, or not available for you"
-    #     )
-
-    validate_seat_per_hall(booking_request.seat_no, hall)
-
     try:
-        person_record: PersonTypesRecord = _persons[booking_request.person_type_id]
+        account = accounts[booking_request.account_id]
     except KeyError:
         raise HTTPException(
-            404, "Person type not found"
+            404,
+            "Account not found, or not available for you"
         )
 
     try:
@@ -79,9 +71,23 @@ async def create_user_bookings(
             404, "Schedule not found"
         )
 
+    if not schedule_record.hall_id:
+        raise HTTPException(404, "Schedule not found")
+
     if not schedule_record.on_schedule:
         raise HTTPException(
             422, "Schedule cancelled"
+        )
+
+    validate_seat_per_hall(booking_request.person.seat_no, hall)
+
+    try:
+        person_record: PersonTypesRecord = _persons[
+            booking_request.person.person_type_id
+        ]
+    except KeyError:
+        raise HTTPException(
+            404, "Person type not found"
         )
 
     if schedule_record.show_time < datetime.now():
@@ -98,23 +104,26 @@ async def create_user_bookings(
             (100 - person_record.discount_amount) / 100
     )
 
+    if account.balance - amount < 0:
+        raise HTTPException(404, "Money not found")
+
     record = BookingsRecord(
-        seat_no=booking_request.seat_no,
+        seat_no=booking_request.person.seat_no,
         schedule_id=booking_request.schedule_id,
-        person_type_id=booking_request.person_type_id,
+        person_type_id=booking_request.person.person_type_id,
         batch_ref=batch_reference,
         amount=amount,
-        assigned_user=booking_request.user_email,
-        # account_id=account.id,
+        assigned_user=booking_request.person.user_email,
+        account_id=account.id,
     )
     await add_object(record)
 
-    # query = update(
-    #     AccountsRecord
-    # ).values(
-    #     balance=AccountsRecord.balance - amount
-    # ).where(AccountsRecord.id == account.id)
-    # await execute_safely(query)
+    query = update(
+        AccountsRecord
+    ).values(
+        balance=AccountsRecord.balance - amount
+    ).where(AccountsRecord.id == account.id)
+    asyncio.create_task(execute_safely(query))
 
     records = await select_batch(batch_reference)
 
