@@ -4,6 +4,8 @@ from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from sqlalchemy import update, and_, select
+from sqlalchemy.orm import aliased
+
 from src.crud.models import AccountsRecord, CardsRecord
 from src.crud.queries.accounts import (
     select_account, select_half_account, select_half_accounts,
@@ -11,7 +13,7 @@ from src.crud.queries.accounts import (
 )
 from src.crud.queries.clubs import select_leader_clubs, select_club_with_accounts, select_club_by_id
 from src.crud.queries.utils import add_object, execute_safely
-from src.schema.accounts import Account
+from src.schema.accounts import Account, TopUp
 from src.schema.clubs import Club
 from src.schema.factories.account_factory import AccountsFactory
 from src.schema.factories.club_factories import ClubFactory
@@ -305,28 +307,32 @@ async def get_club_accounts(
 
 
 @router.post(
-    "/account/to-up", status_code=201, tags=["Unfinished", "Clubs"]
+    "/account/top-up", status_code=201, tags=["Unfinished", "Clubs"]
 )
 async def club_top_up(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
         ],
-        account_id: Annotated[int, Param(title="Account ID", ge=1)],
-        amount: Annotated[float, Param(title="Amount to Top Up", ge=1)]
+        top_up: TopUp
 ):
-    # finalize on specifics regarding transactions
-    record = await select_half_account(account_id)
-
-    if not record:
-        raise HTTPException(404, "Account not found")
-
-    account = AccountsFactory.get_half_account(record)
-
-    query = update(
-        AccountsRecord
-    ).values(
-        balance=AccountsRecord.balance + amount
-    )
-    await execute_safely(query)
-    account.balance += amount
-    return account
+    # todo finish
+    pass
+    # club_account = aliased(AccountsRecord)
+    # query = select(
+    #     AccountsRecord, club_account
+    # )
+    # record = await select_half_account(account_id)
+    #
+    # if not record:
+    #     raise HTTPException(404, "Account not found")
+    #
+    # account = AccountsFactory.get_half_account(record)
+    #
+    # query = update(
+    #     AccountsRecord
+    # ).values(
+    #     balance=AccountsRecord.balance + amount
+    # )
+    # await execute_safely(query)
+    # account.balance += amount
+    # return account

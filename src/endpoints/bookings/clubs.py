@@ -44,7 +44,7 @@ async def get_club_bookings(
     return BookingsFactory.get_bookings(records)
 
 
-@router.post("/booking", tags=["Unfinished", "Clubs"])
+@router.post("/booking", status_code=201, tags=["Unfinished", "Clubs"])
 async def create_club_bookings(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
@@ -92,7 +92,7 @@ async def create_club_bookings(
         )
 
     if account.status != "ENABLED":
-        raise HTTPException(422, "Account is not enabled")
+        raise HTTPException(403, "Account is not enabled")
 
     while True:
         batch_reference = generate_random_string()
@@ -113,7 +113,7 @@ async def create_club_bookings(
         validate_seat_per_hall(request.seat_no, hall)
 
         try:
-            members[request.user_email]
+            members[request.user_id]
         except KeyError as e:
             raise HTTPException(
                 422,
@@ -138,10 +138,9 @@ async def create_club_bookings(
             batch_ref=batch_reference,
             amount=amount,
             account_id=account.id,
-            assigned_user=request.user_email
+            assigned_user=request.user_id
         )
         final_booking_records.append(record)
-        batches[batch_reference] = batch_reference
 
     await add_objects(final_booking_records)
 
@@ -156,7 +155,7 @@ async def create_club_bookings(
     return BookingsFactory.get_bookings(records)
 
 
-@router.patch("/booking", tags=["Unfinished", "Users"])
+@router.patch("/booking", status_code=201, tags=["Unfinished", "Users"])
 async def reassign_user_bookings(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])

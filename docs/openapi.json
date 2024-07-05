@@ -1804,7 +1804,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Successful Response",
                         "content": {
                             "application/json": {
@@ -2013,7 +2013,7 @@
                     }
                 },
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Successful Response",
                         "content": {
                             "application/json": {
@@ -2075,7 +2075,7 @@
                     }
                 ],
                 "responses": {
-                    "200": {
+                    "201": {
                         "description": "Successful Response",
                         "content": {
                             "application/json": {
@@ -4394,8 +4394,7 @@
                         "title": "Created"
                     },
                     "assigned_user": {
-                        "type": "string",
-                        "format": "email",
+                        "type": "integer",
                         "title": "Assigned User"
                     },
                     "class_name": {
@@ -5353,17 +5352,16 @@
                         "type": "integer",
                         "title": "Person Type Id"
                     },
-                    "user_email": {
-                        "type": "string",
-                        "format": "email",
-                        "title": "User Email"
+                    "user_id": {
+                        "type": "integer",
+                        "title": "User Id"
                     }
                 },
                 "type": "object",
                 "required": [
                     "seat_no",
                     "person_type_id",
-                    "user_email"
+                    "user_id"
                 ],
                 "title": "_BookPerson"
             }

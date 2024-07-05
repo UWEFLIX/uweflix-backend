@@ -36,7 +36,7 @@ async def get_user_bookings(
     return BookingsFactory.get_bookings(records)
 
 
-@router.post("/booking", tags=["Unfinished", "Users"])
+@router.post("/booking", status_code=201, tags=["Unfinished", "Users"])
 async def create_user_bookings(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:bookings"])
@@ -63,6 +63,9 @@ async def create_user_bookings(
             404,
             "Account not found, or not available for you"
         )
+
+    if account.status != "ENABLED":
+        raise HTTPException(403, "Account is not enabled")
 
     try:
         schedule_record: SchedulesRecord = details["schedules"]
@@ -113,7 +116,7 @@ async def create_user_bookings(
         person_type_id=booking_request.person.person_type_id,
         batch_ref=batch_reference,
         amount=amount,
-        assigned_user=booking_request.person.user_email,
+        assigned_user=booking_request.person.user_id,
         account_id=account.id,
     )
     await add_object(record)

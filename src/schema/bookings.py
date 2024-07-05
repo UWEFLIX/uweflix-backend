@@ -90,7 +90,7 @@ class Booking(BaseModel):
     serial_no: str
     batch_ref: str
     created: datetime
-    assigned_user: EmailStr
+    assigned_user: int
     class_name: str = "BOOKING"
 
     @classmethod
@@ -102,7 +102,7 @@ class Booking(BaseModel):
 class _BookPerson(BaseModel):
     seat_no: SeatNoStr
     person_type_id: int
-    user_email: EmailStr
+    user_id: int
 
 
 class SingleBooking(BaseModel):

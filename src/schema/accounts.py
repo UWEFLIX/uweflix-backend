@@ -127,3 +127,9 @@ class Account(BaseModel):
     @field_validator("status", mode="before")
     def status_validation(cls, value: str):
         return basic_string_validation(value, "status")
+
+
+class TopUp(BaseModel):
+    card_id: int
+    account_id: int
+    amount: float

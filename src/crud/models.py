@@ -517,7 +517,8 @@ class BookingsRecord(Base):
         DateTime(), default=func.now(), nullable=False
     )
     assigned_user = Column(
-        String(50, collation=_COLLATION), ForeignKey("user.email"),
+        INTEGER(11, unsigned=True),
+        ForeignKey("user.user_id"),
         nullable=False,
     )
     __table_args__ = (
