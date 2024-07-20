@@ -154,7 +154,7 @@ async def get_details(entity_id: int, entity_type: str, schedule_id: int):
             result = await session.execute(text(query))
 
             details = defaultdict(dict)
-            rows = result.fetchall()
+            rows = result.all()
 
             schedule_record = SchedulesRecord(
                 schedule_id=rows[0][11],
@@ -192,7 +192,7 @@ async def get_details(entity_id: int, entity_type: str, schedule_id: int):
                             password=row[27],
                             status=row[28],
                         )
-                        details["club_members"][email] = member
+                        details["club_members"][member_id] = member
 
                 account_record = AccountsRecord(
                     id=row[0],

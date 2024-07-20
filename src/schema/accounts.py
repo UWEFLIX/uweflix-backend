@@ -133,3 +133,4 @@ class TopUp(BaseModel):
     card_id: int
     account_id: int
     amount: float
+    user_password: str

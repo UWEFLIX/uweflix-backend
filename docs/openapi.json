@@ -2939,7 +2939,7 @@
                 }
             }
         },
-        "/accounts/account/to-up": {
+        "/accounts/account/top-up": {
             "post": {
                 "tags": [
                     "Accounts",
@@ -2947,34 +2947,17 @@
                     "Clubs"
                 ],
                 "summary": "Club Top Up",
-                "operationId": "club_top_up_accounts_account_to_up_post",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "account_id",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "minimum": 1,
-                            "title": "Account ID"
+                "operationId": "club_top_up_accounts_account_top_up_post",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/TopUp"
+                            }
                         }
                     },
-                    {
-                        "name": "amount",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "number",
-                            "minimum": 1.0,
-                            "title": "Amount to Top Up"
-                        }
-                    }
-                ],
+                    "required": true
+                },
                 "responses": {
                     "201": {
                         "description": "Successful Response",
@@ -2994,7 +2977,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
             }
         },
         "/films/halls/hall": {
@@ -5186,6 +5174,34 @@
                     "token_type"
                 ],
                 "title": "Token"
+            },
+            "TopUp": {
+                "properties": {
+                    "card_id": {
+                        "type": "integer",
+                        "title": "Card Id"
+                    },
+                    "account_id": {
+                        "type": "integer",
+                        "title": "Account Id"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "title": "Amount"
+                    },
+                    "user_password": {
+                        "type": "string",
+                        "title": "User Password"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "card_id",
+                    "account_id",
+                    "amount",
+                    "user_password"
+                ],
+                "title": "TopUp"
             },
             "User-Input": {
                 "properties": {

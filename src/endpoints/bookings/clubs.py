@@ -56,7 +56,8 @@ async def create_club_bookings(
         clubs[requests.club_id]
     except KeyError:
         raise HTTPException(
-            422, "You are not the leader of the club"
+            422, "You are not the leader of the club or "
+                 "club doesnt exist"
         )
 
     details = await get_details(
@@ -117,7 +118,7 @@ async def create_club_bookings(
         except KeyError as e:
             raise HTTPException(
                 422,
-                f"{request.user_email} doesnt exist or is not in your club"
+                f"user id {request.user_id} doesnt exist or is not in your club"
             )
 
         # todo find if discounts stack like this
@@ -133,7 +134,7 @@ async def create_club_bookings(
 
         record = BookingsRecord(
             seat_no=request.seat_no,
-            schedule_id=request.schedule_id,
+            schedule_id=requests.schedule_id,
             person_type_id=request.person_type_id,
             batch_ref=batch_reference,
             amount=amount,

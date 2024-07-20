@@ -92,6 +92,7 @@ async def initialise_db():
 
     _admin1_username = os.getenv("ADMIN1_EMAIL")
     _admin2_username = os.getenv("ADMIN2_EMAIL")
+    _admin3_username = os.getenv("ADMIN3_EMAIL")
     _admin1_password = os.getenv("ADMIN1_PASSWORD")
     hashed_pass = get_password_hash(_admin1_password)
 
@@ -104,6 +105,11 @@ async def initialise_db():
     user2 = UsersRecord(
         name="Naffah Rasheed",
         email=_admin2_username,
+        password=hashed_pass
+    )
+    user3 = UsersRecord(
+        name="Shadhan Sidique",
+        email=_admin3_username,
         password=hashed_pass
     )
     account1 = AccountsRecord(
@@ -122,20 +128,32 @@ async def initialise_db():
         discount_rate=0,
         status="ENABLED"
     )
+    account3 = AccountsRecord(
+        account_uid="4",
+        name="Shadhan",
+        entity_type="USER",
+        entity_id=3,
+        discount_rate=0,
+        status="ENABLED"
+    )
     user_role1 = UserRolesRecord(user_id=1, role_id=1)
     user_role2 = UserRolesRecord(user_id=2, role_id=1)
+    user_role3 = UserRolesRecord(user_id=3, role_id=1)
     person_type = PersonTypesRecord(
         person_type="ADULT",
         discount_amount=0
     )
 
-    objs.extend([user1, user2, admin])
+    objs.extend([user1, user2, admin, user3, account3])
     await add_objects(objs)
 
     # tasks = [add_object(x) for x in objs]
     # await asyncio.gather(*tasks)
 
-    objs2.extend([user_role1, account1, person_type, user_role2, account2])
+    objs2.extend([
+        user_role1, user_role3, account1, person_type,
+        user_role2, account2
+    ])
     await add_objects(objs2)
 
 
