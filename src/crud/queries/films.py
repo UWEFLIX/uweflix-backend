@@ -143,9 +143,13 @@ async def select_film_schedules(query):
             schedules = [
                 x[1] for x in rows if x[1]
             ]
+            halls = [
+                x[2] for x in rows if x[2]
+            ]
             return {
                 "film": film,
-                "schedules": schedules
+                "schedules": schedules,
+                "halls": halls
             }
 
 

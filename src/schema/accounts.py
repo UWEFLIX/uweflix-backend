@@ -1,94 +1,37 @@
+import base64
+import hashlib
 from datetime import datetime
 from typing import List, Literal
 
+from cryptography.fernet import Fernet
 from fastapi import HTTPException
 from pydantic import BaseModel, Field, field_validator
+from pydantic_extra_types.payment import PaymentCardNumber
 
 from src.schema.validation import basic_string_validation
-from src.security.security import fernet
 
 
 class Card(BaseModel):
+    """Encrypted Card data"""
     id: int
     account_id: int
-    card_number: str = Field()
+    card_number: str
     holder_name: str
     exp_date: str
     status: str
     class_name: str = "CARD"
 
-    _encrypted: bool = False
 
-    def validate_card(self):
-        if self._encrypted:
-            raise Exception("Details are encrypted")
-
-        card_digits = len(self.card_number)
-        if card_digits != 10 and card_digits != 13:
-            raise HTTPException(status_code=422, detail="Invalid card number")
-
-        if not self.card_number.isnumeric():
-            raise HTTPException(
-                422, "Invalid card number"
-            )
-
-        try:
-            int(card_digits)
-        except ValueError:
-            raise HTTPException(status_code=422, detail="Invalid card number")
-
-        if not self.holder_name.isalpha():
-            raise HTTPException(
-                status_code=422,
-                detail="Invalid holder name"
-            )
-
-        if len(self.exp_date) != 5:
-            raise HTTPException(422, "Invalid exp date")
-
-        try:
-            datetime_object = datetime.strptime(self.exp_date, "%m/%y")
-        except ValueError:
-            raise HTTPException(
-                422, "Invalid date format. Please use 'mm/yy'."
-            )
-
-    def encrypt(self):
-        if self._encrypted:
-            raise Exception("Details are encrypted")
-
-        self.card_number = fernet.encrypt(
-            self.card_number.encode()
-        ).decode()
-        self.holder_name = fernet.encrypt(
-            self.holder_name.encode()
-        ).decode()
-        self.exp_date = fernet.encrypt(
-            self.exp_date.encode()
-        ).decode()
-
-        self._encrypted = True
-
-    def decrypt(self):
-        if not self._encrypted:
-            raise Exception("Details are not encrypted")
-
-        self.card_number = fernet.decrypt(
-            self.card_number.encode()
-        ).decode()
-        self.holder_name = fernet.decrypt(
-            self.holder_name.encode()
-        ).decode()
-        self.exp_date = fernet.decrypt(
-            self.exp_date.encode()
-        ).decode()
-
-        self._encrypted = False
-
-    @classmethod
-    @field_validator("card_number", mode="before")
-    def card_number_validation(cls, value: str):
-        return basic_string_validation(value, "card_number")
+class CardInput(BaseModel):
+    """Unencrypted Card data"""
+    id: int
+    account_id: int
+    card_number: PaymentCardNumber
+    holder_name: str
+    exp_date: str
+    status: str
+    user_password: str = Field(exclude=True)
+    class_name: str = "CardInput"
 
     @classmethod
     @field_validator("holder_name", mode="before")
@@ -103,14 +46,47 @@ class Card(BaseModel):
     @classmethod
     @field_validator("exp_date", mode="before")
     def exp_date_validation(cls, value: str):
-        return basic_string_validation(value, "exp_date")
+        value = basic_string_validation(value, "exp_date")
+
+        if len(value) != 5:
+            raise ValueError("Invalid length of exp_date")
+
+        datetime.strptime(
+            f"01/{value}",
+            "%d/%m/%y"
+        )
+
+        return value
+
+    @staticmethod
+    def encrypt(string: str, fernet: Fernet) -> str:
+        return fernet.encrypt(string.encode()).decode()
+
+    @staticmethod
+    def decrypt(cipher_text: str, fernet: Fernet) -> str:
+        return fernet.decrypt(cipher_text.encode()).decode()
+
+    def card(self) -> Card:
+        hash_object = hashlib.sha256(
+            self.user_password.encode()
+        )
+        digest = hash_object.digest()
+        digest = base64.urlsafe_b64encode(digest[:32])
+        fernet = Fernet(digest)
+        return Card(
+            id=self.id,
+            account_id=self.account_id,
+            card_number=CardInput.encrypt(self.card_number, fernet),
+            holder_name=CardInput.encrypt(self.holder_name, fernet),
+            exp_date=CardInput.encrypt(self.exp_date, fernet),
+            status=self.status,
+        )
 
 
 class Account(BaseModel):
     id: int
     uid: str
     name: str
-    cards: List[Card] | None = None
     entity_type: str
     entity_id: int
     discount_rate: int = Field(min_value=0, max_value=100)

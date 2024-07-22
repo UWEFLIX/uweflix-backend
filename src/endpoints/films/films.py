@@ -1,16 +1,19 @@
+import os
 from datetime import datetime
 from typing import Annotated, List
-from fastapi import APIRouter, Security, HTTPException
+
+import aiofiles
+from fastapi import APIRouter, Security, HTTPException, File, UploadFile, Form, Body
 from fastapi.params import Param
 from sqlalchemy import update, select, and_, func, asc
-from src.crud.models import FilmsRecord, SchedulesRecord
+from src.crud.models import FilmsRecord, SchedulesRecord, HallsRecord
 from src.crud.queries.films import (
     select_film, select_films, select_film_schedules, select_film_by_id
 )
-from src.crud.queries.utils import add_object, execute_safely
+from src.crud.queries.utils import add_object, execute_safely, all_selection
 from src.endpoints.films.halls import router as halls
 from src.schema.factories.film_factories import FilmFactory
-from src.schema.films import Film
+from src.schema.films import Film, Schedule, ScheduleDetailed
 from src.schema.users import User
 from src.security.security import get_current_active_user
 from src.endpoints.films.film_images import router as images, rename_poster
@@ -23,12 +26,17 @@ router.include_router(images)
 router.include_router(schedules)
 
 
+_ASSETS_DIR = os.getenv('ASSETS_FOLDER')
+_FILMS_DIR = os.path.join(_ASSETS_DIR, 'images/films')
+
+
 @router.post("/film", status_code=201, tags=["Unfinished"])
 async def create_film(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:films"])
         ],
-        film: Film
+        film: Film = Body(...),
+        files: List[UploadFile] = File(min_length=1, max_length=1),
 ) -> Film:
 
     if type(film.on_air_to) is str:
@@ -44,6 +52,9 @@ async def create_film(
         '%Y-%m-%d %H:%M:%S'
     )
 
+    film.title = film.title.replace("/", "")
+    film.title = film.title.replace("\\", "")
+
     record = FilmsRecord(
         film_id=film.id,
         title=film.title,
@@ -54,9 +65,17 @@ async def create_film(
         on_air_to=on_air_to,
         is_active=film.is_active,
     )
+    poster_image = files[0]
+    _path = f'{_FILMS_DIR}/{film.title}-poster.jpg'
+    async with aiofiles.open(
+            _path, 'wb'
+    ) as f:
+        content = await poster_image.read()
+        await f.write(content)
 
     await add_object(record)
     records = await select_film(film.title)
+
     return FilmFactory.get_full_film(records)
 
 
@@ -191,12 +210,15 @@ async def get_schedules_by_film_id(
             User, Security(get_current_active_user, scopes=[])
         ],
         film_id: int
-):
+) -> List[ScheduleDetailed]:
     query = select(
-        FilmsRecord, SchedulesRecord
+        FilmsRecord, SchedulesRecord, HallsRecord
     ).outerjoin(
         SchedulesRecord,
         FilmsRecord.film_id == SchedulesRecord.film_id
+    ).join(
+        HallsRecord,
+        HallsRecord.hall_id == SchedulesRecord.hall_id
     ).where(
         and_(
             FilmsRecord.film_id == film_id,
@@ -204,12 +226,25 @@ async def get_schedules_by_film_id(
         )
     ).order_by(asc(SchedulesRecord.show_time))
 
-    records = await select_film_schedules(query)
+    records = await all_selection(query)
 
     if records is None:
         raise HTTPException(
             404, "Film not found"
         )
 
-    return FilmFactory.get_film_schedules(records)
+    _schedules = []
+    for record in records:
+        if not record:
+            continue
 
+        _schedules.append(
+            ScheduleDetailed(
+                **FilmFactory.get_schedule(
+                    record[1]
+                ).model_dump(),
+                hall=FilmFactory.get_hall(record[2])
+            )
+        )
+
+    return _schedules

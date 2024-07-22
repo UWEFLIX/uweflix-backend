@@ -196,15 +196,15 @@ class CardsRecord(Base):
         nullable=False,
     )
     card_number = Column(
-        String(100, collation=_COLLATION),
+        String(150, collation=_COLLATION),
         nullable=False
     )
     holder_name = Column(
-        String(100, collation=_COLLATION),
+        String(150, collation=_COLLATION),
         nullable=False
     )
     exp_date = Column(
-        String(100, collation=_COLLATION),
+        String(150, collation=_COLLATION),
         nullable=False
     )
     status = Column(

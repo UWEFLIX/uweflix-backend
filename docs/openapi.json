@@ -2301,7 +2301,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Card"
+                                "$ref": "#/components/schemas/CardInput"
                             }
                         }
                     },
@@ -2315,48 +2315,6 @@
                                 "schema": {}
                             }
                         }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ]
-            }
-        },
-        "/accounts/cards/user/card": {
-            "delete": {
-                "tags": [
-                    "Accounts",
-                    "Cards",
-                    "Unfinished",
-                    "Users"
-                ],
-                "summary": "Delete User Card",
-                "operationId": "delete_user_card_accounts_cards_user_card_delete",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Card"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "204": {
-                        "description": "Successful Response"
                     },
                     "422": {
                         "description": "Validation Error",
@@ -2375,62 +2333,15 @@
                     }
                 ]
             },
-            "patch": {
+            "delete": {
                 "tags": [
                     "Accounts",
                     "Cards",
                     "Unfinished",
                     "Users"
                 ],
-                "summary": "Update User Card",
-                "operationId": "update_user_card_accounts_cards_user_card_patch",
-                "requestBody": {
-                    "content": {
-                        "application/json": {
-                            "schema": {
-                                "$ref": "#/components/schemas/Card"
-                            }
-                        }
-                    },
-                    "required": true
-                },
-                "responses": {
-                    "201": {
-                        "description": "Successful Response",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "422": {
-                        "description": "Validation Error",
-                        "content": {
-                            "application/json": {
-                                "schema": {
-                                    "$ref": "#/components/schemas/HTTPValidationError"
-                                }
-                            }
-                        }
-                    }
-                },
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ]
-            }
-        },
-        "/accounts/cards/club/card": {
-            "delete": {
-                "tags": [
-                    "Accounts",
-                    "Cards",
-                    "Unfinished",
-                    "Clubs"
-                ],
-                "summary": "Delete Club Card",
-                "operationId": "delete_club_card_accounts_cards_club_card_delete",
+                "summary": "Delete Card",
+                "operationId": "delete_card_accounts_cards_card_delete",
                 "requestBody": {
                     "content": {
                         "application/json": {
@@ -2470,12 +2381,12 @@
                     "Clubs"
                 ],
                 "summary": "Update Club Card",
-                "operationId": "update_club_card_accounts_cards_club_card_patch",
+                "operationId": "update_club_card_accounts_cards_card_patch",
                 "requestBody": {
                     "content": {
                         "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Card"
+                                "$ref": "#/components/schemas/CardInput"
                             }
                         }
                     },
@@ -2506,6 +2417,162 @@
                         "OAuth2PasswordBearer": []
                     }
                 ]
+            }
+        },
+        "/accounts/cards/card/{card_id}/{user_password/": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Cards"
+                ],
+                "summary": "Get Card",
+                "operationId": "get_card_accounts_cards_card__card_id___user_password__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "card_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Card Id"
+                        }
+                    },
+                    {
+                        "name": "user_password",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "User Password"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/cards/club/cards/{user_password/": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Cards"
+                ],
+                "summary": "Get Club Cards",
+                "operationId": "get_club_cards_accounts_cards_club_cards__user_password__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_password",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "User Password"
+                        }
+                    },
+                    {
+                        "name": "club_id",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Club Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/accounts/cards/user/cards/{user_password/": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Cards"
+                ],
+                "summary": "Get User Cards",
+                "operationId": "get_user_cards_accounts_cards_user_cards__user_password__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_password",
+                        "in": "query",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "User Password"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/accounts/account": {
@@ -3729,9 +3796,9 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "application/json": {
+                        "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/Film"
+                                "$ref": "#/components/schemas/Body_create_film_films_film_post"
                             }
                         }
                     }
@@ -4048,7 +4115,13 @@
                         "description": "Successful Response",
                         "content": {
                             "application/json": {
-                                "schema": {}
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/ScheduleDetailed"
+                                    },
+                                    "title": "Response Get Schedules By Film Id Films Film Schedules Id  Film Id  Get"
+                                }
                             }
                         }
                     },
@@ -4150,20 +4223,6 @@
                         "type": "string",
                         "title": "Name"
                     },
-                    "cards": {
-                        "anyOf": [
-                            {
-                                "items": {
-                                    "$ref": "#/components/schemas/Card"
-                                },
-                                "type": "array"
-                            },
-                            {
-                                "type": "null"
-                            }
-                        ],
-                        "title": "Cards"
-                    },
                     "entity_type": {
                         "type": "string",
                         "title": "Entity Type"
@@ -4262,6 +4321,29 @@
                     "files"
                 ],
                 "title": "Body_add_film_posters_films_images_posters_post"
+            },
+            "Body_create_film_films_film_post": {
+                "properties": {
+                    "film": {
+                        "$ref": "#/components/schemas/Film"
+                    },
+                    "files": {
+                        "items": {
+                            "type": "string",
+                            "format": "binary"
+                        },
+                        "type": "array",
+                        "maxItems": 1,
+                        "minItems": 1,
+                        "title": "Files"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "film",
+                    "files"
+                ],
+                "title": "Body_create_film_films_film_post"
             },
             "Body_login_for_access_token_token_post": {
                 "properties": {
@@ -4448,7 +4530,59 @@
                     "exp_date",
                     "status"
                 ],
-                "title": "Card"
+                "title": "Card",
+                "description": "Encrypted Card data"
+            },
+            "CardInput": {
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "title": "Id"
+                    },
+                    "account_id": {
+                        "type": "integer",
+                        "title": "Account Id"
+                    },
+                    "card_number": {
+                        "type": "string",
+                        "maxLength": 19,
+                        "minLength": 12,
+                        "title": "Card Number"
+                    },
+                    "holder_name": {
+                        "type": "string",
+                        "title": "Holder Name"
+                    },
+                    "exp_date": {
+                        "type": "string",
+                        "title": "Exp Date"
+                    },
+                    "status": {
+                        "type": "string",
+                        "title": "Status"
+                    },
+                    "user_password": {
+                        "type": "string",
+                        "title": "User Password"
+                    },
+                    "class_name": {
+                        "type": "string",
+                        "title": "Class Name",
+                        "default": "CardInput"
+                    }
+                },
+                "type": "object",
+                "required": [
+                    "id",
+                    "account_id",
+                    "card_number",
+                    "holder_name",
+                    "exp_date",
+                    "status",
+                    "user_password"
+                ],
+                "title": "CardInput",
+                "description": "Unencrypted Card data"
             },
             "City": {
                 "properties": {
@@ -4717,18 +4851,6 @@
                     "is_active": {
                         "type": "boolean",
                         "title": "Is Active"
-                    },
-                    "poster_image": {
-                        "anyOf": [
-                            {
-                                "type": "string",
-                                "format": "binary"
-                            },
-                            {
-                                "type": "null"
-                            }
-                        ],
-                        "title": "Poster Image"
                     },
                     "images": {
                         "anyOf": [

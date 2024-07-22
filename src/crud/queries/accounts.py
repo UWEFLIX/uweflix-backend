@@ -1,9 +1,10 @@
 from collections import defaultdict
 
-from sqlalchemy import select, and_, ScalarResult, asc
+from sqlalchemy import select, and_, ScalarResult, asc, delete
 
 from src.crud.engine import async_session
 from src.crud.models import AccountsRecord, CardsRecord, UsersRecord, ClubsRecord
+from src.crud.queries.utils import scalar_selection, execute_safely, scalars_selection
 
 
 async def select_account(query):
@@ -54,11 +55,11 @@ async def select_accounts(query):
     return accounts
 
 
-async def select_card(card):
+async def select_card(card: int):
     query = select(
         CardsRecord
     ).where(
-        CardsRecord.card_number == card
+        CardsRecord.card_id == card
     )
     async with async_session() as session:
         async with session.begin():
@@ -95,7 +96,7 @@ async def check_club_card(user_id, card_id):
     ).join(
         CardsRecord, CardsRecord.card_id == card_id
     ).join(
-        UsersRecord, ClubsRecord.leader == UsersRecord.id
+        UsersRecord, ClubsRecord.leader == UsersRecord.user_id
     ).join(
         AccountsRecord, and_(
             AccountsRecord.id == CardsRecord.account_id,
@@ -103,7 +104,7 @@ async def check_club_card(user_id, card_id):
             AccountsRecord.entity_type == "CLUB"
         )
     ).where(
-        UsersRecord.id == user_id
+        UsersRecord.user_id == user_id
     )
 
     async with async_session() as session:
@@ -189,3 +190,53 @@ async def select_club_accounts(
         async with session.begin():
             result = await session.execute(query)
             return result.scalars()
+
+
+async def select_account_from_card_id(card_id: int) -> AccountsRecord:
+    query = select(
+        AccountsRecord
+    ).join(
+        CardsRecord, CardsRecord.account_id == AccountsRecord.id
+    ).where(
+        CardsRecord.card_id == card_id
+    )
+    return await scalar_selection(query)
+
+
+async def delete_card_query(card_id: int) -> None:
+    query = delete(
+        CardsRecord
+    ).where(
+        CardsRecord.card_id == card_id
+    )
+    await execute_safely(query)
+
+
+async def select_club_cards(club_id):
+    query = select(
+        CardsRecord
+    ).join(
+        AccountsRecord,
+        AccountsRecord.id == CardsRecord.account_id
+    ).where(
+        and_(
+            AccountsRecord.entity_id == club_id,
+            AccountsRecord.entity_type == "CLUB"
+        )
+    )
+    return await scalars_selection(query)
+
+
+async def select_user_cards(user_id):
+    query = select(
+        CardsRecord
+    ).join(
+        AccountsRecord,
+        AccountsRecord.id == CardsRecord.account_id
+    ).where(
+        and_(
+            AccountsRecord.entity_id == user_id,
+            AccountsRecord.entity_type == "USER"
+        )
+    )
+    return await scalars_selection(query)

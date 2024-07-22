@@ -1,6 +1,10 @@
+import base64
+import hashlib
 from typing import List
 
-from src.schema.accounts import Account, Card
+from cryptography.fernet import Fernet
+
+from src.schema.accounts import Account, Card, CardInput
 
 
 class AccountsFactory:
@@ -34,8 +38,6 @@ class AccountsFactory:
             exp_date=record.exp_date,
             status=record.status,
         )
-        card._encrypted = True
-        card.decrypt()
         return card
 
     @staticmethod
@@ -62,3 +64,19 @@ class AccountsFactory:
         return [
             AccountsFactory.get_half_account(x) for x in records
         ]
+
+    @staticmethod
+    def get_card_input(card: Card, password: str) -> CardInput:
+        hash_object = hashlib.sha256(password.encode())
+        digest = hash_object.digest()
+        digest = base64.urlsafe_b64encode(digest[:32])
+        fernet = Fernet(digest)
+        return CardInput(
+            id=card.id,
+            account_id=card.account_id,
+            card_number=CardInput.decrypt(card.card_number, fernet),
+            holder_name=CardInput.decrypt(card.holder_name, fernet),
+            exp_date=CardInput.decrypt(card.exp_date, fernet),
+            status=card.status,
+            user_password="",
+        )

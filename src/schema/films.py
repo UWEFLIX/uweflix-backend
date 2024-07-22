@@ -1,5 +1,7 @@
 from datetime import datetime
 from typing import List
+
+from fastapi import UploadFile
 from pydantic import BaseModel, Field, field_validator, field_serializer
 
 from src.schema.validation import basic_string_validation
@@ -55,7 +57,6 @@ class Film(BaseModel):
     on_air_from: datetime | str
     on_air_to: datetime | str
     is_active: bool
-    poster_image: bytes | None = None
     images: List[FilmImage] | None = None
     schedules: List[Schedule] | None = None
     class_name: str = "FILM"
