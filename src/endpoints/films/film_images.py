@@ -9,7 +9,7 @@ from fastapi.params import Param
 from sqlalchemy import text, delete
 from starlette.responses import FileResponse
 from src.crud.models import FilmImagesRecord
-from src.crud.queries.films import select_film, select_images
+from src.crud.queries.films import select_film, select_images, select_film_by_id
 from src.crud.queries.utils import add_objects, execute_safely
 from src.schema.factories.film_factories import FilmFactory
 from src.schema.users import User
@@ -32,17 +32,22 @@ async def rename_poster(new_title: str, old_title: str) -> None:
         pass
 
 
-@router.patch("/poster", status_code=201, tags=["Unfinished"])
+@router.patch("/poster/{film_id}", status_code=201, tags=["Unfinished"])
 async def update_film_poster(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:films"])
         ],
-        film_title: Annotated[str, Param(title="Title of the film")],
+        film_id: int,
         file: UploadFile,
 ) -> FileResponse:
-    film_title.replace("/", "")
-    film_title.replace("\\", "")
-    _path = f'{_FILMS_DIR}/{film_title}-poster.jpg'
+    film = await select_film_by_id(film_id)
+
+    if film is None:
+        raise HTTPException(
+            404, "Film not found"
+        )
+
+    _path = f'{_FILMS_DIR}/{film_id}-poster.jpg'
     async with aiofiles.open(
             _path, 'wb'
     ) as f:
@@ -54,7 +59,7 @@ async def update_film_poster(
     )
 
 
-@router.post("/posters", status_code=201, tags=["Unfinished"])
+@router.patch("/posters", status_code=201, tags=["Unfinished"])
 async def add_film_posters(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:films"])

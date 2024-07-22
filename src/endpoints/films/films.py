@@ -36,7 +36,6 @@ async def create_film(
             User, Security(get_current_active_user, scopes=["write:films"])
         ],
         film: Film = Body(...),
-        files: List[UploadFile] = File(min_length=1, max_length=1),
 ) -> Film:
 
     if type(film.on_air_to) is str:
@@ -52,9 +51,6 @@ async def create_film(
         '%Y-%m-%d %H:%M:%S'
     )
 
-    film.title = film.title.replace("/", "")
-    film.title = film.title.replace("\\", "")
-
     record = FilmsRecord(
         film_id=film.id,
         title=film.title,
@@ -65,13 +61,6 @@ async def create_film(
         on_air_to=on_air_to,
         is_active=film.is_active,
     )
-    poster_image = files[0]
-    _path = f'{_FILMS_DIR}/{film.title}-poster.jpg'
-    async with aiofiles.open(
-            _path, 'wb'
-    ) as f:
-        content = await poster_image.read()
-        await f.write(content)
 
     await add_object(record)
     records = await select_film(film.title)
@@ -79,28 +68,10 @@ async def create_film(
     return FilmFactory.get_full_film(records)
 
 
-# @router.delete("/film", status_code=204, tags=["Unfinished"])
-# async def delete_film(
-#         current_user: Annotated[
-#             User, Security(get_current_active_user, scopes=["write:films"])
-#         ],
-#         title: str
-# ):
-#     query = delete(
-#         FilmsRecord
-#     ).where(
-#         FilmsRecord.title == title
-#     )
-#     await execute_safely(query)
-
-
 @router.patch("/film", status_code=201, tags=["Unfinished"])
 async def update_film(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:films"])
-        ],
-        old_title: Annotated[
-            str, Param(title="Old title of the film")
         ],
         film: Film
 ):
@@ -115,7 +86,7 @@ async def update_film(
         on_air_to=film.on_air_to,
         is_active=film.is_active,
     ).where(
-        FilmsRecord.title == old_title
+        FilmsRecord.id == film.id
     )
     await execute_safely(query)
 
@@ -125,8 +96,6 @@ async def update_film(
         raise HTTPException(
             404, "Film not found"
         )
-
-    await rename_poster(film.title, old_title)
 
     return FilmFactory.get_full_film(records)
 
