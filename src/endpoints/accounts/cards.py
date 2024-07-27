@@ -131,7 +131,7 @@ async def delete_card(
     await delete_card_query(card.id)
 
 
-@router.get("/card/{card_id}/{user_password/")
+@router.get("/card/{card_id}/{user_password}/")
 async def get_card(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
@@ -156,7 +156,7 @@ async def get_card(
     return card_input
 
 
-@router.get("/club/cards/{user_password/")
+@router.get("/club/cards/{user_password}/")
 async def get_club_cards(
     current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])

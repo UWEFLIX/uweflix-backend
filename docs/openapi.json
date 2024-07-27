@@ -3372,7 +3372,7 @@
                 }
             }
         },
-        "/films/images/poster": {
+        "/films/images/poster/{film_id}": {
             "patch": {
                 "tags": [
                     "Films",
@@ -3380,7 +3380,7 @@
                     "Unfinished"
                 ],
                 "summary": "Update Film Poster",
-                "operationId": "update_film_poster_films_images_poster_patch",
+                "operationId": "update_film_poster_films_images_poster__film_id__patch",
                 "security": [
                     {
                         "OAuth2PasswordBearer": [
@@ -3390,12 +3390,12 @@
                 ],
                 "parameters": [
                     {
-                        "name": "film_title",
-                        "in": "query",
+                        "name": "film_id",
+                        "in": "path",
                         "required": true,
                         "schema": {
-                            "type": "string",
-                            "title": "Title of the film"
+                            "type": "integer",
+                            "title": "Film Id"
                         }
                     }
                 ],
@@ -3404,7 +3404,7 @@
                     "content": {
                         "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/Body_update_film_poster_films_images_poster_patch"
+                                "$ref": "#/components/schemas/Body_update_film_poster_films_images_poster__film_id__patch"
                             }
                         }
                     }
@@ -3432,14 +3432,14 @@
             }
         },
         "/films/images/posters": {
-            "post": {
+            "patch": {
                 "tags": [
                     "Films",
                     "FilmImages",
                     "Unfinished"
                 ],
                 "summary": "Add Film Posters",
-                "operationId": "add_film_posters_films_images_posters_post",
+                "operationId": "add_film_posters_films_images_posters_patch",
                 "security": [
                     {
                         "OAuth2PasswordBearer": [
@@ -3463,7 +3463,7 @@
                     "content": {
                         "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/Body_add_film_posters_films_images_posters_post"
+                                "$ref": "#/components/schemas/Body_add_film_posters_films_images_posters_patch"
                             }
                         }
                     }
@@ -3838,17 +3838,6 @@
                         "OAuth2PasswordBearer": [
                             "write:films"
                         ]
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "old_title",
-                        "in": "query",
-                        "required": true,
-                        "schema": {
-                            "type": "string",
-                            "title": "Old title of the film"
-                        }
                     }
                 ],
                 "requestBody": {
@@ -4305,7 +4294,7 @@
                 ],
                 "title": "BatchData"
             },
-            "Body_add_film_posters_films_images_posters_post": {
+            "Body_add_film_posters_films_images_posters_patch": {
                 "properties": {
                     "files": {
                         "items": {
@@ -4320,28 +4309,22 @@
                 "required": [
                     "files"
                 ],
-                "title": "Body_add_film_posters_films_images_posters_post"
+                "title": "Body_add_film_posters_films_images_posters_patch"
             },
             "Body_create_film_films_film_post": {
                 "properties": {
                     "film": {
                         "$ref": "#/components/schemas/Film"
                     },
-                    "files": {
-                        "items": {
-                            "type": "string",
-                            "format": "binary"
-                        },
-                        "type": "array",
-                        "maxItems": 1,
-                        "minItems": 1,
-                        "title": "Files"
+                    "file": {
+                        "type": "string",
+                        "format": "binary",
+                        "title": "File"
                     }
                 },
                 "type": "object",
                 "required": [
-                    "film",
-                    "files"
+                    "film"
                 ],
                 "title": "Body_create_film_films_film_post"
             },
@@ -4402,7 +4385,7 @@
                 ],
                 "title": "Body_login_for_access_token_token_post"
             },
-            "Body_update_film_poster_films_images_poster_patch": {
+            "Body_update_film_poster_films_images_poster__film_id__patch": {
                 "properties": {
                     "file": {
                         "type": "string",
@@ -4414,7 +4397,7 @@
                 "required": [
                     "file"
                 ],
-                "title": "Body_update_film_poster_films_images_poster_patch"
+                "title": "Body_update_film_poster_films_images_poster__film_id__patch"
             },
             "Booking": {
                 "properties": {

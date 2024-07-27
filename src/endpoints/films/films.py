@@ -33,9 +33,11 @@ _FILMS_DIR = os.path.join(_ASSETS_DIR, 'images/films')
 @router.post("/film", status_code=201, tags=["Unfinished"])
 async def create_film(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:films"])
+            User, Security(
+                get_current_active_user, scopes=["write:films"]
+            )
         ],
-        film: Film = Body(...),
+        film: Film = Body(...), file: UploadFile = File(None),
 ) -> Film:
 
     if type(film.on_air_to) is str:
