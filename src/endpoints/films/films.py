@@ -37,7 +37,7 @@ async def create_film(
                 get_current_active_user, scopes=["write:films"]
             )
         ],
-        film: Film = Body(...), file: UploadFile = File(None),
+        film: Film = Body(...)
 ) -> Film:
 
     if type(film.on_air_to) is str:
