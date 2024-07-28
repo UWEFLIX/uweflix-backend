@@ -11,11 +11,12 @@ from typing_extensions import Doc
 from src.schema.validation import basic_string_validation
 
 _SEAT_NO_MAX_LENGTH = 7
-SEAT_NO_DELIMITER = "#"
+# SEAT_NO_DELIMITER = "#"
 
 
 def _seat_no_validation(value: str, handler) -> str:
     """
+    todo update
     Validates a seat number string.
 
     - Must contain a set delimiter.
@@ -30,23 +31,23 @@ def _seat_no_validation(value: str, handler) -> str:
         raise ValueError("Length cannot be greater than 7 characters")
 
     value = value.upper()
-    split = value.split(SEAT_NO_DELIMITER)
+    if not value.isalnum():
+        raise ValueError("Not a valid seat number")
 
-    if len(split) != 2:
-        raise ValueError(
-            f"Expected delimiter({SEAT_NO_DELIMITER}) not found or string "
-            f"not seperated by delimiter"
-        )
-
-    row_alph = split[0]
-    col_alph = split[1]
-
+    row_alph = ""
+    col_alph = ""
     for char in value:
-        if char.isspace():
+        if char.isalpha():
+            row_alph += char
+        elif char.isnumeric():
+            col_alph += char
+        elif char.isspace():
             raise ValueError("Whitespace in string")
+        else:
+            raise ValueError("Invalid characters in seat")
 
-    if not row_alph.isalpha():
-        raise ValueError("Invalid characters in seat row, only alphabets allowed")
+    if not (row_alph.isalpha() and col_alph.isnumeric()):
+        raise ValueError("Not a valid seat number")
 
     try:
         col = int(col_alph)
@@ -56,7 +57,7 @@ def _seat_no_validation(value: str, handler) -> str:
     if 0 > col:
         raise ValueError("Seat column cannot be negative")
 
-    return value
+    return f"{row_alph}{col_alph}"
 
 
 SeatNoStr = Annotated[

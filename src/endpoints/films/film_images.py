@@ -131,7 +131,7 @@ async def delete_film_posters(
         )
 
 
-@router.get("/image/{file_name}", tags=["Unfinished"])
+@router.get("/image/{file_name}", tags=["Unfinished", "Public"])
 async def get_image(
         file_name: str
 ) -> FileResponse:

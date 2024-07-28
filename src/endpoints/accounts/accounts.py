@@ -4,8 +4,6 @@ from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from sqlalchemy import update, and_, select
-from sqlalchemy.orm import aliased
-
 from src.crud.models import AccountsRecord, CardsRecord
 from src.crud.queries.accounts import (
     select_account, select_half_account, select_half_accounts,

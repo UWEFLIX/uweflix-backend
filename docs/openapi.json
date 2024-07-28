@@ -3140,13 +3140,6 @@
                 ],
                 "summary": "Get Halls",
                 "operationId": "get_halls_films_halls_hall_get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": [
-                            "read:halls"
-                        ]
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "hall_name",
@@ -3285,13 +3278,6 @@
                 ],
                 "summary": "Get Halls By Hall Id",
                 "operationId": "get_halls_by_hall_id_films_halls_hall_id__hall_id__get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": [
-                            "read:halls"
-                        ]
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "hall_id",
@@ -3402,13 +3388,6 @@
                 ],
                 "summary": "Get Schedules",
                 "operationId": "get_schedules_films_halls_hall_schedules__hall_id___limit__get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": [
-                            "read:halls"
-                        ]
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "hall_id",
@@ -3616,7 +3595,8 @@
                 "tags": [
                     "Films",
                     "FilmImages",
-                    "Unfinished"
+                    "Unfinished",
+                    "Public"
                 ],
                 "summary": "Get Image",
                 "operationId": "get_image_films_images_image__file_name__get",
@@ -3756,11 +3736,6 @@
                 ],
                 "summary": "Get Schedule",
                 "operationId": "get_schedule_films_schedules_schedule__schedule_id__get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "schedule_id",
@@ -3803,11 +3778,6 @@
                 ],
                 "summary": "Get Schedules",
                 "operationId": "get_schedules_films_schedules_schedules_get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "start",
@@ -4096,11 +4066,6 @@
                 ],
                 "summary": "Get Schedules",
                 "operationId": "get_schedules_films_film_schedules_get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "title",

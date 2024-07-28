@@ -1,6 +1,6 @@
 from fastapi import HTTPException
 
-from src.schema.bookings import SeatNoStr, SEAT_NO_DELIMITER
+from src.schema.bookings import SeatNoStr
 from src.utils.utils import ALPHABETS
 from src.crud.models import HallsRecord
 
@@ -23,10 +23,17 @@ def titleToNumber(string: str) -> int:
 
 
 def validate_seat_per_hall(seat: SeatNoStr, hall: HallsRecord):
-    split = seat.split(SEAT_NO_DELIMITER)
+    row_alph = ""
+    col_alph = ""
+    for char in seat:
+        if char.isalpha():
+            row_alph += char
+        if char.isnumeric():
+            col_alph += char
+        if char.isspace():
+            raise ValueError("Whitespace in string")
 
-    row_alph = split[0]
-    column = int(split[1])
+    column = int(col_alph)
     row = titleToNumber(row_alph)
 
     if row > hall.no_of_rows:
