@@ -15,9 +15,6 @@ router = APIRouter(prefix="/halls", tags=["Halls"])
 
 @router.get("/hall", status_code=200, tags=["Unfinished"])
 async def get_halls(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["read:halls"])
-        ],
         hall_name: str
 ) -> Hall:
     record = await select_hall(hall_name)
@@ -30,9 +27,6 @@ async def get_halls(
 
 @router.get("/hall/id/{hall_id}", status_code=200, tags=["Unfinished"])
 async def get_halls_by_hall_id(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["read:halls"])
-        ],
         hall_id: int
 ) -> Hall:
     record = await select_hall_by_id(hall_id)
@@ -120,9 +114,6 @@ async def get_halls(
 
 @router.get("/hall/schedules/{hall_id}/{limit}", tags=["Unfinished"])
 async def get_schedules(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["read:halls"])
-        ],
         hall_id: int, limit: int
 ):
     records = await select_schedules_by_hall_id(hall_id, limit)

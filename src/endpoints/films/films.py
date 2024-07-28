@@ -1,3 +1,4 @@
+import asyncio
 import os
 from datetime import datetime
 from typing import Annotated, List
@@ -104,9 +105,6 @@ async def update_film(
 
 @router.get("/film/{film_id}", tags=["Unfinished"])
 async def get_film_by_id(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
-        ],
         film_id: int
 ) -> Film:
     records = await select_film_by_id(film_id)
@@ -121,9 +119,6 @@ async def get_film_by_id(
 
 @router.get("/film", tags=["Unfinished"])
 async def get_film(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
-        ],
         title: str
 ) -> Film:
     records = await select_film(title)
@@ -138,9 +133,6 @@ async def get_film(
 
 @router.get("/films", tags=["Unfinished"])
 async def get_films(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
-        ],
         start: Annotated[int, Param(title="Range starting ID to get", ge=1)],
         limit: Annotated[int, Param(title="Amount of resources to fetch", ge=1)]
 ) -> List[Film]:
@@ -151,9 +143,6 @@ async def get_films(
 
 @router.get("/film/schedules", tags=["Unfinished"])
 async def get_schedules(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
-        ],
         title: str
 ):
     query = select(
@@ -177,9 +166,6 @@ async def get_schedules(
 
 @router.get("/film/schedules/id/{film_id}", tags=["Unfinished"])
 async def get_schedules_by_film_id(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
-        ],
         film_id: int
 ) -> List[ScheduleDetailed]:
     query = select(

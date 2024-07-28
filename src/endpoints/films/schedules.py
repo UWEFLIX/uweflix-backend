@@ -151,9 +151,6 @@ async def update_schedule(
 
 @router.get("/schedule/{schedule_id}", tags=["Unfinished"])
 async def get_schedule(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
-        ],
         schedule_id: int
 ):
     records = await select_schedule(schedule_id)
@@ -162,9 +159,6 @@ async def get_schedule(
 
 @router.get("/schedules", tags=["Unfinished"])
 async def get_schedules(
-        current_user: Annotated[
-            User, Security(get_current_active_user, scopes=[])
-        ],
         start: Annotated[int, Param(title="Range starting ID to get", ge=1)],
         limit: Annotated[int, Param(title="Amount of resources to fetch", ge=1)]
 ):

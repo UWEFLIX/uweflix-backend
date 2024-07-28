@@ -2419,14 +2419,14 @@
                 ]
             }
         },
-        "/accounts/cards/card/{card_id}/{user_password/": {
+        "/accounts/cards/card/{card_id}/{user_password}/": {
             "get": {
                 "tags": [
                     "Accounts",
                     "Cards"
                 ],
                 "summary": "Get Card",
-                "operationId": "get_card_accounts_cards_card__card_id___user_password__get",
+                "operationId": "get_card_accounts_cards_card__card_id___user_password___get",
                 "security": [
                     {
                         "OAuth2PasswordBearer": []
@@ -2444,7 +2444,7 @@
                     },
                     {
                         "name": "user_password",
-                        "in": "query",
+                        "in": "path",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -2474,14 +2474,14 @@
                 }
             }
         },
-        "/accounts/cards/club/cards/{user_password/": {
+        "/accounts/cards/club/cards/{user_password}/": {
             "get": {
                 "tags": [
                     "Accounts",
                     "Cards"
                 ],
                 "summary": "Get Club Cards",
-                "operationId": "get_club_cards_accounts_cards_club_cards__user_password__get",
+                "operationId": "get_club_cards_accounts_cards_club_cards__user_password___get",
                 "security": [
                     {
                         "OAuth2PasswordBearer": []
@@ -2490,7 +2490,7 @@
                 "parameters": [
                     {
                         "name": "user_password",
-                        "in": "query",
+                        "in": "path",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -2832,6 +2832,85 @@
                         "OAuth2PasswordBearer": []
                     }
                 ]
+            }
+        },
+        "/accounts/account/me": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Get User Account",
+                "operationId": "get_user_account_accounts_account_me_get",
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
+            }
+        },
+        "/accounts/user/account/{user_id}": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Users"
+                ],
+                "summary": "Get User Account",
+                "operationId": "get_user_account_accounts_user_account__user_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:accounts"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "user_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "User Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
             }
         },
         "/accounts/club/account/{account_id}/": {
@@ -3541,11 +3620,6 @@
                 ],
                 "summary": "Get Image",
                 "operationId": "get_image_films_images_image__file_name__get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "file_name",
@@ -3796,9 +3870,9 @@
                 "requestBody": {
                     "required": true,
                     "content": {
-                        "multipart/form-data": {
+                        "application/json": {
                             "schema": {
-                                "$ref": "#/components/schemas/Body_create_film_films_film_post"
+                                "$ref": "#/components/schemas/Film"
                             }
                         }
                     }
@@ -3878,11 +3952,6 @@
                 ],
                 "summary": "Get Film",
                 "operationId": "get_film_films_film_get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "title",
@@ -3926,11 +3995,6 @@
                 ],
                 "summary": "Get Film By Id",
                 "operationId": "get_film_by_id_films_film__film_id__get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "film_id",
@@ -3974,11 +4038,6 @@
                 ],
                 "summary": "Get Films",
                 "operationId": "get_films_films_films_get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "start",
@@ -4083,11 +4142,6 @@
                 ],
                 "summary": "Get Schedules By Film Id",
                 "operationId": "get_schedules_by_film_id_films_film_schedules_id__film_id__get",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
                 "parameters": [
                     {
                         "name": "film_id",
@@ -4310,23 +4364,6 @@
                     "files"
                 ],
                 "title": "Body_add_film_posters_films_images_posters_patch"
-            },
-            "Body_create_film_films_film_post": {
-                "properties": {
-                    "film": {
-                        "$ref": "#/components/schemas/Film"
-                    },
-                    "file": {
-                        "type": "string",
-                        "format": "binary",
-                        "title": "File"
-                    }
-                },
-                "type": "object",
-                "required": [
-                    "film"
-                ],
-                "title": "Body_create_film_films_film_post"
             },
             "Body_login_for_access_token_token_post": {
                 "properties": {

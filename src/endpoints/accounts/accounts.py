@@ -12,7 +12,7 @@ from src.crud.queries.accounts import (
     select_last_entered_account, select_full_account, select_club_accounts
 )
 from src.crud.queries.clubs import select_leader_clubs, select_club_with_accounts, select_club_by_id
-from src.crud.queries.utils import add_object, execute_safely
+from src.crud.queries.utils import add_object, execute_safely, scalar_selection
 from src.schema.accounts import Account, TopUp
 from src.schema.clubs import Club
 from src.schema.factories.account_factory import AccountsFactory
@@ -234,24 +234,51 @@ async def _select_account(
     return AccountsFactory.get_account(records)
 
 
-# @router.get("/user/account", status_code=201, tags=["Unfinished", "Users"])
-# async def get_user_account(
-#         current_user: Annotated[
-#             User, Security(get_current_active_user, scopes=[])
-#         ]
-# ) -> Account:
-#     query = select(
-#         AccountsRecord, CardsRecord
-#     ).join(
-#         CardsRecord.account_id == AccountsRecord.id
-#     ).where(
-#         and_(
-#             AccountsRecord.entity_id == current_user.id,
-#             AccountsRecord.entity_type == "USER"
-#         )
-#     )
-#     records = await select_full_account(query)
-#     return AccountsFactory.get_account(records)
+@router.get("/account/me", status_code=201, tags=["Unfinished", "Users"])
+async def get_user_account(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ]
+) -> Account:
+    query = select(
+        AccountsRecord
+    ).where(
+        and_(
+            AccountsRecord.entity_id == current_user.id,
+            AccountsRecord.entity_type == "USER"
+        )
+    )
+    records = await scalar_selection(query)
+
+    if records is None:
+        raise HTTPException(
+            404, "Account Not Found"
+        )
+    return AccountsFactory.get_half_account(records)
+
+
+@router.get("/user/account/{user_id}", status_code=201, tags=["Unfinished", "Users"])
+async def get_user_account(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:accounts"])
+        ],
+        user_id: int
+) -> Account:
+    query = select(
+        AccountsRecord
+    ).where(
+        and_(
+            AccountsRecord.entity_id == user_id,
+            AccountsRecord.entity_type == "USER"
+        )
+    )
+    records = await scalar_selection(query)
+
+    if records is None:
+        raise HTTPException(
+            404, "Account Not Found"
+        )
+    return AccountsFactory.get_half_account(records)
 
 
 @router.get("/club/account/{account_id}/", status_code=201, tags=["Unfinished", "Clubs"])
