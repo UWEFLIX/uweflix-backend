@@ -89,7 +89,7 @@ async def update_film(
         on_air_to=film.on_air_to,
         is_active=film.is_active,
     ).where(
-        FilmsRecord.id == film.id
+        FilmsRecord.film_id == film.id
     )
     await execute_safely(query)
 
