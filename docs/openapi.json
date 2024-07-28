@@ -4810,27 +4810,13 @@
                         "title": "Trailer Desc"
                     },
                     "on_air_from": {
-                        "anyOf": [
-                            {
-                                "type": "string",
-                                "format": "date-time"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
+                        "type": "string",
+                        "format": "date-time",
                         "title": "On Air From"
                     },
                     "on_air_to": {
-                        "anyOf": [
-                            {
-                                "type": "string",
-                                "format": "date-time"
-                            },
-                            {
-                                "type": "string"
-                            }
-                        ],
+                        "type": "string",
+                        "format": "date-time",
                         "title": "On Air To"
                     },
                     "is_active": {

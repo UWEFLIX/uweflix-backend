@@ -54,8 +54,8 @@ class Film(BaseModel):
     age_rating: str
     duration_sec: int = Field(..., ge=1)
     trailer_desc: str
-    on_air_from: datetime | str
-    on_air_to: datetime | str
+    on_air_from: datetime
+    on_air_to: datetime
     is_active: bool
     images: List[FilmImage] | None = None
     schedules: List[Schedule] | None = None
