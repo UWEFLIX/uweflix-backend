@@ -3489,7 +3489,7 @@
                 }
             }
         },
-        "/films/images/posters": {
+        "/films/images/posters/{film_id}": {
             "patch": {
                 "tags": [
                     "Films",
@@ -3497,7 +3497,7 @@
                     "Unfinished"
                 ],
                 "summary": "Add Film Posters",
-                "operationId": "add_film_posters_films_images_posters_patch",
+                "operationId": "add_film_posters_films_images_posters__film_id__patch",
                 "security": [
                     {
                         "OAuth2PasswordBearer": [
@@ -3508,7 +3508,7 @@
                 "parameters": [
                     {
                         "name": "film_id",
-                        "in": "query",
+                        "in": "path",
                         "required": true,
                         "schema": {
                             "type": "integer",
@@ -3521,7 +3521,7 @@
                     "content": {
                         "multipart/form-data": {
                             "schema": {
-                                "$ref": "#/components/schemas/Body_add_film_posters_films_images_posters_patch"
+                                "$ref": "#/components/schemas/Body_add_film_posters_films_images_posters__film_id__patch"
                             }
                         }
                     }
@@ -3546,7 +3546,9 @@
                         }
                     }
                 }
-            },
+            }
+        },
+        "/films/images/posters": {
             "delete": {
                 "tags": [
                     "Films",
@@ -4313,7 +4315,7 @@
                 ],
                 "title": "BatchData"
             },
-            "Body_add_film_posters_films_images_posters_patch": {
+            "Body_add_film_posters_films_images_posters__film_id__patch": {
                 "properties": {
                     "files": {
                         "items": {
@@ -4328,7 +4330,7 @@
                 "required": [
                     "files"
                 ],
-                "title": "Body_add_film_posters_films_images_posters_patch"
+                "title": "Body_add_film_posters_films_images_posters__film_id__patch"
             },
             "Body_login_for_access_token_token_post": {
                 "properties": {

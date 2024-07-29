@@ -5,7 +5,7 @@ from typing import Annotated, List
 import aiofiles
 from aiofiles.os import remove, path, rename
 from fastapi import APIRouter, Security, UploadFile, File, HTTPException
-from fastapi.params import Param
+from fastapi.params import Param, Path
 from sqlalchemy import text, delete
 from starlette.responses import FileResponse
 from src.crud.models import FilmImagesRecord
@@ -72,7 +72,7 @@ async def add_film_posters(
             User, Security(get_current_active_user, scopes=["write:films"])
         ],
         files: List[UploadFile],
-        film_id: Annotated[int, Param(title="ID of the film")],
+        film_id: Annotated[int, Path(title="ID of the film")],
 ):
     new_records = await select_film_by_id(film_id)
 
