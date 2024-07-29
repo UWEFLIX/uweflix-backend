@@ -66,7 +66,7 @@ async def _delete_image(filename: str) -> None:
         print("File Not Found " + str(e))
 
 
-@router.patch("/posters", status_code=201, tags=["Unfinished"])
+@router.patch("/posters/{film_id}", status_code=201, tags=["Unfinished"])
 async def add_film_posters(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:films"])
