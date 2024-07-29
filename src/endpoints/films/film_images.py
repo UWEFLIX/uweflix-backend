@@ -65,9 +65,9 @@ async def add_film_posters(
             User, Security(get_current_active_user, scopes=["write:films"])
         ],
         files: List[UploadFile],
-        film_title: Annotated[str, Param(title="Title of the film")],
+        film_id: Annotated[int, Param(title="ID of the film")],
 ):
-    records = await select_film(film_title)
+    records = await select_film_by_id(film_id)
 
     if not records:
         raise HTTPException(
