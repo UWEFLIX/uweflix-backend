@@ -6,6 +6,7 @@ from src.crud.engine import async_session
 from src.crud.models import (
     HallsRecord, FilmsRecord, FilmImagesRecord, SchedulesRecord
 )
+from src.crud.queries.utils import scalars_selection
 
 
 async def select_hall(hall_name: str):
@@ -268,3 +269,13 @@ async def select_hall_by_id(hall_id: int):
         async with session.begin():
             result = await session.execute(query)
             return result.scalar()
+
+
+async def select_poster_images(film_id: int):
+    query = select(
+        FilmImagesRecord
+    ).where(
+        FilmImagesRecord.film_id == film_id
+    )
+
+    return await scalars_selection(query)

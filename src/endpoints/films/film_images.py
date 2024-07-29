@@ -1,15 +1,15 @@
+import asyncio
 import os
-from pathlib import Path
 import time
 from typing import Annotated, List
 import aiofiles
-from aiofiles.os import remove, path, rename, makedirs
+from aiofiles.os import remove, path, rename
 from fastapi import APIRouter, Security, UploadFile, File, HTTPException
 from fastapi.params import Param
 from sqlalchemy import text, delete
 from starlette.responses import FileResponse
 from src.crud.models import FilmImagesRecord
-from src.crud.queries.films import select_film, select_images, select_film_by_id
+from src.crud.queries.films import select_film, select_images, select_film_by_id, select_poster_images
 from src.crud.queries.utils import add_objects, execute_safely
 from src.schema.factories.film_factories import FilmFactory
 from src.schema.users import User
@@ -59,6 +59,13 @@ async def update_film_poster(
     )
 
 
+async def _delete_image(filename: str) -> None:
+    try:
+        await remove(f'{_FILMS_DIR}/{filename}')
+    except FileNotFoundError as e:
+        print("File Not Found " + str(e))
+
+
 @router.patch("/posters", status_code=201, tags=["Unfinished"])
 async def add_film_posters(
         current_user: Annotated[
@@ -67,23 +74,42 @@ async def add_film_posters(
         files: List[UploadFile],
         film_id: Annotated[int, Param(title="ID of the film")],
 ):
-    records = await select_film_by_id(film_id)
+    new_records = await select_film_by_id(film_id)
 
-    if not records:
+    if not new_records:
         raise HTTPException(
             422, detail="Film not found"
         )
 
-    film = FilmFactory.get_full_film(records)
+    film = FilmFactory.get_full_film(new_records)
     batch = int(time.time())
 
-    records = [
+    existing_records = await select_poster_images(film_id)
+    existing_images = FilmFactory.get_images(existing_records)
+    query = execute_safely(
+        delete(
+            FilmImagesRecord
+        ).where(
+            FilmImagesRecord.film_id == film_id
+        )
+    )
+    tasks = [
+        _delete_image(image.filename) for image in
+        existing_images
+    ]
+    tasks.append(query)
+
+    await asyncio.gather(
+        *tasks
+    )
+
+    new_records = [
         FilmImagesRecord(
             film_id=film.id,
             batch=batch,
         ) for _ in range(len(files))
     ]
-    await add_objects(records)
+    await add_objects(new_records)
 
     image_records = await select_images(film.id, batch)
     images = FilmFactory.get_images(image_records)

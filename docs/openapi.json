@@ -3507,12 +3507,12 @@
                 ],
                 "parameters": [
                     {
-                        "name": "film_title",
+                        "name": "film_id",
                         "in": "query",
                         "required": true,
                         "schema": {
-                            "type": "string",
-                            "title": "Title of the film"
+                            "type": "integer",
+                            "title": "ID of the film"
                         }
                     }
                 ],
