@@ -146,7 +146,7 @@ async def add_club(
 
 
 @router.patch("/admin/club", status_code=201, tags=["Unfinished"])
-async def add_club(
+async def admin_update_club(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:clubs"])
         ],
