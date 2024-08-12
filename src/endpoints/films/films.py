@@ -4,7 +4,7 @@ from datetime import datetime
 from typing import Annotated, List
 
 import aiofiles
-from fastapi import APIRouter, Security, HTTPException, File, UploadFile, Form, Body
+from fastapi import APIRouter, Security, HTTPException, Body
 from fastapi.params import Param
 from sqlalchemy import update, select, and_, func, asc
 from src.crud.models import FilmsRecord, SchedulesRecord, HallsRecord
@@ -14,10 +14,10 @@ from src.crud.queries.films import (
 from src.crud.queries.utils import add_object, execute_safely, all_selection
 from src.endpoints.films.halls import router as halls
 from src.schema.factories.film_factories import FilmFactory
-from src.schema.films import Film, Schedule, ScheduleDetailed
+from src.schema.films import Film, ScheduleDetailed
 from src.schema.users import User
 from src.security.security import get_current_active_user
-from src.endpoints.films.film_images import router as images, rename_poster
+from src.endpoints.films.film_images import router as images
 from src.endpoints.films.schedules import router as schedules
 from src.utils.utils import str_to_iso_format
 

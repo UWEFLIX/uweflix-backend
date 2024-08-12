@@ -9,7 +9,7 @@ from fastapi.params import Param, Path
 from sqlalchemy import text, delete
 from starlette.responses import FileResponse
 from src.crud.models import FilmImagesRecord
-from src.crud.queries.films import select_film, select_images, select_film_by_id, select_poster_images
+from src.crud.queries.films import select_images, select_film_by_id, select_poster_images
 from src.crud.queries.utils import add_objects, execute_safely
 from src.schema.factories.film_factories import FilmFactory
 from src.schema.users import User

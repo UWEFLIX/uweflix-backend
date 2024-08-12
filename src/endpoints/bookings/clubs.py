@@ -143,6 +143,9 @@ async def create_club_bookings(
         )
         final_booking_records.append(record)
 
+    if account.balance - total < 0:
+        raise HTTPException(404, "Money not found")
+
     await add_objects(final_booking_records)
 
     query = update(

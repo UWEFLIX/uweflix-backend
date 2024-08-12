@@ -196,15 +196,15 @@ class CardsRecord(Base):
         nullable=False,
     )
     card_number = Column(
-        String(150, collation=_COLLATION),
+        String(250, collation=_COLLATION),
         nullable=False
     )
     holder_name = Column(
-        String(150, collation=_COLLATION),
+        String(250, collation=_COLLATION),
         nullable=False
     )
     exp_date = Column(
-        String(150, collation=_COLLATION),
+        String(250, collation=_COLLATION),
         nullable=False
     )
     status = Column(
@@ -320,7 +320,7 @@ class AccountsRecord(Base):
 
     __table_args__ = (
         UniqueConstraint(
-            'entity_type', 'entity_id', "name",
+            'entity_type', 'entity_id',
             name='_entity-name'
         ),
         CheckConstraint('balance >= -100', name='balance_constraint')

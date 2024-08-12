@@ -21,6 +21,8 @@ from src.endpoints.accounts.cards import router as cards
 
 router = APIRouter(prefix="/accounts", tags=["Accounts"])
 router.include_router(cards)
+
+
 # todo fix account uid
 
 
@@ -32,9 +34,15 @@ def get_initials(name: str):
 async def update_club_account_uid(
         name: str, entity_id: int, entity_type: str
 ) -> Account:
-    new_record = await select_last_entered_account(
-        name, entity_id, entity_type
+    query = select(
+        AccountsRecord
+    ).where(
+        and_(
+            AccountsRecord.entity_id == entity_id,
+            AccountsRecord.entity_type == entity_type
+        )
     )
+    new_record = await scalar_selection(query)
 
     if entity_type == "USER":
         char = "U"
@@ -340,24 +348,26 @@ async def club_top_up(
         ],
         top_up: TopUp
 ):
-    # todo finish
-    pass
-    # club_account = aliased(AccountsRecord)
-    # query = select(
-    #     AccountsRecord, club_account
-    # )
-    # record = await select_half_account(account_id)
-    #
-    # if not record:
-    #     raise HTTPException(404, "Account not found")
-    #
-    # account = AccountsFactory.get_half_account(record)
-    #
-    # query = update(
-    #     AccountsRecord
-    # ).values(
-    #     balance=AccountsRecord.balance + amount
-    # )
-    # await execute_safely(query)
-    # account.balance += amount
-    # return account
+    query = select(
+        CardsRecord
+    ).where(
+        CardsRecord.card_id == top_up.card_id
+    )
+    record = await scalar_selection(query)
+    card = AccountsFactory.get_card(record)
+    card_input = AccountsFactory.get_card_input(card, top_up.user_password)
+
+    update_query = update(
+        AccountsRecord
+    ).values(
+        balance=AccountsRecord.balance + top_up.amount
+    ).where(
+        AccountsRecord.id == top_up.account_id
+    )
+    await execute_safely(update_query)
+
+    record = await select_half_account(top_up.account_id)
+    if not record:
+        raise HTTPException(404, "Account not found")
+
+    return AccountsFactory.get_half_account(record)
