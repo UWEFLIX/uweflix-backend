@@ -514,6 +514,55 @@
                 }
             }
         },
+        "/clubs/admin/club": {
+            "patch": {
+                "tags": [
+                    "Clubs",
+                    "Unfinished"
+                ],
+                "summary": "Add Club",
+                "operationId": "add_club_clubs_admin_club_patch",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Club-Input"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Club-Output"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:clubs"
+                        ]
+                    }
+                ]
+            }
+        },
         "/clubs/club/id/{club_id}": {
             "get": {
                 "tags": [

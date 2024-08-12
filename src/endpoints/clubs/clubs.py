@@ -145,6 +145,41 @@ async def add_club(
     return club
 
 
+@router.patch("/admin/club", status_code=201, tags=["Unfinished"])
+async def add_club(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["write:clubs"])
+        ],
+        club: Club
+) -> Club:
+    query = update(
+        ClubsRecord
+    ).values(
+        club_name=club.club_name,
+        addr_street_number=club.addr_street_number,
+        addr_street_name=club.addr_street_name,
+        post_code=club.post_code,
+        city_id=club.city.id,
+        landline_number=club.landline_number,
+        contact_number=club.contact_number,
+        status=club.status
+    ).where(
+        ClubsRecord.id == club.id
+    )
+
+    tasks = [
+        _add_members(club.members, club.id, club.leader.id),
+        execute_safely(query)
+    ]
+    await asyncio.gather(*tasks)
+    await update_account_uids(
+        club.id, club.club_name,
+    )
+
+    record = await select_club(club.club_name)
+    return ClubFactory.get_full_club(record)
+
+
 @router.patch("/club", status_code=201, tags=["Unfinished"])
 async def update_club(
         current_user: Annotated[
