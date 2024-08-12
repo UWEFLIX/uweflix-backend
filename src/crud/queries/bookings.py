@@ -241,7 +241,7 @@ async def select_batch(batch: str):
             return rows
 
 
-async def select_assigned_bookings(email: str):
+async def select_assigned_bookings(user_id: int):
     query = select(
         BookingsRecord, SchedulesRecord, FilmsRecord, HallsRecord,
         AccountsRecord, PersonTypesRecord
@@ -258,7 +258,7 @@ async def select_assigned_bookings(email: str):
         PersonTypesRecord,
         PersonTypesRecord.person_type_id == BookingsRecord.person_type_id
     ).where(
-        BookingsRecord.assigned_user == email
+        BookingsRecord.id == user_id
     ).order_by(asc(BookingsRecord.id))
 
     async with async_session() as session:

@@ -174,6 +174,6 @@ async def get_assigned_bookings(
             User, Security(get_current_active_user, scopes=[])
         ],
 ):
-    records = await select_assigned_bookings(current_user.email)
+    records = await select_assigned_bookings(current_user.id)
 
     return BookingsFactory.get_bookings(records)

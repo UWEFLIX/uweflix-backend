@@ -520,8 +520,8 @@
                     "Clubs",
                     "Unfinished"
                 ],
-                "summary": "Add Club",
-                "operationId": "add_club_clubs_admin_club_patch",
+                "summary": "Admin Update Club",
+                "operationId": "admin_update_club_clubs_admin_club_patch",
                 "requestBody": {
                     "content": {
                         "application/json": {
