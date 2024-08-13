@@ -127,3 +127,8 @@ class BatchData(BaseModel):
     created: datetime
     total: int | float
     class_name: str = "BATCH_DATA"
+
+
+class Reporting(BaseModel):
+    count: int = 0
+    amount: float = 0

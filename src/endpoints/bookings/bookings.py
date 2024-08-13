@@ -1,11 +1,14 @@
 import asyncio
-from collections import Counter
+from collections import Counter, defaultdict
 from datetime import datetime
 from typing import Annotated, Dict, List
+
 from fastapi import APIRouter, Security, HTTPException, Path
 from sqlalchemy import select, update, text
 
-from src.crud.models import BookingsRecord, AccountsRecord, PersonTypesRecord, SchedulesRecord, HallsRecord
+from src.crud.models import (
+    BookingsRecord, AccountsRecord, PersonTypesRecord, SchedulesRecord, HallsRecord
+)
 from src.crud.queries.accounts import select_account
 from src.crud.queries.bookings import (
     select_booking, select_batches, select_batch
@@ -13,14 +16,13 @@ from src.crud.queries.bookings import (
 from src.crud.queries.clubs import select_leader_clubs
 from src.crud.queries.utils import scalars_selection, scalar_selection, add_object, execute_safely
 from src.endpoints.bookings._utils import validate_seat_per_hall
+from src.endpoints.bookings.clubs import router as clubs_router
 from src.endpoints.bookings.person_types import router as persons
-from src.schema.bookings import Booking, BatchData, SingleBooking
+from src.endpoints.bookings.users import router as users_router
+from src.schema.bookings import Booking, BatchData, SingleBooking, Reporting
 from src.schema.factories.bookings_factory import BookingsFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
-from src.endpoints.bookings.users import router as users_router
-from src.endpoints.bookings.clubs import router as clubs_router
-from src.utils.utils import generate_random_string
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 router.include_router(persons)
@@ -128,7 +130,7 @@ async def get_account_bookings(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["read:reports"])
         ],
-        account_id: int
+        account_id: int,
 ):
     query = select(
         BookingsRecord
@@ -136,11 +138,15 @@ async def get_account_bookings(
         BookingsRecord.account_id == account_id
     )
     records: List[BookingsRecord] = await scalars_selection(query)
-    return Counter(
-        [
-            record.created.strftime("%m-%Y") for record in records
-        ]
-    )
+    monthly_data = defaultdict(Reporting)
+
+    for record in records:
+        timeframe = record.created.strftime("%m-%Y")
+        report = monthly_data[timeframe]
+        report.amount += record.amount
+        report.count += 1
+
+    return monthly_data
 
 
 @router.post("/admin/booking/{cash}/")
