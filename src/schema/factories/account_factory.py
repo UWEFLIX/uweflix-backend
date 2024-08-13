@@ -11,14 +11,8 @@ class AccountsFactory:
     @staticmethod
     def get_account(mp: dict) -> Account:
         account_record = mp["account"]
-        card_records = mp["cards"]
-
-        cards = [
-            AccountsFactory.get_card(x) for x in card_records
-        ]
 
         account = AccountsFactory.get_half_account(account_record)
-        account.cards = cards
 
         return account
 
