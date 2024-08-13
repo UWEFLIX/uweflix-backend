@@ -130,7 +130,6 @@ async def update_schedule(
     query = update(
         SchedulesRecord
     ).values(
-        hall_id=updated.hall_id,
         on_schedule=updated.on_schedule,
         ticket_price=updated.ticket_price,
     ).where(
