@@ -41,8 +41,11 @@ async def update_club_account_uid(
             AccountsRecord.entity_type == entity_type
         )
     )
-    print(f"name = {name}, entity_id = {entity_id}, entity_type = {entity_type}")
+    # name = Hello, entity_id = 28, entity_type = USER
     new_record = await scalar_selection(query)
+
+    if new_record is None:
+        return
 
     if entity_type == "USER":
         char = "U"
