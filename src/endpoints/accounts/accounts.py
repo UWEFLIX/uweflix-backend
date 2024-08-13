@@ -22,7 +22,6 @@ from src.endpoints.accounts.cards import router as cards
 router = APIRouter(prefix="/accounts", tags=["Accounts"])
 router.include_router(cards)
 
-
 # todo fix account uid
 
 
@@ -42,6 +41,7 @@ async def update_club_account_uid(
             AccountsRecord.entity_type == entity_type
         )
     )
+    print(f"name = {name}, entity_id = {entity_id}, entity_type = {entity_type}")
     new_record = await scalar_selection(query)
 
     if entity_type == "USER":
