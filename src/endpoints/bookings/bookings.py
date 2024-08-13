@@ -1,21 +1,26 @@
+import asyncio
 from collections import Counter
+from datetime import datetime
 from typing import Annotated, Dict, List
-from fastapi import APIRouter, Security, HTTPException
-from sqlalchemy import select
+from fastapi import APIRouter, Security, HTTPException, Path
+from sqlalchemy import select, update, text
 
-from src.crud.models import BookingsRecord
+from src.crud.models import BookingsRecord, AccountsRecord, PersonTypesRecord, SchedulesRecord, HallsRecord
+from src.crud.queries.accounts import select_account
 from src.crud.queries.bookings import (
     select_booking, select_batches, select_batch
 )
 from src.crud.queries.clubs import select_leader_clubs
-from src.crud.queries.utils import scalars_selection
+from src.crud.queries.utils import scalars_selection, scalar_selection, add_object, execute_safely
+from src.endpoints.bookings._utils import validate_seat_per_hall
 from src.endpoints.bookings.person_types import router as persons
-from src.schema.bookings import Booking, BatchData
+from src.schema.bookings import Booking, BatchData, SingleBooking
 from src.schema.factories.bookings_factory import BookingsFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
 from src.endpoints.bookings.users import router as users_router
 from src.endpoints.bookings.clubs import router as clubs_router
+from src.utils.utils import generate_random_string
 
 router = APIRouter(prefix="/bookings", tags=["Bookings"])
 router.include_router(persons)
@@ -70,7 +75,7 @@ async def get_batch_bookings(
 @router.get("/batch/bookings/{batch_reference}", tags=["Unfinished"])
 async def get_batch_bookings(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["read:bookings"])
+            User, Security(get_current_active_user, scopes=[])
         ],
         batch_reference: str
 ) -> List[Booking]:
@@ -85,7 +90,7 @@ async def get_batch_bookings(
 @router.get("/bookings/booked-seats/{schedule_id}", tags=["Unfinished"])
 async def get_batch_bookings(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["read:bookings"])
+            User, Security(get_current_active_user, scopes=[])
         ],
         schedule_id: int
 ) -> List[str]:
@@ -104,7 +109,7 @@ async def get_batch_bookings(
 @router.get("/bookings/batch-ref/{batch_ref}", tags=["Unfinished"])
 async def get_batch(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["read:bookings"])
+            User, Security(get_current_active_user, scopes=[])
         ],
         batch_ref: str
 ):
@@ -121,7 +126,7 @@ async def get_batch(
 @router.get("/account/bookings/{account_id}")
 async def get_account_bookings(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["read:accounts"])
+            User, Security(get_current_active_user, scopes=["read:reports"])
         ],
         account_id: int
 ):
@@ -136,3 +141,94 @@ async def get_account_bookings(
             record.created.strftime("%m-%Y") for record in records
         ]
     )
+
+
+@router.post("/admin/booking/{cash}/")
+async def create_admin_side_booking(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["write:bookings"])
+        ],
+        booking_request: SingleBooking,
+        cash: Annotated[int, Path(title="Is the customer paying by cash", ge=0, le=1)]
+):
+    accounts_query = select(
+        AccountsRecord
+    ).where(
+        AccountsRecord.id == booking_request.account_id
+    )
+    person_type_query = select(
+        PersonTypesRecord
+    ).where(
+        PersonTypesRecord.person_type_id == booking_request.person.person_type_id
+    )
+    schedule_query = select(
+        SchedulesRecord
+    ).where(
+        SchedulesRecord.schedule_id == booking_request.schedule_id
+    )
+
+    account_record, person_type_record, schedule_record = await asyncio.gather(
+        select_account(accounts_query), scalar_selection(person_type_query),
+        scalar_selection(schedule_query)
+    )
+
+    if account_record is None:
+        raise HTTPException(404, "Account not found")
+
+    if person_type_record is None:
+        raise HTTPException(404, "Person type not found")
+
+    if account_record.status != "ENABLED":
+        raise HTTPException(403, "Account is not enabled")
+
+    if schedule_record is None:
+        raise HTTPException(
+            404, "Schedule not found"
+        )
+
+    hall_query = select(
+        HallsRecord
+    ).where(
+        HallsRecord.hall_id == schedule_record.hall_id
+    )
+
+    hall_record = await scalar_selection(hall_query)
+
+    validate_seat_per_hall(booking_request.person.seat_no, hall_record)
+
+    if schedule_record.show_time < datetime.now():
+        raise HTTPException(
+            422, "Cannot book for a past schedule"
+        )
+
+    amount = schedule_record.ticket_price * (
+            (100 - person_type_record.discount_amount) / 100
+    )
+    if not cash:
+        if account_record.balance - amount < 0:
+            raise HTTPException(404, "Money not found")
+
+    record = BookingsRecord(
+        seat_no=booking_request.person.seat_no,
+        schedule_id=booking_request.schedule_id,
+        person_type_id=booking_request.person.person_type_id,
+        batch_ref=text("generate_unique_string()"),
+        amount=amount,
+        assigned_user=booking_request.person.user_id,
+        account_id=account_record.id,
+    )
+    await add_object(record)
+    query = select(BookingsRecord).where(BookingsRecord.id == record.id)
+    booking = await scalar_selection(query)
+
+    records = await select_batch(booking.batch_ref)
+
+    if not cash:
+        query = update(
+            AccountsRecord
+        ).values(
+            balance=AccountsRecord.balance - amount
+        ).where(AccountsRecord.id == account_record.id)
+        asyncio.create_task(execute_safely(query))
+
+    return BookingsFactory.get_bookings(records)[0]

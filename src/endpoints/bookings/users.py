@@ -39,7 +39,7 @@ async def get_user_bookings(
 @router.post("/booking", status_code=201, tags=["Unfinished", "Users"])
 async def create_user_bookings(
         current_user: Annotated[
-            User, Security(get_current_active_user, scopes=["write:bookings"])
+            User, Security(get_current_active_user, scopes=[])
         ],
         booking_request: SingleBooking
 ) -> Booking:

@@ -44,18 +44,18 @@ async def select_booking(booking_id: int):
         BookingsRecord, SchedulesRecord, FilmsRecord, HallsRecord,
         AccountsRecord, PersonTypesRecord
     ).join(
-        SchedulesRecord.schedule_id == BookingsRecord.schedule_id
+        SchedulesRecord, SchedulesRecord.schedule_id == BookingsRecord.schedule_id
     ).join(
-        SchedulesRecord.film_id == FilmsRecord.film_id
+        FilmsRecord, SchedulesRecord.film_id == FilmsRecord.film_id
     ).join(
-        HallsRecord.hall_id == SchedulesRecord.hall_id
+        HallsRecord, HallsRecord.hall_id == SchedulesRecord.hall_id
     ).join(
         AccountsRecord, AccountsRecord.id == BookingsRecord.account_id
     ).join(
         PersonTypesRecord,
         PersonTypesRecord.person_type_id == BookingsRecord.person_type_id
     ).where(
-        BookingsRecord.booking_id == booking_id
+        BookingsRecord.id == booking_id
     )
 
     async with async_session() as session:

@@ -54,6 +54,7 @@ async def get_permissions():
 
     read_accounts = PermissionsRecord(permission="read:accounts")
     write_accounts = PermissionsRecord(permission="write:accounts")
+    read_reports = PermissionsRecord(permission="read:reports")
 
     return [
         write_user, read_user, write_bookings, read_bookings,
@@ -63,7 +64,7 @@ async def get_permissions():
         write_schedules, read_films, write_films, read_images,
         write_images, read_role_perms, write_role_perms,
         read_person_type, write_person_type, read_accounts,
-        write_accounts
+        write_accounts, read_reports
     ]
 
 
@@ -76,7 +77,6 @@ def admin_perms(count: int):
 
 
 async def initialise_db():
-
     async with async_session() as session:
         async with session.begin():
             await session.execute(text(generate_unique_string()))
@@ -113,7 +113,7 @@ async def initialise_db():
         password=hashed_pass
     )
     account1 = AccountsRecord(
-        account_uid="2",
+        account_uid="U1#N.N",
         name="Nishawl Naseer",
         entity_type="USER",
         entity_id=1,
@@ -121,7 +121,7 @@ async def initialise_db():
         status="ENABLED"
     )
     account2 = AccountsRecord(
-        account_uid="3",
+        account_uid="U2#N.R",
         name="Naffah Rasheed",
         entity_type="USER",
         entity_id=2,
@@ -129,7 +129,7 @@ async def initialise_db():
         status="ENABLED"
     )
     account3 = AccountsRecord(
-        account_uid="4",
+        account_uid="U3#S.S",
         name="Shadhan",
         entity_type="USER",
         entity_id=3,
@@ -139,8 +139,16 @@ async def initialise_db():
     user_role1 = UserRolesRecord(user_id=1, role_id=1)
     user_role2 = UserRolesRecord(user_id=2, role_id=1)
     user_role3 = UserRolesRecord(user_id=3, role_id=1)
-    person_type = PersonTypesRecord(
+    person_type1 = PersonTypesRecord(
         person_type="ADULT",
+        discount_amount=0
+    )
+    person_type2 = PersonTypesRecord(
+        person_type="CHILD",
+        discount_amount=0
+    )
+    person_type3 = PersonTypesRecord(
+        person_type="STUDENT",
         discount_amount=0
     )
 
@@ -151,8 +159,8 @@ async def initialise_db():
     # await asyncio.gather(*tasks)
 
     objs2.extend([
-        user_role1, user_role3, account1, person_type,
-        user_role2, account2
+        user_role1, user_role3, account1, person_type1,
+        user_role2, account2, person_type2, person_type3
     ])
     await add_objects(objs2)
 

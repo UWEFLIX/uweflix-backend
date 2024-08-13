@@ -1837,9 +1837,7 @@
                 "operationId": "create_user_bookings_bookings_users_booking_post",
                 "security": [
                     {
-                        "OAuth2PasswordBearer": [
-                            "write:bookings"
-                        ]
+                        "OAuth2PasswordBearer": []
                     }
                 ],
                 "requestBody": {
@@ -2239,9 +2237,7 @@
                 "operationId": "get_batch_bookings_bookings_batch_bookings__batch_reference__get",
                 "security": [
                     {
-                        "OAuth2PasswordBearer": [
-                            "read:bookings"
-                        ]
+                        "OAuth2PasswordBearer": []
                     }
                 ],
                 "parameters": [
@@ -2293,9 +2289,7 @@
                 "operationId": "get_batch_bookings_bookings_bookings_booked_seats__schedule_id__get",
                 "security": [
                     {
-                        "OAuth2PasswordBearer": [
-                            "read:bookings"
-                        ]
+                        "OAuth2PasswordBearer": []
                     }
                 ],
                 "parameters": [
@@ -2347,9 +2341,7 @@
                 "operationId": "get_batch_bookings_bookings_batch_ref__batch_ref__get",
                 "security": [
                     {
-                        "OAuth2PasswordBearer": [
-                            "read:bookings"
-                        ]
+                        "OAuth2PasswordBearer": []
                     }
                 ],
                 "parameters": [
@@ -2395,7 +2387,7 @@
                 "security": [
                     {
                         "OAuth2PasswordBearer": [
-                            "read:accounts"
+                            "read:reports"
                         ]
                     }
                 ],
@@ -2410,6 +2402,65 @@
                         }
                     }
                 ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/admin/booking/{cash}/": {
+            "post": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Create Admin Side Booking",
+                "operationId": "create_admin_side_booking_bookings_admin_booking__cash___post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "write:bookings"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "cash",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1,
+                            "minimum": 0,
+                            "title": "Is the customer paying by cash"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SingleBooking"
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful Response",
