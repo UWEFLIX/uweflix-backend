@@ -527,3 +527,68 @@ class BookingsRecord(Base):
             name='_schedule_details'
         ),
     )
+
+
+class TransactionsRecord(Base):
+    __tablename__ = "transaction"
+    id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    amount = Column(
+        Float(),
+        nullable=False,
+    )
+    transaction_type = Column(
+        Enum(
+            "BOOKING", "TOP-UP", name="status",
+            collation=_COLLATION
+        ),
+        nullable=False,
+    )
+    account_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("account.id"),
+        nullable=True,
+    )
+    batch_ref = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+        unique=True
+    )
+
+
+class SeatLocksRecord(Base):
+    __tablename__ = "seat_lock"
+    id = Column(
+        INTEGER(unsigned=True),
+        primary_key=True,
+        autoincrement=True,
+        nullable=False,
+        unique=True,
+    )
+    seat = Column(
+        String(50, collation=_COLLATION),
+        nullable=False,
+    )
+    schedule_id = Column(
+        INTEGER(unsigned=True),
+        ForeignKey("schedule.schedule_id"),
+        nullable=False,
+    )
+    is_manually_closed = Column(
+        BIT(),
+        nullable=False,
+        default=False
+    )
+    created_at = Column(
+        DateTime(timezone=True), nullable=False,
+        default=func.now()
+    )
+    user_id = Column(
+        INTEGER(unsigned=True), ForeignKey("user.user_id"),
+        nullable=False,
+    )

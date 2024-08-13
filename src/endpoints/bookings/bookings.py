@@ -1,13 +1,13 @@
 import asyncio
 from collections import Counter, defaultdict
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Annotated, Dict, List
 
 from fastapi import APIRouter, Security, HTTPException, Path
-from sqlalchemy import select, update, text
+from sqlalchemy import select, update, text, and_, func, delete
 
 from src.crud.models import (
-    BookingsRecord, AccountsRecord, PersonTypesRecord, SchedulesRecord, HallsRecord
+    BookingsRecord, AccountsRecord, PersonTypesRecord, SchedulesRecord, HallsRecord, SeatLocksRecord
 )
 from src.crud.queries.accounts import select_account
 from src.crud.queries.bookings import (
@@ -19,7 +19,7 @@ from src.endpoints.bookings._utils import validate_seat_per_hall
 from src.endpoints.bookings.clubs import router as clubs_router
 from src.endpoints.bookings.person_types import router as persons
 from src.endpoints.bookings.users import router as users_router
-from src.schema.bookings import Booking, BatchData, SingleBooking, Reporting
+from src.schema.bookings import Booking, BatchData, SingleBooking, Reporting, SeatNoStr, SeatLock
 from src.schema.factories.bookings_factory import BookingsFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
@@ -238,3 +238,70 @@ async def create_admin_side_booking(
         asyncio.create_task(execute_safely(query))
 
     return BookingsFactory.get_bookings(records)[0]
+
+
+@router.post(
+    "/seat-lock/{seat}/{user_id}/{schedule_id}/",
+    status_code=201
+)
+async def seat_lock(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        seat: SeatNoStr, user_id: int, schedule_id: int
+):
+    query = select(
+        SeatLocksRecord
+    ).where(
+        and_(
+            SeatLocksRecord.seat == seat,
+            SeatLocksRecord.schedule_id == schedule_id,
+            SeatLocksRecord.is_manually_closed == False,
+            SeatLocksRecord.created_at >= func.now() -
+            timedelta(minutes=5)
+        )
+    )
+
+    record = await scalar_selection(query)
+    if not record:
+        pass
+    else:
+        raise HTTPException(
+            409,
+            "Seat already locked by another user"
+        )
+
+    new_record = SeatLocksRecord(
+        seat=seat,
+        schedule_id=schedule_id,
+        user_id=user_id
+    )
+    await add_object(new_record)
+    return SeatLock(
+        id=new_record.id,
+        seat=new_record.seat,
+        schedule_id=new_record.schedule_id,
+        is_manually_closed=new_record.is_manually_closed,
+        created_at=new_record.created_at,
+        user_id=new_record.user_id,
+    )
+
+
+@router.patch(
+    "/seat-lock-release/{seat_lock_id}/",
+    status_code=201
+)
+async def seat_lock_release(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        seat_lock_id: int
+):
+    query = update(
+        SeatLocksRecord
+    ).values(
+        is_manually_closed=1
+    ).where(
+        SeatLocksRecord.id == seat_lock_id
+    )
+    asyncio.create_task(execute_safely(query))

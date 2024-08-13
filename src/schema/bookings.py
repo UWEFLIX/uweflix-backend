@@ -132,3 +132,13 @@ class BatchData(BaseModel):
 class Reporting(BaseModel):
     count: int = 0
     amount: float = 0
+    class_name: str = "Reporting"
+
+
+class SeatLock(BaseModel):
+    id: int
+    seat: SeatNoStr
+    schedule_id: int
+    is_manually_closed: bool
+    created_at: datetime
+    user_id: int
