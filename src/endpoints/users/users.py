@@ -131,7 +131,7 @@ async def update_user(
         name=user.name,
         # status=user.status
     ).where(
-        UsersRecord.email == current_user.email
+        UsersRecord.email == user.email
     )
 
     _accounts_update = update(
