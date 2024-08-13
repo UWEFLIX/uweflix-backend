@@ -116,9 +116,9 @@ async def update_schedule(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=["write:schedules"])
         ],
-        schedule: Schedule
+        updated: Schedule
 ):
-    records = await select_schedule(schedule.id)
+    records = await select_schedule(updated.id)
 
     if records is None:
         raise HTTPException(
@@ -126,15 +126,13 @@ async def update_schedule(
         )
 
     schedule = FilmFactory.get_detailed_schedule(records)
-    _film = schedule.film
 
     query = update(
         SchedulesRecord
     ).values(
-        hall_id=schedule.hall_id,
-        film_id=schedule.film_id,
-        on_schedule=schedule.on_schedule,
-        ticket_price=schedule.ticket_price,
+        hall_id=updated.hall_id,
+        on_schedule=updated.on_schedule,
+        ticket_price=updated.ticket_price,
     ).where(
         SchedulesRecord.schedule_id == schedule.id
     )
