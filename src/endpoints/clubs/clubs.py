@@ -138,7 +138,14 @@ async def add_club(
         member=club.leader.id,
         club=club.id
     )
-    await add_objects([accounts_record, club_member_record])
+    records = [accounts_record, club_member_record]
+    records.extend([
+        ClubMembersRecords(
+            member=member.id,
+            club=club.id
+        ) for member in club.members
+    ])
+    await add_objects(records)
     coro = update_club_account_uid(club.club_name, club.id, "CLUB")
     asyncio.create_task(coro)
 
