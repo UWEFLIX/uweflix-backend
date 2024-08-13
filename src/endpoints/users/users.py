@@ -131,7 +131,7 @@ async def update_user(
         name=user.name,
         # status=user.status
     ).where(
-        UsersRecord.email == user.email
+        UsersRecord.id == user.id
     )
 
     _accounts_update = update(
@@ -152,7 +152,7 @@ async def update_user(
 
     await asyncio.gather(*tasks)
 
-    user_record = await select_user_by_email(current_user.email)
+    user_record = await select_user_by_email(user.email)
     return UserFactory.create_full_user(user_record)
 
 
