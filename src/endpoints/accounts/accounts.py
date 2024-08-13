@@ -32,7 +32,7 @@ def get_initials(name: str):
 
 async def update_club_account_uid(
         name: str, entity_id: int, entity_type: str
-) -> Account:
+) -> Account | None:
     query = select(
         AccountsRecord
     ).where(
