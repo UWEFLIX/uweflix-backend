@@ -98,3 +98,20 @@ async def get_batch_bookings(
     return [
         record.seat_no for record in records
     ]
+
+
+@router.get("/bookings/batch-ref/{batch_ref}", tags=["Unfinished"])
+async def get_batch(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:bookings"])
+        ],
+        batch_ref: str
+):
+    query = select(
+        BookingsRecord
+    ).where(
+        BookingsRecord.batch_ref == batch_ref
+    )
+    records = await scalars_selection(query)
+
+    return BookingsFactory.get_half_bookings(records)

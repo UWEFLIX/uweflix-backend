@@ -9,6 +9,7 @@ from src.crud.models import (
 from src.crud.queries.raw_sql import (
     select_batch_data, club_pre_booking_details, user_pre_booking_details
 )
+from src.crud.queries.utils import all_selection
 from src.schema.bookings import BatchData
 
 
@@ -258,11 +259,8 @@ async def select_assigned_bookings(user_id: int):
         PersonTypesRecord,
         PersonTypesRecord.person_type_id == BookingsRecord.person_type_id
     ).where(
-        BookingsRecord.id == user_id
+        BookingsRecord.assigned_user == user_id
     ).order_by(asc(BookingsRecord.id))
 
-    async with async_session() as session:
-        async with session.begin():
-            result = await session.execute(query)
-            return result.fetchall()
+    return await all_selection(query)
 

@@ -48,3 +48,21 @@ class BookingsFactory:
         return [
             BookingsFactory.get_booking(x) for x in records
         ]
+
+    @staticmethod
+    def get_half_bookings(records):
+        return [
+            {
+                "id": record.id,
+                "seat_no": record.seat_no,
+                "schedule": record.schedule_id,
+                "status": record.status,
+                "account": record.account_id,
+                "person_type": record.person_type_id,
+                "amount": record.amount,
+                "serial_no": record.serial_no,
+                "batch_ref": record.batch_ref,
+                "created": record.created,
+                "assigned_user": record.assigned_user
+            } for record in records
+        ]

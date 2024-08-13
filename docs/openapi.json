@@ -2337,6 +2337,54 @@
                 }
             }
         },
+        "/bookings/bookings/batch-ref/{batch_ref}": {
+            "get": {
+                "tags": [
+                    "Bookings",
+                    "Unfinished"
+                ],
+                "summary": "Get Batch",
+                "operationId": "get_batch_bookings_bookings_batch_ref__batch_ref__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:bookings"
+                        ]
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "batch_ref",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "Batch Ref"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/accounts/cards/card": {
             "post": {
                 "tags": [
