@@ -1,3 +1,4 @@
+from collections import Counter
 from typing import Annotated, Dict, List
 from fastapi import APIRouter, Security, HTTPException
 from sqlalchemy import select
@@ -115,3 +116,23 @@ async def get_batch(
     records = await scalars_selection(query)
 
     return BookingsFactory.get_half_bookings(records)
+
+
+@router.get("/account/bookings/{account_id}")
+async def get_account_bookings(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:accounts"])
+        ],
+        account_id: int
+):
+    query = select(
+        BookingsRecord
+    ).where(
+        BookingsRecord.account_id == account_id
+    )
+    records: List[BookingsRecord] = await scalars_selection(query)
+    return Counter(
+        [
+            record.created.strftime("%m-%Y") for record in records
+        ]
+    )
