@@ -8,6 +8,7 @@ class TokenData(BaseModel):
     username: str | None = None
     name: str | None = None
     password: str | None = None
+    is_club_rep: bool | None = None
     scopes: List[str] = []
 
 

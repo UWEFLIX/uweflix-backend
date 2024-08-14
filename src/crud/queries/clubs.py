@@ -189,3 +189,21 @@ async def select_club_with_accounts(account_id: int):
                 "account": rows[0][0],
                 "cards": [x[5] for x in rows if x[5]],
             }
+
+
+async def is_club_rep(username: str):
+    query = select(
+        ClubsRecord
+    ).join(
+        UsersRecord,
+        UsersRecord.user_id == ClubsRecord.leader
+    ).where(
+        UsersRecord.email == username
+    )
+
+    record = scalar_selection(query)
+
+    if record is None:
+        return False
+    else:
+        return True

@@ -211,7 +211,7 @@ async def create_club_bookings(
     price = schedule_record.ticket_price
     total = price * len(requests.bookings)
 
-    if not cash and account_record.ballance - total < 0:
+    if not cash and account_record.balance - total < 0:
         raise HTTPException(404, "Money not found")
 
     booking_records = []

@@ -1,6 +1,6 @@
 from datetime import timedelta
 from typing import Annotated
-
+from src.crud.queries.clubs import is_club_rep
 from fastapi import FastAPI, Depends, Security, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from starlette import status
@@ -70,6 +70,8 @@ async def login_for_access_token(
             headers={"WWW-Authenticate": "Bearer"},
         )
 
+    _is_club_rep = await is_club_rep(form_data.username)
+
     scopes = user.permissions
 
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -77,7 +79,8 @@ async def login_for_access_token(
         data={
             "sub": user.email,
             "scopes": list(scopes),
-            "full_name": user.name
+            "full_name": user.name,
+            "is_club_rep": _is_club_rep
         },
         expires_delta=access_token_expires
     )
