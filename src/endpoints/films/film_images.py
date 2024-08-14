@@ -171,6 +171,7 @@ async def get_image(
             f'{_FILMS_DIR}/{file_name}', media_type="image/jpg"
         )
     else:
-        raise HTTPException(
-            status_code=404, detail="File not found"
+        return FileResponse(
+            f'{_FILMS_DIR}/dummy.jpg',
+            media_type="image/jpg",
         )
