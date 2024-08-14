@@ -7,19 +7,19 @@ from fastapi import APIRouter, Security, HTTPException, Path
 from sqlalchemy import select, update, text, and_, func, delete
 
 from src.crud.models import (
-    BookingsRecord, AccountsRecord, PersonTypesRecord, SchedulesRecord, HallsRecord, SeatLocksRecord
+    BookingsRecord, AccountsRecord, PersonTypesRecord, SchedulesRecord, HallsRecord, SeatLocksRecord, FilmsRecord
 )
 from src.crud.queries.accounts import select_account
 from src.crud.queries.bookings import (
     select_booking, select_batches, select_batch
 )
 from src.crud.queries.clubs import select_leader_clubs
-from src.crud.queries.utils import scalars_selection, scalar_selection, add_object, execute_safely
+from src.crud.queries.utils import scalars_selection, scalar_selection, add_object, execute_safely, all_selection
 from src.endpoints.bookings._utils import validate_seat_per_hall
 from src.endpoints.bookings.clubs import router as clubs_router
 from src.endpoints.bookings.person_types import router as persons
 from src.endpoints.bookings.users import router as users_router
-from src.schema.bookings import Booking, BatchData, SingleBooking, Reporting, SeatNoStr, SeatLock
+from src.schema.bookings import Booking, BatchData, SingleBooking, Reporting, SeatNoStr, SeatLock, FilmSalesReport
 from src.schema.factories.bookings_factory import BookingsFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
@@ -238,3 +238,29 @@ async def create_admin_side_booking(
         asyncio.create_task(execute_safely(query))
 
     return BookingsFactory.get_bookings(records)[0]
+
+
+@router.get("/film/bookings-count/")
+async def get_sales_count(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:reports"])
+        ],
+        # count: int
+) -> dict[int, FilmSalesReport]:
+    query = select(
+        BookingsRecord, FilmsRecord
+    ).join(
+        SchedulesRecord, BookingsRecord.schedule_id == SchedulesRecord.schedule_id
+    ).join(
+        FilmsRecord, FilmsRecord.film_id == SchedulesRecord.film_id
+    )
+
+    records = await all_selection(query)
+    data = defaultdict(FilmSalesReport)
+
+    for record in records:
+        report = data[record[1].film_id]
+        report.film_title = record[1].title
+        report.bookings += 1
+
+    return data

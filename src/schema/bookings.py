@@ -142,3 +142,8 @@ class SeatLock(BaseModel):
     is_manually_closed: bool
     created_at: datetime
     user_id: int
+
+
+class FilmSalesReport(BaseModel):
+    film_title: str = ""
+    bookings: int = 0

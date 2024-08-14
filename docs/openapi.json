@@ -2483,6 +2483,38 @@
                 }
             }
         },
+        "/bookings/film/bookings-count/": {
+            "get": {
+                "tags": [
+                    "Bookings"
+                ],
+                "summary": "Get Sales Count",
+                "operationId": "get_sales_count_bookings_film_bookings_count__get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "additionalProperties": {
+                                        "$ref": "#/components/schemas/FilmSalesReport"
+                                    },
+                                    "type": "object",
+                                    "title": "Response Get Sales Count Bookings Film Bookings Count  Get"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:reports"
+                        ]
+                    }
+                ]
+            }
+        },
         "/accounts/cards/card": {
             "post": {
                 "tags": [
@@ -5199,6 +5231,22 @@
                     "filename"
                 ],
                 "title": "FilmImage"
+            },
+            "FilmSalesReport": {
+                "properties": {
+                    "film_title": {
+                        "type": "string",
+                        "title": "Film Title",
+                        "default": ""
+                    },
+                    "bookings": {
+                        "type": "integer",
+                        "title": "Bookings",
+                        "default": 0
+                    }
+                },
+                "type": "object",
+                "title": "FilmSalesReport"
             },
             "HTTPValidationError": {
                 "properties": {

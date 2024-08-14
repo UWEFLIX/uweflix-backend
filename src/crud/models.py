@@ -401,11 +401,6 @@ class FilmsRecord(Base):
     is_active = Column(
         BIT(1), nullable=False, default=b'0'
     )
-    # poster_image = Column(
-    #     String(60, collation=_COLLATION),
-    #     nullable=False,
-    #     unique=True
-    # )
 
 
 class FilmImagesRecord(Base):
