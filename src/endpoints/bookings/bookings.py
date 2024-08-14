@@ -210,9 +210,8 @@ async def create_admin_side_booking(
     amount = schedule_record.ticket_price * (
             (100 - person_type_record.discount_amount) / 100
     )
-    if not cash:
-        if account_record.balance - amount < 0:
-            raise HTTPException(404, "Money not found")
+    if not cash and account_record.balance - amount < 0:
+        raise HTTPException(404, "Money not found")
 
     record = BookingsRecord(
         seat_no=booking_request.person.seat_no,

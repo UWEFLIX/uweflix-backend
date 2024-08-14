@@ -1959,6 +1959,71 @@
                 ]
             }
         },
+        "/bookings/users/bookings/multiple/{cash}": {
+            "post": {
+                "tags": [
+                    "Bookings",
+                    "Users",
+                    "Unfinished"
+                ],
+                "summary": "Create Club Bookings",
+                "operationId": "create_club_bookings_bookings_users_bookings_multiple__cash__post",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "cash",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "maximum": 1,
+                            "minimum": 0,
+                            "title": "If collected in cash or not"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/MultipleBookings"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Booking"
+                                    },
+                                    "title": "Response Create Club Bookings Bookings Users Bookings Multiple  Cash  Post"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/bookings/club/bookings": {
             "get": {
                 "tags": [
