@@ -222,6 +222,7 @@ async def update_club(
         landline_number=club.landline_number,
         contact_number=club.contact_number,
         # status=club.status
+        email=club.email,
     ).where(
         ClubsRecord.id == club.id
     )

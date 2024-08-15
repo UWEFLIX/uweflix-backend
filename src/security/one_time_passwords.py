@@ -39,4 +39,3 @@ class OTP:
         _otp = pyotp.TOTP(key, interval=300)  # unique obj for each user
         now = int(self._otp.now())  # the unique code for our server
         return _otp.verify(otp, now)  # verify
-

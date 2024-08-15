@@ -27,7 +27,7 @@ router.include_router(cards)
 
 def get_initials(name: str):
     words = name.split(" ")
-    return ". ".join([word[0].upper() for word in words])
+    return ".".join([word[0].upper() for word in words])
 
 
 async def update_club_account_uid(
