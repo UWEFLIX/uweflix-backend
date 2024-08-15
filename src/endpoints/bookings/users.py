@@ -179,14 +179,14 @@ async def get_assigned_bookings(
     return BookingsFactory.get_bookings(records)
 
 
-@router.post("/bookings/multiple/{cash}", status_code=201, tags=["Unfinished"])
+@router.post("/bookings/multiple", status_code=201, tags=["Unfinished"])
 async def create_club_bookings(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
         ],
         requests: MultipleBookings,
-        cash: Annotated[int, Path(title="If collected in cash or not", ge=0, le=1)],
 ) -> List[Booking]:
+    cash = requests.cash
     schedule_record = select(
         SchedulesRecord
     ).where(

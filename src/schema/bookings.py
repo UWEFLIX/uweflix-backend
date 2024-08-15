@@ -118,6 +118,7 @@ class MultipleBookings(BaseModel):
     club_id: int
     schedule_id: int
     account_id: int
+    cash: int = Field(default=0, ge=0, le=1)
     class_name: str = "MULTIPLE_BOOKINGS"
 
 
