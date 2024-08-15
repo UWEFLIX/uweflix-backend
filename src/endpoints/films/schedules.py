@@ -6,13 +6,15 @@ from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from icecream import ic
 from sqlalchemy import delete, update, select, func, and_
-from src.crud.models import SchedulesRecord, HallsRecord, FilmsRecord, SeatLocksRecord
+from src.crud.models import SchedulesRecord, HallsRecord, FilmsRecord, SeatLocksRecord, BookingsRecord, AccountsRecord, \
+    PersonTypesRecord
 from src.crud.queries.films import (
     select_inserted_schedules, select_schedule, select_schedules,
     select_all_schedules, select_film_by_id
 )
-from src.crud.queries.utils import add_object, execute_safely, scalar_selection
+from src.crud.queries.utils import add_object, execute_safely, scalar_selection, all_selection
 from src.schema.bookings import SeatNoStr, SeatLock
+from src.schema.factories.bookings_factory import BookingsFactory
 from src.schema.factories.film_factories import FilmFactory
 from src.schema.films import Schedule, Film
 from src.schema.users import User
@@ -231,3 +233,36 @@ async def seat_lock_release(
     )
     asyncio.create_task(execute_safely(query))
 
+
+@router.get("/booking/{schedule_id}/", tags=["Schedules", "Bookings"])
+async def bookings_per_schedule(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        schedule_id: int
+):
+    query = select(
+        BookingsRecord, SchedulesRecord, FilmsRecord, HallsRecord,
+        AccountsRecord, PersonTypesRecord
+    ).join(
+        SchedulesRecord,
+        SchedulesRecord.schedule_id == BookingsRecord.schedule_id
+    ).join(
+        FilmsRecord,
+        SchedulesRecord.film_id == FilmsRecord.film_id
+    ).join(
+        HallsRecord,
+        HallsRecord.hall_id == SchedulesRecord.hall_id
+    ).outerjoin(
+        AccountsRecord, AccountsRecord.id == BookingsRecord.account_id
+    ).join(
+        PersonTypesRecord,
+        PersonTypesRecord.person_type_id == BookingsRecord.person_type_id
+    ).where(
+        BookingsRecord.schedule_id == schedule_id
+    )
+    records = await all_selection(query)
+
+    if not records:
+        raise HTTPException(404, "No bookings found")
+    return BookingsFactory.get_bookings(records)
