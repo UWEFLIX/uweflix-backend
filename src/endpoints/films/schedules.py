@@ -87,7 +87,7 @@ async def create_schedule(
     show_time = schedule.show_time.astimezone(tz=timezone.utc)
 
     # Now you can safely compare the datetime objects
-    if on_air_from <= show_time <= on_air_to:
+    if not on_air_from <= show_time <= on_air_to:
         raise HTTPException(
             422,
             "Film is not active or not on air during this period"
