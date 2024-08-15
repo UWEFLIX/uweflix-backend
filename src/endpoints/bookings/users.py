@@ -234,19 +234,19 @@ async def create_club_bookings(
                 "Person type not found"
                 )
 
-        total_dc = person_type.discount_amount + account_record.discount_rate
-
-        if total_dc > 100:
-            total_dc = 100
-
-        _amount = (1 - (total_dc / 100)) * schedule_record.ticket_price
-        total += _amount
+        person_type_dc = price * (
+                1 - (person_type.discount_amount / 100)
+        )
+        after_account_dc = person_type_dc * (
+                1 - (account_record.discount_rate / 100)
+        )
+        total += after_account_dc
 
         record = BookingsRecord(
             seat_no=booking.seat_no,
             schedule_id=requests.schedule_id,
             account_id=requests.account_id,
-            amount=_amount,
+            amount=after_account_dc,
             person_type_id=booking.person_type_id,
             batch_ref=batch_reference,
             assigned_user=booking.user_id

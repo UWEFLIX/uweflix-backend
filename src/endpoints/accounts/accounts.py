@@ -2,7 +2,7 @@ import random
 import string
 from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
-from fastapi.params import Param
+from fastapi.params import Param, Path
 from sqlalchemy import update, and_, select
 from src.crud.models import AccountsRecord, CardsRecord
 from src.crud.queries.accounts import (
@@ -340,6 +340,21 @@ async def get_club_accounts(
 ) -> List[Account]:
     records = await select_club_accounts(club_id, start, limit)
     return AccountsFactory.get_half_accounts(records)
+
+
+@router.get("/club/{club_id}", status_code=201, tags=["Unfinished", "Clubs"])
+async def get_club_account(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        club_id: Annotated[int, Path(title="Club ID of accounts", ge=1)],
+) -> Account:
+    records = await select_club_accounts(club_id, 0, 1111)
+
+    try:
+        return AccountsFactory.get_half_accounts(records)[0]
+    except IndexError:
+        raise HTTPException(404, "Club and or account not found")
 
 
 @router.post(

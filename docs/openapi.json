@@ -3422,6 +3422,56 @@
                 }
             }
         },
+        "/accounts/club/{club_id}": {
+            "get": {
+                "tags": [
+                    "Accounts",
+                    "Unfinished",
+                    "Clubs"
+                ],
+                "summary": "Get Club Account",
+                "operationId": "get_club_account_accounts_club__club_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "club_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "title": "Club ID of accounts"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Account"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/accounts/account/top-up": {
             "post": {
                 "tags": [
