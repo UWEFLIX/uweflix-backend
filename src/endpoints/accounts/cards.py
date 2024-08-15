@@ -187,7 +187,7 @@ async def get_club_cards(
     return _card
 
 
-@router.get("/user/cards/{user_password/")
+@router.get("/user/cards/{user_password}/")
 async def get_user_cards(
     current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
