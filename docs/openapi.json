@@ -2664,10 +2664,10 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "additionalProperties": {
+                                    "items": {
                                         "$ref": "#/components/schemas/FilmSalesReport"
                                     },
-                                    "type": "object",
+                                    "type": "array",
                                     "title": "Response Get Sales Count Bookings Film Bookings Count  Get"
                                 }
                             }
@@ -2924,14 +2924,14 @@
                 }
             }
         },
-        "/accounts/cards/user/cards/{user_password/": {
+        "/accounts/cards/user/cards/{user_password}/": {
             "get": {
                 "tags": [
                     "Accounts",
                     "Cards"
                 ],
                 "summary": "Get User Cards",
-                "operationId": "get_user_cards_accounts_cards_user_cards__user_password__get",
+                "operationId": "get_user_cards_accounts_cards_user_cards__user_password___get",
                 "security": [
                     {
                         "OAuth2PasswordBearer": []
@@ -2940,7 +2940,7 @@
                 "parameters": [
                     {
                         "name": "user_password",
-                        "in": "query",
+                        "in": "path",
                         "required": true,
                         "schema": {
                             "type": "string",
@@ -5452,6 +5452,11 @@
             },
             "FilmSalesReport": {
                 "properties": {
+                    "film_id": {
+                        "type": "integer",
+                        "title": "Film Id",
+                        "default": 0
+                    },
                     "film_title": {
                         "type": "string",
                         "title": "Film Title",

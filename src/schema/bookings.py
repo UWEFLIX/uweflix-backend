@@ -146,5 +146,6 @@ class SeatLock(BaseModel):
 
 
 class FilmSalesReport(BaseModel):
+    film_id: int = 0
     film_title: str = ""
     bookings: int = 0

@@ -245,7 +245,7 @@ async def get_sales_count(
             User, Security(get_current_active_user, scopes=["read:reports"])
         ],
         # count: int
-) -> dict[int, FilmSalesReport]:
+) -> List[FilmSalesReport]:
     query = select(
         BookingsRecord, FilmsRecord
     ).join(
@@ -259,7 +259,8 @@ async def get_sales_count(
 
     for record in records:
         report = data[record[1].film_id]
+        report.film_id = record[1].film_id
         report.film_title = record[1].title
         report.bookings += 1
 
-    return data
+    return [v for k, v in data.items()]
