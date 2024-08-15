@@ -221,7 +221,7 @@ async def create_club_bookings(
     total = 0
 
     if not cash and account_record.balance - total < 0:
-        raise HTTPException(404, "Money not found")
+        raise HTTPException(422, "Money not found")
 
     booking_records = []
     batch_reference = generate_random_string()
