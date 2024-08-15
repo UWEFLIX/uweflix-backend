@@ -145,11 +145,11 @@ async def initialise_db():
     )
     person_type2 = PersonTypesRecord(
         person_type="CHILD",
-        discount_amount=0
+        discount_amount=20
     )
     person_type3 = PersonTypesRecord(
         person_type="STUDENT",
-        discount_amount=0
+        discount_amount=10
     )
 
     objs.extend([user1, user2, admin, user3, account3])

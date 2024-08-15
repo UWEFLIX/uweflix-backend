@@ -81,9 +81,9 @@ async def create_schedule(
         )
 
     _film: Film = FilmFactory.get_half_film(film_record["film"])
-    _film.on_air_to_film.on_air_to.astimezone(tz=timezone.utc)
-    schedule.show_timeschedule.show_time.astimezone(tz=timezone.utc)
-    _film.on_air_from_film.on_air_from.astimezone(tz=timezone.utc)
+    _film.on_air_to.astimezone(tz=timezone.utc)
+    schedule.show_time.astimezone(tz=timezone.utc)
+    _film.on_air_from.astimezone(tz=timezone.utc)
 
     if not _film.is_active or not (
         _film.on_air_from <= schedule.show_time <= _film.on_air_to

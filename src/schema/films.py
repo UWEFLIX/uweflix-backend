@@ -71,6 +71,14 @@ class Film(BaseModel):
     def age_rating_validation(cls, value: str):
         return basic_string_validation(value, "age_rating")
 
+    @field_serializer('on_air_from')
+    def serialize_dt_from(self, show_time: datetime, _info):
+        return show_time.isoformat()
+
+    @field_serializer('on_air_to')
+    def serialize_dt_to(self, show_time: datetime, _info):
+        return show_time.isoformat()
+
 
 class ScheduleDetailed(Schedule):
     hall: Hall | None = None

@@ -13,7 +13,7 @@ from src.crud.queries.bookings import (
     select_assigned_bookings
 )
 from src.crud.queries.utils import (
-    add_object, execute_safely, add_objects, scalar_selection
+    add_object, execute_safely, add_objects, scalar_selection, scalars_selection
 )
 from src.endpoints.bookings._utils import validate_seat_per_hall
 from src.schema.bookings import Booking, SingleBooking, MultipleBookings
@@ -45,7 +45,6 @@ async def create_user_bookings(
         ],
         booking_request: SingleBooking
 ) -> Booking:
-
     details = await get_details(
         current_user.id, "USER", booking_request.schedule_id
     )
@@ -143,7 +142,6 @@ async def reassign_user_bookings(
         booking_id: int,
         new_assignee: EmailStr
 ) -> Booking:
-
     records = await select_booking(booking_id)
 
     if not records:
@@ -199,9 +197,20 @@ async def create_club_bookings(
     ).where(
         AccountsRecord.id == requests.account_id
     )
-    schedule_record, account_record = await asyncio.gather(
-        scalar_selection(schedule_record), scalar_selection(account_query)
+    person_types_query = select(
+        PersonTypesRecord
     )
+    schedule_record, account_record, person_types_records \
+        = await asyncio.gather(
+            scalar_selection(schedule_record),
+            scalar_selection(account_query),
+            scalars_selection(person_types_query)
+        )
+
+    person_types = {
+        record.person_type_id: BookingsFactory.get_person_type(record)
+        for record in person_types_records
+    }
 
     if schedule_record is None:
         raise HTTPException(404, "Schedule not found")
@@ -209,7 +218,7 @@ async def create_club_bookings(
         raise HTTPException(404, "Account not found")
 
     price = schedule_record.ticket_price
-    total = price * len(requests.bookings)
+    total = 0
 
     if not cash and account_record.balance - total < 0:
         raise HTTPException(404, "Money not found")
@@ -217,11 +226,27 @@ async def create_club_bookings(
     booking_records = []
     batch_reference = generate_random_string()
     for booking in requests.bookings:
+        try:
+            person_type = person_types[booking.person_type_id]
+        except KeyError:
+            raise HTTPException(
+                404,
+                "Person type not found"
+                )
+
+        total_dc = person_type.discount_amount + account_record.discount_rate
+
+        if total_dc > 100:
+            total_dc = 100
+
+        _amount = (1 - (total_dc / 100)) * schedule_record.ticket_price
+        total += _amount
+
         record = BookingsRecord(
             seat_no=booking.seat_no,
             schedule_id=requests.schedule_id,
             account_id=requests.account_id,
-            amount=schedule_record.ticket_price,
+            amount=_amount,
             person_type_id=booking.person_type_id,
             batch_ref=batch_reference,
             assigned_user=booking.user_id

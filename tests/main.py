@@ -289,7 +289,7 @@ def main(USER_COUNT: int, NO_CLUBS: int):
         ),
         "25": Test(
             req_url_path="/bookings/person-types/person-type",
-            res_status_code=201,
+            res_status_code=422,
             req_type="post",
             req_body=PersonType(
                 id=0, person_type="Child", discount_amount=20,
@@ -298,7 +298,7 @@ def main(USER_COUNT: int, NO_CLUBS: int):
         ),
         "26": Test(
             req_url_path="/bookings/person-types/person-type",
-            res_status_code=201,
+            res_status_code=422,
             req_type="post",
             req_body=PersonType(
                 id=0, person_type="Student", discount_amount=10,
@@ -381,8 +381,6 @@ def main(USER_COUNT: int, NO_CLUBS: int):
 
     for days_since in range(1, delta_days + 1, 3):
         filming_time1 = today + timedelta(days=days_since, hours=12-hour)
-        filming_time2 = today + timedelta(days=days_since, hours=16-hour)
-        filming_time3 = today + timedelta(days=days_since, hours=20-hour)
 
         reqs = {
             count + 1: Test(
@@ -399,34 +397,6 @@ def main(USER_COUNT: int, NO_CLUBS: int):
                     class_name="0",
                 ),
             ),
-            # count + 2: Test(
-            #     req_url_path="/films/schedules/schedule",
-            #     res_status_code=201,
-            #     req_type="post",
-            #     req_body=Schedule(
-            #         id=1,
-            #         hall_id=1,
-            #         film_id=1,
-            #         show_time=filming_time2,
-            #         on_schedule=1,
-            #         ticket_price=7,
-            #         class_name="0",
-            #     ),
-            # ),
-            # count + 3: Test(
-            #     req_url_path="/films/schedules/schedule",
-            #     res_status_code=201,
-            #     req_type="post",
-            #     req_body=Schedule(
-            #         id=1,
-            #         hall_id=1,
-            #         film_id=1,
-            #         show_time=filming_time3,
-            #         on_schedule=1,
-            #         ticket_price=7,
-            #         class_name="0",
-            #     ),
-            # )
         }
 
         for i_id, item in reqs.items():
@@ -437,3 +407,37 @@ def main(USER_COUNT: int, NO_CLUBS: int):
             client.req(item)
 
         count += len(reqs)
+
+    filming_time1 = today + timedelta(days=5, hours=12 - hour)
+    test1 = Test(
+        test_id=1001,
+        req_url_path="/films/schedules/schedule",
+        res_status_code=201,
+        req_type="post",
+        req_body=Schedule(
+            id=1,
+            hall_id=2,
+            film_id=1,
+            show_time=filming_time1,
+            on_schedule=1,
+            ticket_price=7,
+            class_name="0",
+        ),
+    )
+    test2 = Test(
+        test_id=1002,
+        req_url_path="/films/schedules/schedule",
+        res_status_code=422,
+        req_type="post",
+        req_body=Schedule(
+            id=1,
+            hall_id=2,
+            film_id=1,
+            show_time=filming_time1,
+            on_schedule=1,
+            ticket_price=7,
+            class_name="0",
+        ),
+    )
+    client.req(test1)
+    client.req(test2)
