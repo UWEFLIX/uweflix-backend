@@ -1,14 +1,14 @@
 import asyncio
-from typing import Annotated
+from typing import Annotated, List
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from pydantic import EmailStr
-from sqlalchemy import delete, and_, update
+from sqlalchemy import delete, and_, update, select
 from src.crud.models import (
     UsersRecord, AccountsRecord, UserRolesRecord
 )
 from src.crud.queries.user import select_user_by_email, select_users, select_user_by_id
-from src.crud.queries.utils import add_object, execute_safely, add_objects
+from src.crud.queries.utils import add_object, execute_safely, add_objects, scalar_selection, scalars_selection
 from src.endpoints.accounts.accounts import get_initials, update_club_account_uid
 from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User
@@ -124,7 +124,6 @@ async def update_user(
         ],
         user: User
 ) -> User:
-
     query = update(
         UsersRecord
     ).values(
@@ -156,29 +155,25 @@ async def update_user(
     return UserFactory.create_full_user(user_record)
 
 
-# @router.delete("/user", status_code=204, tags=["Unfinished"])
-# async def delete_user(
-#         current_user: Annotated[
-#             User, Security(get_current_active_user, scopes=["write:users"])
-#         ],
-#         user_id: int
-# ):
-#     query = delete(
-#         UsersRecord
-#     ).where(
-#         UsersRecord.user_id == user_id
-#     )
-#     await execute_safely(query)
-#
-#     delete_accounts = delete(
-#         AccountsRecord
-#     ).where(
-#         and_(
-#             AccountsRecord.entity_id == user_id,
-#             AccountsRecord.entity_type == "USER"
-#         )
-#     )
-#     await execute_safely(delete_accounts)
+@router.get("/users/{string}/", status_code=201)
+async def get_users(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        string: str
+):
+    query = select(
+        UsersRecord
+    )
+    records: List[UsersRecord] = await scalars_selection(query)
 
+    users = []
+    string = string.lower()
+    for record in records:
+        if string in record.name.lower() or \
+                string in record.email.lower():
+            users.append(
+                UserFactory.create_half_user(record)
+            )
 
-# todo patch method to soft delete
+    return users
