@@ -127,7 +127,7 @@ async def add_club(
     club = ClubFactory.get_full_club(record)
 
     accounts_record = AccountsRecord(
-        account_uid=f"C{randint(0, 5000)}#{get_initials(club.club_name)}",
+        account_uid=f"C{club.id}#{get_initials(club.club_name)}",
         name=club.club_name,
         entity_type="CLUB",
         entity_id=club.id,
@@ -146,8 +146,6 @@ async def add_club(
         ) for member in club.members
     ])
     await add_objects(records)
-    coro = update_club_account_uid(club.club_name, club.id, "CLUB")
-    asyncio.create_task(coro)
 
     return club
 
@@ -174,14 +172,24 @@ async def admin_update_club(
         ClubsRecord.id == club.id
     )
 
+    uid_update = update(
+        AccountsRecord
+    ).values(
+        account_uid=f"C{club.id}#{get_initials(club.club_name)}"
+    ).where(
+        and_(
+            AccountsRecord.entity_id == club.id,
+            AccountsRecord.entity_type == "CLUB"
+        )
+    )
+
     tasks = [
         _add_members(club.members, club.id, club.leader.id),
-        execute_safely(query)
+        execute_safely(query),
+        execute_safely(uid_update)
     ]
+
     await asyncio.gather(*tasks)
-    await update_account_uids(
-        club.id, club.club_name,
-    )
 
     record = await select_club(club.club_name)
     return ClubFactory.get_full_club(record)
@@ -225,10 +233,17 @@ async def update_club(
     record = await select_club(club.club_name)
 
     if old_club.club_name != club.club_name:
-        coro = update_account_uids(
-            club.id, club.club_name,
+        uid_update = update(
+            AccountsRecord
+        ).values(
+            account_uid=f"C{club.id}#{get_initials(club.club_name)}"
+        ).where(
+            and_(
+                AccountsRecord.entity_id == club.id,
+                AccountsRecord.entity_type == "CLUB"
+            )
         )
-        asyncio.create_task(coro)
+        asyncio.create_task(execute_safely(uid_update))
 
     return ClubFactory.get_full_club(record)
 
