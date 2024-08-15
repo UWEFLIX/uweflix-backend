@@ -111,6 +111,51 @@
                 }
             }
         },
+        "/clubs/clubs/members/{club_id}/": {
+            "get": {
+                "tags": [
+                    "Clubs"
+                ],
+                "summary": "Get Members",
+                "operationId": "get_members_clubs_clubs_members__club_id___get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "club_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Club Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/clubs/cities/city": {
             "get": {
                 "tags": [
@@ -668,6 +713,32 @@
                         }
                     }
                 }
+            }
+        },
+        "/clubs/club/me": {
+            "get": {
+                "tags": [
+                    "Clubs"
+                ],
+                "summary": "Get My Club",
+                "operationId": "get_my_club_clubs_club_me_get",
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": [
+                            "read:clubs"
+                        ]
+                    }
+                ]
             }
         },
         "/users/passwords/change": {
@@ -2004,7 +2075,7 @@
                 ]
             }
         },
-        "/bookings/users/bookings/multiple/{cash}": {
+        "/bookings/users/bookings/multiple": {
             "post": {
                 "tags": [
                     "Bookings",
@@ -2012,34 +2083,16 @@
                     "Unfinished"
                 ],
                 "summary": "Create Club Bookings",
-                "operationId": "create_club_bookings_bookings_users_bookings_multiple__cash__post",
-                "security": [
-                    {
-                        "OAuth2PasswordBearer": []
-                    }
-                ],
-                "parameters": [
-                    {
-                        "name": "cash",
-                        "in": "path",
-                        "required": true,
-                        "schema": {
-                            "type": "integer",
-                            "maximum": 1,
-                            "minimum": 0,
-                            "title": "If collected in cash or not"
-                        }
-                    }
-                ],
+                "operationId": "create_club_bookings_bookings_users_bookings_multiple_post",
                 "requestBody": {
-                    "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "$ref": "#/components/schemas/MultipleBookings"
                             }
                         }
-                    }
+                    },
+                    "required": true
                 },
                 "responses": {
                     "201": {
@@ -2047,11 +2100,11 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "array",
                                     "items": {
                                         "$ref": "#/components/schemas/Booking"
                                     },
-                                    "title": "Response Create Club Bookings Bookings Users Bookings Multiple  Cash  Post"
+                                    "type": "array",
+                                    "title": "Response Create Club Bookings Bookings Users Bookings Multiple Post"
                                 }
                             }
                         }
@@ -2066,7 +2119,12 @@
                             }
                         }
                     }
-                }
+                },
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ]
             }
         },
         "/bookings/club/bookings": {
@@ -5476,6 +5534,13 @@
                     "account_id": {
                         "type": "integer",
                         "title": "Account Id"
+                    },
+                    "cash": {
+                        "type": "integer",
+                        "maximum": 1.0,
+                        "minimum": 0.0,
+                        "title": "Cash",
+                        "default": 0
                     },
                     "class_name": {
                         "type": "string",

@@ -1,9 +1,10 @@
 from typing import Annotated
 from fastapi import APIRouter, Security, HTTPException
-from sqlalchemy import and_, delete
-from src.crud.models import ClubMembersRecords
+from sqlalchemy import and_, delete, select
+from src.crud.models import ClubMembersRecords, UsersRecord
 from src.crud.queries.clubs import select_leader_clubs
-from src.crud.queries.utils import add_object, execute_safely
+from src.crud.queries.utils import add_object, execute_safely, scalars_selection
+from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
 
@@ -63,3 +64,22 @@ async def remove_club_member(
     await execute_safely(query)
 
     # return {"details": "Success"}
+
+
+@router.get("/members/{club_id}/")
+async def get_members(
+        current_user: Annotated[
+            User, Security(get_current_active_user, scopes=[])
+        ],
+        club_id: int
+):
+    query = select(
+        UsersRecord
+    ).join(
+        ClubMembersRecords,
+        ClubMembersRecords.member == UsersRecord.user_id
+    ).where(
+        ClubMembersRecords.club == club_id
+    )
+    records = await scalars_selection(query)
+    return [UserFactory.create_half_user(record) for record in records]

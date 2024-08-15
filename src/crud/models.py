@@ -339,6 +339,7 @@ class ClubMembersRecords(Base):
     member = Column(
         INTEGER(unsigned=True),
         ForeignKey("user.user_id", ondelete="CASCADE"),
+        unique=True,
         nullable=False,
     )
     club = Column(

@@ -3,11 +3,13 @@ from random import randint
 from typing import Annotated, List
 from fastapi.params import Param
 from sqlalchemy import update, delete, and_, select, or_
-from src.crud.models import ClubsRecord, AccountsRecord, ClubMembersRecords
+from sqlalchemy.orm import aliased
+
+from src.crud.models import ClubsRecord, AccountsRecord, ClubMembersRecords, CitiesRecord
 from src.crud.queries.accounts import select_club_accounts
 from src.crud.queries.clubs import select_club, select_leader_clubs, select_clubs, select_club_members, \
     select_club_by_id
-from src.crud.queries.utils import add_object, execute_safely, add_objects
+from src.crud.queries.utils import add_object, execute_safely, add_objects, scalar_selection, all_selection
 from src.endpoints.accounts.accounts import get_initials, update_club_account_uid
 from src.endpoints.clubs.club_members import router as club_members
 from fastapi import APIRouter, Security, HTTPException
@@ -293,3 +295,29 @@ async def get_clubs(
     records = await select_clubs(start, limit)
 
     return ClubFactory.get_half_clubs(records)
+
+
+@router.get("/club/me")
+async def get_my_club(
+    current_user: Annotated[
+            User, Security(get_current_active_user, scopes=["read:clubs"])
+        ],
+):
+    ClubsRecordAlias = aliased(ClubsRecord)
+    CitiesRecordAlias = aliased(CitiesRecord)
+    ClubMembersRecordsAlias = aliased(ClubMembersRecords)
+
+    query = (
+        select(ClubsRecordAlias, CitiesRecordAlias)
+        .select_from(ClubsRecordAlias)
+        .join(ClubMembersRecordsAlias, ClubMembersRecordsAlias.club == ClubsRecordAlias.id)
+        .join(CitiesRecordAlias, CitiesRecordAlias.city_id == ClubsRecordAlias.city_id)
+        .where(ClubMembersRecordsAlias.member == current_user.id)
+    )
+
+    records = await all_selection(query)
+
+    if len(records) == 0:
+        raise HTTPException(404, "Club not found")
+
+    return ClubFactory.get_half_club(records)
