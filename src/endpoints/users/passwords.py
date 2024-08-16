@@ -1,10 +1,11 @@
+import asyncio
 from typing import Annotated
 from fastapi import APIRouter, Security, HTTPException
 from pydantic import EmailStr
-from sqlalchemy import update
-from src.crud.models import UsersRecord
+from sqlalchemy import update, delete, select, and_, or_
+from src.crud.models import UsersRecord, CardsRecord, AccountsRecord, ClubsRecord
 from src.crud.queries.user import select_user_by_email
-from src.crud.queries.utils import execute_safely
+from src.crud.queries.utils import execute_safely, scalar_selection
 from src.schema.users import (
     User, PasswordChange, ResetRequest, PasswordResetConfirmation
 )
@@ -85,5 +86,43 @@ async def password_reset_confirmation(form: PasswordResetConfirmation):
         UsersRecord.email == users_record.email
     )
 
-    await execute_safely(query)
+    personal_account_query = select(
+        AccountsRecord
+    ).where(
+        and_(
+            AccountsRecord.entity_id == users_record.user_id,
+            AccountsRecord.entity_type == "USER"
+        )
+    )
+    club_account_query = select(
+        AccountsRecord
+    ).join(
+        ClubsRecord, AccountsRecord.entity_id == ClubsRecord.id
+    ).where(
+        and_(
+            ClubsRecord.leader == users_record.user_id,
+            AccountsRecord.entity_type == "CLUB"
+        )
+    )
 
+    personal_account_record, club_account_record = \
+        await asyncio.gather(
+            scalar_selection(personal_account_query),
+            scalar_selection(club_account_query)
+        )
+    accounts = [personal_account_record.id]
+    if club_account_record:
+        accounts.append(club_account_record.id)
+
+    card_delete_query = delete(
+        CardsRecord
+    ).where(
+        or_(*[
+            CardsRecord.account_id == x for x in accounts
+        ])
+    )
+
+    await asyncio.gather(
+        execute_safely(query),
+        execute_safely(card_delete_query)
+    )

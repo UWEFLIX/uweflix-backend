@@ -13,9 +13,17 @@ from src.crud.queries.utils import add_object, execute_safely
 from src.schema.accounts import Card, CardInput
 from src.schema.factories.account_factory import AccountsFactory
 from src.schema.users import User
-from src.security.security import get_current_active_user
+from src.security.security import get_current_active_user, get_password_hash, verify_password
 
 router = APIRouter(prefix="/cards", tags=["Cards"])
+
+
+def _check_password(entered_password: str, password_on_db: str):
+    password = get_password_hash(entered_password)
+    if not verify_password(password, password_on_db):
+        raise HTTPException(
+            422, "Password on database doesnt match with entered password"
+        )
 
 
 async def validate_account(
@@ -54,7 +62,7 @@ async def create_card(
         ],
         card_input: CardInput
 ):
-
+    _check_password(card_input.user_password, current_user.password)
     card = card_input.card()
 
     await validate_account(
@@ -87,6 +95,8 @@ async def update_club_card(
         ],
         card_input: CardInput
 ):
+    _check_password(card_input.user_password, current_user.password)
+
     await validate_account(
         current_user,
         card_input.id,
@@ -138,6 +148,7 @@ async def get_card(
         ],
         card_id: int, user_password: str
 ):
+    _check_password(user_password, current_user.password)
     card = await validate_account(
         current_user,
         card_id,
@@ -163,6 +174,7 @@ async def get_club_cards(
         ],
     user_password: str, club_id: int
 ):
+    _check_password(user_password, current_user.password)
     clubs = await select_leader_clubs(current_user.id)
     try:
         clubs[club_id]
@@ -194,6 +206,7 @@ async def get_user_cards(
         ],
     user_password: str,
 ):
+    _check_password(user_password, current_user.password)
     records = await select_user_cards(current_user.id)
     cards = AccountsFactory.get_cards(records)
     try:
