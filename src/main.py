@@ -80,7 +80,8 @@ async def login_for_access_token(
             "sub": user.email,
             "scopes": list(scopes),
             "full_name": user.name,
-            "is_club_rep": _is_club_rep
+            "is_club_rep": _is_club_rep,
+            "roles": [x.name for x in user.roles]
         },
         expires_delta=access_token_expires
     )
@@ -99,9 +100,4 @@ async def read_users_me(
         ]
 ):
     return current_user
-
-
-# @app.get("/.well-known/acme-challenge/{token}", status_code=200)
-# async def lets_encrypt(token: str):
-#     with open()
 

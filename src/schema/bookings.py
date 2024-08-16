@@ -149,3 +149,8 @@ class FilmSalesReport(BaseModel):
     film_id: int = 0
     film_title: str = ""
     bookings: int = 0
+
+
+class BatchBookings(BaseModel):
+    batch_ref: str = ""
+    bookings: List[Booking] = []

@@ -11,7 +11,7 @@ from src.crud.models import FilmsRecord, SchedulesRecord, HallsRecord
 from src.crud.queries.films import (
     select_film, select_films, select_film_schedules, select_film_by_id
 )
-from src.crud.queries.utils import add_object, execute_safely, all_selection
+from src.crud.queries.utils import add_object, execute_safely, all_selection, scalars_selection
 from src.endpoints.films.halls import router as halls
 from src.schema.factories.film_factories import FilmFactory
 from src.schema.films import Film, ScheduleDetailed
@@ -26,7 +26,6 @@ router.include_router(halls)
 router.include_router(images)
 router.include_router(schedules)
 
-
 _ASSETS_DIR = os.getenv('ASSETS_FOLDER')
 _FILMS_DIR = os.path.join(_ASSETS_DIR, 'images/films')
 
@@ -40,7 +39,6 @@ async def create_film(
         ],
         film: Film = Body(...)
 ) -> Film:
-
     if type(film.on_air_to) is str:
         film.on_air_to = str_to_iso_format(film.on_air_to)
 
@@ -205,3 +203,16 @@ async def get_schedules_by_film_id(
         )
 
     return _schedules
+
+
+@router.get("/search/{string}/")
+async def search_films(string: str):
+    query = select(FilmsRecord)
+    records = await scalars_selection(query)
+
+    films = FilmFactory.get_half_films(records)
+
+    string = string.lower()
+    return [
+        x for x in films if string in x.title or string in x.trailer_desc
+    ]

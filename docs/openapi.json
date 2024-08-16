@@ -4427,6 +4427,52 @@
                 }
             }
         },
+        "/films/schedules/schedule/bookings/{schedule_id}": {
+            "get": {
+                "tags": [
+                    "Films",
+                    "Schedules"
+                ],
+                "summary": "Get Bookings",
+                "operationId": "get_bookings_films_schedules_schedule_bookings__schedule_id__get",
+                "security": [
+                    {
+                        "OAuth2PasswordBearer": []
+                    }
+                ],
+                "parameters": [
+                    {
+                        "name": "schedule_id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "title": "Schedule Id"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/films/film": {
             "post": {
                 "tags": [

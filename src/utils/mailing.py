@@ -29,6 +29,9 @@ class EmailClient:
         email_message["To"] = details.email
         email_message["Subject"] = "Password Reset"
         email_message.attach(email_body)
+        print(self._server)
+        print(self._port)
+        print(self._password)
 
         try:
             with smtplib.SMTP(
@@ -51,7 +54,6 @@ class EmailClient:
             )
 
     async def password_reset_email(self, details: ResetRequest):
-
         loop = asyncio.get_event_loop()
         with ThreadPoolExecutor() as executor:
             result = await loop.run_in_executor(
