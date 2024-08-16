@@ -269,7 +269,7 @@ async def bookings_per_schedule(
     return BookingsFactory.get_bookings(records)
 
 
-@router.get("/schedule/bookings/{schedule_id}", tags=["Bookings"])
+@router.get("/scheduled/bookings/{schedule_id}", tags=["Bookings"])
 async def get_bookings(
         current_user: Annotated[
             User, Security(get_current_active_user, scopes=[])
@@ -298,6 +298,9 @@ async def get_bookings(
     )
 
     records = await all_selection(query)
+    if records is None:
+        return []
+
     bookings = BookingsFactory.get_bookings(records)
 
     data = defaultdict(BatchBookings)
@@ -306,4 +309,4 @@ async def get_bookings(
         batch.batch_ref = booking.batch_ref
         batch.bookings.append(booking)
 
-    return data
+    return [v for k, v in data.items()]

@@ -4427,14 +4427,15 @@
                 }
             }
         },
-        "/films/schedules/schedule/bookings/{schedule_id}": {
+        "/films/schedules/scheduled/bookings/{schedule_id}": {
             "get": {
                 "tags": [
                     "Films",
-                    "Schedules"
+                    "Schedules",
+                    "Bookings"
                 ],
                 "summary": "Get Bookings",
-                "operationId": "get_bookings_films_schedules_schedule_bookings__schedule_id__get",
+                "operationId": "get_bookings_films_schedules_scheduled_bookings__schedule_id__get",
                 "security": [
                     {
                         "OAuth2PasswordBearer": []
@@ -4781,6 +4782,46 @@
                                     },
                                     "title": "Response Get Schedules By Film Id Films Film Schedules Id  Film Id  Get"
                                 }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation Error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/HTTPValidationError"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/films/search/{string}/": {
+            "get": {
+                "tags": [
+                    "Films"
+                ],
+                "summary": "Search Films",
+                "operationId": "search_films_films_search__string___get",
+                "parameters": [
+                    {
+                        "name": "string",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "title": "String"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
                             }
                         }
                     },
