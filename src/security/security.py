@@ -115,11 +115,11 @@ async def get_current_user(
 
     user = UserFactory.create_full_user(data)
 
-    check_scope(
-        user.permissions,
-        security_scopes.scopes,
-        authenticate_value
-    )
+    # check_scope(
+    #     user.permissions,
+    #     security_scopes.scopes,
+    #     authenticate_value
+    # )
 
     return user
 
