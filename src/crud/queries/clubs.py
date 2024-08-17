@@ -201,7 +201,7 @@ async def is_club_rep(username: str):
         UsersRecord.email == username
     )
 
-    record = scalar_selection(query)
+    record = await scalar_selection(query)
 
     if record is None:
         return False

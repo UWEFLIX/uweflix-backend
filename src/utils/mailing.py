@@ -6,12 +6,32 @@ from datetime import datetime, timedelta, timezone
 from concurrent.futures import ThreadPoolExecutor
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from typing import List, Dict
 
 from fastapi import HTTPException
+from pydantic import EmailStr
 
+from src.crud.models import SchedulesRecord, UsersRecord
+from src.crud.queries.user import select_user_by_id
+from src.schema.bookings import Booking, PersonType
+from src.schema.films import Schedule
 from src.schema.users import ResetRequest
 
 logger = logging.getLogger("Email")
+
+
+def convert_seconds(seconds):
+    """
+    Author GeeksForGeeks
+    source: https://www.geeksforgeeks.org/python-program-to-convert-seconds-into-hours-minutes-and-seconds/
+    """
+    seconds = seconds % (24 * 3600)
+    hour = seconds // 3600
+    seconds %= 3600
+    minutes = seconds // 60
+    seconds %= 60
+
+    return "%d:%02d:%02d" % (hour, minutes, seconds)
 
 
 class EmailClient:
@@ -22,16 +42,25 @@ class EmailClient:
         self._password = password
         self._tls_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
 
-    def _password_reset_email(self, details: ResetRequest):
-        email_body = MIMEText(details.otp, "plain")
+    async def password_reset_email(self, details: ResetRequest):
+        await self._send_email(details.otp, "Password Reset Request", details.email)
+
+    async def _thread_pool_executor(self, content: str, subject: str, receiver: str):
+        loop = asyncio.get_event_loop()
+        with ThreadPoolExecutor() as executor:
+            result = await loop.run_in_executor(
+                executor,
+                self._send_email,
+                content, subject, receiver
+            )
+
+    def _send_email(self, content: str, subject: str, receiver: str):
+        email_body = MIMEText(content, "plain")
         email_message = MIMEMultipart()
         email_message["From"] = self._username
-        email_message["To"] = details.email
-        email_message["Subject"] = "Password Reset"
+        email_message["To"] = receiver
+        email_message["Subject"] = subject
         email_message.attach(email_body)
-        print(self._server)
-        print(self._port)
-        print(self._password)
 
         try:
             with smtplib.SMTP(
@@ -41,7 +70,7 @@ class EmailClient:
                 server.login(self._username, self._password)
                 server.sendmail(
                     self._username,
-                    details.email,
+                    receiver,
                     email_message.as_string()
                 )
         except Exception as e:
@@ -53,11 +82,32 @@ class EmailClient:
                 detail=f"Error while sending an email, timestamp: {now}"
             )
 
-    async def password_reset_email(self, details: ResetRequest):
-        loop = asyncio.get_event_loop()
-        with ThreadPoolExecutor() as executor:
-            result = await loop.run_in_executor(
-                executor,
-                self._password_reset_email,
-                details
-            )
+    async def send_booking_email(
+            self, bookings: List[Booking]
+    ):
+        if len(bookings) == 0:
+            return
+
+        booking = bookings[0]
+        content = (f"BOOKINGS CONFIRMED\nBATCH REFERENCE: "
+                   f"{booking.batch_ref}\n\n")
+        show_time = booking.schedule.show_time.strftime("%d-%m-%Y %H:%M")
+        content += f"SHOW TIME: {show_time}\n"
+        content += f"Location: {booking.schedule.hall.hall_name}\n"
+        content += f"Film: {booking.schedule.film.title}\n"
+        content += f"Show Duration: {convert_seconds(booking.schedule.film.duration_sec)}\n"
+        content += f"Created At: {booking.created.strftime("%d-%m-%Y %H:%M")}\n\n"
+
+        data = await select_user_by_id(booking.assigned_user)
+        user_record: UsersRecord = data["user"]
+
+        for booking in bookings:
+            content += f"SEAT NO: {booking.seat_no}\n"
+            content += f"Person Type: {booking.person_type.person_type}\n"
+            content += f"Ticket Price: {booking.amount}\n"
+            content += f"Serial No: {booking.serial_no}\n"
+            content += "\n"
+
+        await self._send_email(
+            content, "UWEFlix Booking Confirmation", user_record.email
+        )

@@ -19,8 +19,7 @@ router = APIRouter(prefix="/cards", tags=["Cards"])
 
 
 def _check_password(entered_password: str, password_on_db: str):
-    password = get_password_hash(entered_password)
-    if not verify_password(password, password_on_db):
+    if not verify_password(entered_password, password_on_db):
         raise HTTPException(
             422, "Password on database doesnt match with entered password"
         )

@@ -37,6 +37,12 @@ otp = OTP(os.environ.get("OTP_SECRET"))
 
 
 def verify_password(plain_password: str, hashed_password: str):
+    """
+        Verify the password
+        :param: plain_password
+        :param: hashed password
+        :return: boolean, true if correct
+    """
     return pwd_context.verify(plain_password, hashed_password)
 
 

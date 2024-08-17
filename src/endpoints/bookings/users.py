@@ -19,7 +19,7 @@ from src.endpoints.bookings._utils import validate_seat_per_hall
 from src.schema.bookings import Booking, SingleBooking, MultipleBookings
 from src.schema.factories.bookings_factory import BookingsFactory
 from src.schema.users import User
-from src.security.security import get_current_active_user
+from src.security.security import get_current_active_user, EMAILS
 from src.utils.utils import generate_random_string
 
 router = APIRouter(prefix="/users", tags=["Users"])
@@ -264,4 +264,10 @@ async def create_club_bookings(
         asyncio.create_task(execute_safely(query))
 
     records = await select_batch(batch_reference)
-    return BookingsFactory.get_bookings(records)
+    bookings = BookingsFactory.get_bookings(records)
+    coro = EMAILS.send_booking_email(
+        bookings,
+    )
+    asyncio.create_task(coro)
+
+    return bookings
