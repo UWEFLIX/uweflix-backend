@@ -80,7 +80,6 @@ async def reencrypt_cards(
         card.user_password = new_password
 
         re_encrypted_card = card.card()
-
         query = update(
             CardsRecord
         ).values(
@@ -120,7 +119,7 @@ async def change_password(
     )
 
     asyncio.create_task(
-        reencrypt_cards(current_user.id, form.old_password, new_password)
+        reencrypt_cards(current_user.id, form.old_password, form.new_password)
     )
 
     await execute_safely(query)

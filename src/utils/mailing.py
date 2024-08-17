@@ -43,7 +43,11 @@ class EmailClient:
         self._tls_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
 
     async def password_reset_email(self, details: ResetRequest):
-        await self._send_email(details.otp, "Password Reset Request", details.email)
+        await self._thread_pool_executor(
+            f"Your OTP to reset Password {details.otp}",
+            "Password Reset Request",
+            details.email
+        )
 
     async def _thread_pool_executor(self, content: str, subject: str, receiver: str):
         loop = asyncio.get_event_loop()
