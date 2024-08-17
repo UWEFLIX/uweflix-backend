@@ -268,6 +268,6 @@ async def create_club_bookings(
     coro = EMAILS.send_booking_email(
         bookings,
     )
-    asyncio.create_task(coro)
+    # asyncio.create_task(coro)
 
     return bookings
