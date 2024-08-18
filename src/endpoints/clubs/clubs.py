@@ -14,6 +14,7 @@ from src.endpoints.accounts.accounts import get_initials, update_club_account_ui
 from src.endpoints.clubs.club_members import router as club_members
 from fastapi import APIRouter, Security, HTTPException
 from src.schema.clubs import Club
+from src.schema.factories.account_factory import AccountsFactory
 from src.schema.factories.club_factories import ClubFactory
 from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User
@@ -306,13 +307,18 @@ async def get_my_club(
         ],
 ):
     query = select(
-        ClubsRecord, CitiesRecord, UsersRecord
+        ClubsRecord, CitiesRecord, UsersRecord, AccountsRecord
     ).join(
         ClubMembersRecords, ClubMembersRecords.club == ClubsRecord.id
     ).join(
         CitiesRecord, CitiesRecord.city_id == ClubsRecord.city_id
     ).join(
         UsersRecord, UsersRecord.user_id == ClubsRecord.leader
+    ).join(
+        AccountsRecord, and_(
+            AccountsRecord.entity_id == ClubsRecord.id,
+            AccountsRecord.entity_type == "CLUB"
+        )
     ).where(
         ClubMembersRecords.member == current_user.id
     )
@@ -323,6 +329,8 @@ async def get_my_club(
         raise HTTPException(404, "Club not found")
 
     leader = UserFactory.create_half_user(records[0][2])
+    account = AccountsFactory.get_half_account(records[0][3])
     club = ClubFactory.get_half_club(records[0])
     club.leader = leader
+    club.account = account
     return club
