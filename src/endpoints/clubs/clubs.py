@@ -5,7 +5,7 @@ from fastapi.params import Param
 from sqlalchemy import update, delete, and_, select, or_
 from sqlalchemy.orm import aliased
 
-from src.crud.models import ClubsRecord, AccountsRecord, ClubMembersRecords, CitiesRecord
+from src.crud.models import ClubsRecord, AccountsRecord, ClubMembersRecords, CitiesRecord, UsersRecord
 from src.crud.queries.accounts import select_club_accounts
 from src.crud.queries.clubs import select_club, select_leader_clubs, select_clubs, select_club_members, \
     select_club_by_id
@@ -15,6 +15,7 @@ from src.endpoints.clubs.club_members import router as club_members
 from fastapi import APIRouter, Security, HTTPException
 from src.schema.clubs import Club
 from src.schema.factories.club_factories import ClubFactory
+from src.schema.factories.user_factory import UserFactory
 from src.schema.users import User
 from src.security.security import get_current_active_user
 from src.endpoints.clubs.cities import router as cities
@@ -304,16 +305,16 @@ async def get_my_club(
             User, Security(get_current_active_user, scopes=["read:clubs"])
         ],
 ):
-    ClubsRecordAlias = aliased(ClubsRecord)
-    CitiesRecordAlias = aliased(CitiesRecord)
-    ClubMembersRecordsAlias = aliased(ClubMembersRecords)
-
-    query = (
-        select(ClubsRecordAlias, CitiesRecordAlias)
-        .select_from(ClubsRecordAlias)
-        .join(ClubMembersRecordsAlias, ClubMembersRecordsAlias.club == ClubsRecordAlias.id)
-        .join(CitiesRecordAlias, CitiesRecordAlias.city_id == ClubsRecordAlias.city_id)
-        .where(ClubMembersRecordsAlias.member == current_user.id)
+    query = select(
+        ClubsRecord, CitiesRecord, UsersRecord
+    ).join(
+        ClubMembersRecords, ClubMembersRecords.club == ClubsRecord.id
+    ).join(
+        CitiesRecord, CitiesRecord.city_id == ClubsRecord.city_id
+    ).join(
+        UsersRecord, UsersRecord.user_id == ClubsRecord.leader
+    ).where(
+        ClubMembersRecords.member == current_user.id
     )
 
     records = await all_selection(query)
@@ -321,4 +322,7 @@ async def get_my_club(
     if len(records) == 0:
         raise HTTPException(404, "Club not found")
 
-    return ClubFactory.get_half_club(records)
+    leader = UserFactory.create_half_user(records[0][2])
+    club = ClubFactory.get_half_club(records[0])
+    club.leader = leader
+    return club
