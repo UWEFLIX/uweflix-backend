@@ -54,11 +54,12 @@ class EmailClient:
         with ThreadPoolExecutor() as executor:
             result = await loop.run_in_executor(
                 executor,
-                self._send_email,
+                self.__send_email,
                 content, subject, receiver
             )
+            return result
 
-    def _send_email(self, content: str, subject: str, receiver: str):
+    def __send_email(self, content: str, subject: str, receiver: str):
         email_body = MIMEText(content, "plain")
         email_message = MIMEMultipart()
         email_message["From"] = self._username
@@ -112,6 +113,15 @@ class EmailClient:
             content += f"Serial No: {booking.serial_no}\n"
             content += "\n"
 
-        await self._send_email(
+        await self._thread_pool_executor(
             content, "UWEFlix Booking Confirmation", user_record.email
+        )
+
+    def send_user_created_email(self, email: EmailStr, password: str):
+        asyncio.create_task(
+            self._thread_pool_executor(
+                f"Your UWEFlix password is {password}",
+                "UWEFlix User Created",
+                email
+            )
         )

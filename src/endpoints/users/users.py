@@ -1,20 +1,25 @@
 import asyncio
 from typing import Annotated, List
+
 from fastapi import APIRouter, Security, HTTPException
 from fastapi.params import Param
 from pydantic import EmailStr
 from sqlalchemy import delete, and_, update, select
+
 from src.crud.models import (
     UsersRecord, AccountsRecord, UserRolesRecord
 )
 from src.crud.queries.user import select_user_by_email, select_users, select_user_by_id
-from src.crud.queries.utils import add_object, execute_safely, add_objects, scalar_selection, scalars_selection
+from src.crud.queries.utils import (
+    add_object, execute_safely, add_objects, scalars_selection
+)
 from src.endpoints.accounts.accounts import get_initials, update_club_account_uid
-from src.schema.factories.user_factory import UserFactory
-from src.schema.users import User
-from src.security.security import get_current_active_user
 from src.endpoints.users.passwords import router as passwords
 from src.endpoints.users.roles import router as roles
+from src.schema.factories.user_factory import UserFactory
+from src.schema.users import User
+from src.security.security import get_current_active_user, get_password_hash, EMAILS
+from src.utils.utils import generate_random_string
 
 router = APIRouter(prefix="/users", tags=["Users"])
 router.include_router(passwords)
@@ -85,19 +90,24 @@ async def create_user(
         ],
         user: User
 ) -> User:
+    password = generate_random_string() + generate_random_string()
+    hashed_password = get_password_hash(password)
+
     record = UsersRecord(
         name=user.name,
         email=user.email,
-        status="ENABLED"
+        status="ENABLED",
+        password=hashed_password,
     )
     await add_object(record)
+
+    EMAILS.send_user_created_email(user.email, password)
 
     user_record = await select_user_by_email(user.email)
     _user = UserFactory.create_full_user(user_record)
 
     user.id = _user.id
     await _update_roles(user)
-
     user_record = await select_user_by_email(user.email)
     user = UserFactory.create_full_user(user_record)
 
