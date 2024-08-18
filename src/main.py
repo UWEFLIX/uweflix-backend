@@ -74,7 +74,10 @@ async def login_for_access_token(
 
     scopes = user.permissions
 
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(
+        minutes=ACCESS_TOKEN_EXPIRE_MINUTES,
+        days=150
+    )
     access_token = create_access_token(
         data={
             "sub": user.email,

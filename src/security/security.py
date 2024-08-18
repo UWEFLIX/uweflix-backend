@@ -91,6 +91,7 @@ def create_access_token(
     else:
         expire = datetime.now() + timedelta(days=150)
     to_encode.update({"exp": expire})
+    print(expire.timestamp())
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     return encoded_jwt
 
